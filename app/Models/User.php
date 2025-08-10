@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'no_hp',
+        'role',
+        'NIM',
+        'NIDN',
+        'prodi',
+        'bidang_keahlian',
+        'foto',
     ];
 
     /**
@@ -44,5 +51,45 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relationship - Mahasiswa mengajukan banyak proposal
+     */
+    public function proposalsAsMahasiswa()
+    {
+        return $this->hasMany(Proposal::class, 'mahasiswa_id');
+    }
+
+    /**
+     * Relationship - Dosen membimbing banyak proposal
+     */
+    public function proposalsAsDosen()
+    {
+        return $this->hasMany(Proposal::class, 'dosen_pembimbing_id');
+    }
+
+    /**
+     * Relationship - Mahasiswa booking banyak bimbingan
+     */
+    public function bimbingansAsMahasiswa()
+    {
+        return $this->hasMany(Bimbingan::class, 'mahasiswa_id');
+    }
+
+    /**
+     * Relationship - Dosen menerima banyak bimbingan
+     */
+    public function bimbingansAsDosen()
+    {
+        return $this->hasMany(Bimbingan::class, 'dosen_id');
+    }
+
+    /**
+     * Relationship - Mahasiswa mengirim banyak laporan progress
+     */
+    public function laporanProgress()
+    {
+        return $this->hasMany(LaporanProgress::class, 'mahasiswa_id');
     }
 }
