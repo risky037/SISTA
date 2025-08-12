@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html class="loading" lang="id" data-textdirection="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="refresh" content="7200">
+    <title>Registrasi Pengguna | Nama Aplikasi Anda</title>
+
+    <link rel="apple-touch-icon" href="https://sia.uici.ac.id/images/uici/logo-uici-baru.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://sia.uici.ac.id/images/uici/logo-uici-baru.png">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://sia.uici.ac.id/vendors/vendors.min.css">
+    <link media="all" type="text/css" rel="stylesheet" href="https://sia.uici.ac.id/fontawesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://sia.uici.ac.id/css/themes/vertical-dark-menu-template/materialize.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://sia.uici.ac.id/css/themes/vertical-dark-menu-template/style.css">
+    <link rel="stylesheet" type="text/css" href="https://sia.uici.ac.id/css/pages/login.css?version=124">
+    <link rel="stylesheet" type="text/css" href="https://sia.uici.ac.id/css/laravel-custom.css">
+    <link rel="stylesheet" type="text/css" href="https://sia.uici.ac.id/css/custom/custom.css">
+
+    <script src="https://sia.uici.ac.id/js-old/jquery.min.js" type="text/javascript"></script>
+    <script src="https://sia.uici.ac.id/js-old/jquery.cookie.js" type="text/javascript"></script>
+</head>
+
+<body id="body"
+    class="login-bg vertical-layout page-header-light vertical-menu-collapsible vertical-dark-menu 2-columns"
+    data-open="click" data-menu="vertical-modern-menu" data-col="1-column">
+    <div class="row">
+        <div class="col s12">
+            <div class="container">
+                <div id="register-page" class="row">
+                    <div
+                        class="col s12 m8 l6 offset-m2 offset-l3 z-depth-4 card-panel border-radius-10 login-card bg-opacity-9">
+                        <form class="register-form" method="POST" action="#" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="input-field col s12 center-align">
+                                    <img class="center-align"
+                                        src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png" width="20%"
+                                        height="20%" alt="Logo Aplikasi">
+                                    <h5 class="center-align font-weight-600">Registrasi Pengguna Baru</h5>
+                                </div>
+                            </div>
+
+                            <div class="row margin">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix pt-2">person_outline</i>
+                                    <input id="nama" type="text" name="nama" required>
+                                    <label for="nama">Nama Lengkap</label>
+                                </div>
+                            </div>
+
+                            <div class="row margin">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix pt-2">email</i>
+                                    <input id="email" type="email" name="email" required>
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+
+                            <div class="row margin">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix pt-2">lock_outline</i>
+                                    <input id="password" type="password" name="password" required>
+                                    <label for="password">Password</label>
+                                </div>
+                            </div>
+
+                            <div class="row margin">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix pt-2">lock_outline</i>
+                                    <input id="password_confirmation" type="password" name="password_confirmation"
+                                        required>
+                                    <label for="password_confirmation">Konfirmasi Password</label>
+                                </div>
+                            </div>
+
+                            <div class="row margin">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix pt-2">phone</i>
+                                    <input id="no_hp" type="text" name="no_hp">
+                                    <label for="no_hp">Nomor HP</label>
+                                </div>
+                            </div>
+
+                            <div class="row margin">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix pt-2">how_to_reg</i>
+                                    <select id="role_select" name="role" required>
+                                        <option value="" disabled selected>Pilih Peran</option>
+                                        <option value="mahasiswa">Mahasiswa</option>
+                                        <option value="dosen">Dosen</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                    <label>Peran</label>
+                                </div>
+                            </div>
+
+                            <div id="mahasiswa_fields" style="display: none;">
+                                <div class="row margin">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix pt-2">credit_card</i>
+                                        <input id="nim" type="text" name="NIM">
+                                        <label for="nim">NIM</label>
+                                    </div>
+                                </div>
+                                <div class="row margin">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix pt-2">school</i>
+                                        <input id="prodi" type="text" name="prodi">
+                                        <label for="prodi">Program Studi</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="dosen_fields" style="display: none;">
+                                <div class="row margin">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix pt-2">badge</i>
+                                        <input id="nidn" type="text" name="NIDN">
+                                        <label for="nidn">NIDN</label>
+                                    </div>
+                                </div>
+                                <div class="row margin">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix pt-2">work</i>
+                                        <input id="bidang_keahlian" type="text" name="bidang_keahlian">
+                                        <label for="bidang_keahlian">Bidang Keahlian</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row margin">
+                                <div class="file-field input-field col s12">
+                                    <div class="btn waves-effect waves-light border-round green">
+                                        <span><i class="material-icons">cloud_upload</i> Foto Profil</span>
+                                        <input type="file" name="foto" id="foto_profil">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text"
+                                            placeholder="Upload foto profil Anda">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s12 display-flex justify-content-center">
+                                    <button type="submit" class="btn waves-effect waves-light border-round green">
+                                        Daftar
+                                    </button>
+                                    <a class="btn waves-effect waves-light border-round grey ml-4"
+                                        href="login.html">Sudah punya akun? Login</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="content-overlay"></div>
+        </div>
+    </div>
+
+    <script src="https://sia.uici.ac.id/js/vendors.min.js" type="text/javascript"></script>
+    <script src="https://sia.uici.ac.id/js/plugins.js" type="text/javascript"></script>
+    <script src="https://sia.uici.ac.id/js/search.js" type="text/javascript"></script>
+    <script src="https://sia.uici.ac.id/js/custom/custom-script.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Inisialisasi Select Materialize
+            $('select').formSelect();
+
+            // Logika untuk menampilkan/menyembunyikan field berdasarkan peran
+            $('#role_select').on('change', function () {
+                var selectedRole = $(this).val();
+
+                // Sembunyikan semua field spesifik terlebih dahulu
+                $('#mahasiswa_fields').hide();
+                $('#dosen_fields').hide();
+
+                // Tampilkan field sesuai peran yang dipilih
+                if (selectedRole === 'mahasiswa') {
+                    $('#mahasiswa_fields').show();
+                } else if (selectedRole === 'dosen') {
+                    $('#dosen_fields').show();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
