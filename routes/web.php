@@ -1,21 +1,14 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 
 
-Route::get('/dashboard-mahasiswa', function () {
-    return view('dashboard mahasiswa');
-});
 
 
 Route::get('/', function () {
-    return view('dashboard-mahasiswa');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return view('welcome');
+})->name('dashboard'); 
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -23,9 +16,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-use App\Http\Controllers\MahasiswaController;
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard')->middleware('role:admin');
 
-Route::resource('mahasiswa', MahasiswaController::class);
-Route::get('/dashboard-mahasiswa', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard-mahasiswa.index');
+    Route::get('/dosen/dashboard', function () {
+        return view('dosen.dashboard');
+    })->name('dosen.dashboard')->middleware('role:dosen');
 
-require __DIR__.'/auth.php';
+    Route::get('/mahasiswa/dashboard', function () {
+        return view('mahasiswa.dashboard');
+    })->name('mahasiswa.dashboard')->middleware('role:mahasiswa');
+});
+
+require __DIR__ . '/auth.php';
