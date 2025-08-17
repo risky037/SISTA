@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Tugas Akhir</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            background: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1518770660439-4636190af475') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -1;
+        }
+        .login-choice {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .login-choice img { width: 100px; margin-bottom: 20px; }
+        .login-choice h4 { font-weight: bold; margin-bottom: 10px; color: #2d3436; }
+        .login-choice p { font-size: 16px; color: #636e72; margin-bottom: 30px; }
+        .login-options { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .login-btn { flex: 1; min-width: 150px; padding: 15px; font-size: 18px; border-radius: 50px; display: flex; align-items: center; justify-content: center; }
+        .login-btn i { font-size: 22px; margin-right: 8px; }
+
+        /* Dashboard Styling */
+        .dashboard {
+            display: none;
+        }
+        .dashboard .card-title {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<!-- Pilihan Login -->
+<div id="login-choice" class="login-choice z-depth-3">
+    <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png" alt="Logo">
+    <h4>Sistem Informasi Tugas Akhir</h4>
+    <p>Silakan pilih jenis login untuk masuk ke dashboard Anda:</p>
+    <div class="login-options">
+        <a class="btn green darken-2 login-btn waves-effect waves-light" onclick="openLogin('admin')">
+            <i class="material-icons">admin_panel_settings</i> Admin
+        </a>
+        <a class="btn blue darken-2 login-btn waves-effect waves-light" onclick="openLogin('mahasiswa')">
+            <i class="material-icons">school</i> Mahasiswa
+        </a>
+        <a class="btn orange darken-2 login-btn waves-effect waves-light" onclick="openLogin('dosen')">
+            <i class="material-icons">groups</i> Dosen
+        </a>
+    </div>
+</div>
+
+<!-- Modal Login -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <h5 id="login-title">Login</h5>
+        <div class="input-field">
+            <input id="username" type="text">
+            <label for="username">Username</label>
+        </div>
+        <div class="input-field">
+            <input id="password" type="password">
+            <label for="password">Password</label>
+        </div>
+    </div>
+    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
+        <a href="#!" class="modal-close btn grey">Batal</a>
+        <a href="#!" class="btn red" id="forgot-password-btn">Lupa Password</a>
+        <a href="#!" class="btn green" id="login-btn">Masuk</a>
+    </div>
+</div>
+
+<!-- Dashboard Admin -->
+<div id="dashboard-admin" class="dashboard">
+    <nav class="green darken-3">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo center">Admin Dashboard</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#" onclick="logout()"><i class="material-icons">exit_to_app</i></a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container" style="margin-top:30px;">
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card white">
+                    <div class="card-content">
+                        <span class="card-title green-text">Manajemen User</span>
+                        <p>Tambah, edit, atau hapus akun pengguna sistem.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6">
+                <div class="card white">
+                    <div class="card-content">
+                        <span class="card-title green-text">Laporan</span>
+                        <p>Unduh laporan dan statistik sistem.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Mahasiswa -->
+<div id="dashboard-mahasiswa" class="dashboard">
+    <nav class="blue darken-3">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo center">Dashboard Mahasiswa</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#" onclick="logout()"><i class="material-icons">exit_to_app</i></a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container" style="margin-top:30px;">
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card white">
+                    <div class="card-content">
+                        <span class="card-title blue-text">Bimbingan Skripsi</span>
+                        <p>Lihat status bimbingan dan jadwal pertemuan dengan dosen pembimbing.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6">
+                <div class="card white">
+                    <div class="card-content">
+                        <span class="card-title blue-text">Pengajuan Judul</span>
+                        <p>Ajukan judul skripsi atau tugas akhir secara online.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Dosen -->
+<div id="dashboard-dosen" class="dashboard">
+    <nav class="orange darken-3">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo center">Dashboard Dosen</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#" onclick="logout()"><i class="material-icons">exit_to_app</i></a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container" style="margin-top:30px;">
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card white">
+                    <div class="card-content">
+                        <span class="card-title orange-text">Bimbingan Mahasiswa</span>
+                        <p>Lihat daftar mahasiswa bimbingan dan progress skripsi mereka.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6">
+                <div class="card white">
+                    <div class="card-content">
+                        <span class="card-title orange-text">Penilaian</span>
+                        <p>Masukkan nilai ujian proposal atau sidang skripsi.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        M.Modal.init(document.querySelectorAll('.modal'));
+    });
+
+    let selectedRole = '';
+
+    function openLogin(role) {
+        selectedRole = role;
+        document.getElementById('login-title').textContent = "Login " + role.charAt(0).toUpperCase() + role.slice(1);
+        M.Modal.getInstance(document.getElementById('login-modal')).open();
+    }
+
+    document.getElementById('login-btn').addEventListener('click', function() {
+        // Simulasi login tanpa cek password
+        document.getElementById('login-choice').style.display = 'none';
+        document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
+        document.getElementById('dashboard-' + selectedRole).style.display = 'block';
+        M.Modal.getInstance(document.getElementById('login-modal')).close();
+    });
+
+    document.getElementById('forgot-password-btn').addEventListener('click', function() {
+        alert('Fitur lupa password belum diaktifkan. Silakan hubungi admin.');
+    });
+
+    function logout() {
+        document.querySelectorAll('.dashboard').forEach(d => d.style.display = 'none');
+        document.getElementById('login-choice').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

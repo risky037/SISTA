@@ -33,5 +33,13 @@
                 class="fas fa-book"></i> Arsip & Nilai</a>
         <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                 class="fas fa-question-circle"></i> Bantuan</a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+            class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
     </nav>
 </aside>
