@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - SIA Tugas Akhir</title>
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
+</head>
+<body class="bg-green-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center mb-6 text-green-700">Sistem Informasi Tugas Akhir</h1>
+    <form id="loginForm">
+      <label class="block mb-2">Username</label>
+      <input type="text" class="w-full p-2 border border-green-300 rounded mb-4" required />
+      <label class="block mb-2">Password</label>
+      <input type="password" class="w-full p-2 border border-green-300 rounded mb-6" required />
+      <label class="block mb-2">Sebagai:</label>
+      <select id="role" class="w-full p-2 border border-green-300 rounded mb-6">
+        <option value="admin">Admin</option>
+        <option value="mahasiswa">Mahasiswa</option>
+        <option value="dosen">Dosen</option>
+      </select>
+      <button type="submit" class="bg-green-500 hover:bg-green-600 text-white w-full p-2 rounded">Login</button>
+    </form>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+</html>
