@@ -19,13 +19,13 @@
                 class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100 text-gray-600">
                 <i class="fas fa-user-graduate"></i> Data Mahasiswa
             </a>
-            <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-user-tie"></i>Dosen Pembimbing</a>
-            <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-calendar-alt"></i>Jadwal Sidang</a>
-            <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-file-alt"></i>Proposal</a>
-            <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-cogs"></i>Pengaturan</a>
         @endif
         @if (auth()->user()->role == 'dosen')
@@ -51,7 +51,7 @@
                 class="flex items-center gap-3 px-4 py-2 rounded-full bg-green-600 text-white font-semibold">
                 <i class="fas fa-home"></i> Beranda
             </a>
-            <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-calendar-check"></i> Jadwal Seminar & Sidang</a>
             <div class="flex flex-col w-full">
                 <button id="btn-progres" onclick="toggleSubmenu()"
@@ -60,17 +60,17 @@
                     <i class="fas fa-chevron-down text-gray-400" id="icon-progres"></i>
                 </button>
                 <div id="submenu-progres" class="flex flex-col pl-12 mt-1 space-y-1">
-                    <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100">Laporan
+                    <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100">Laporan
                         Bab</a>
-                    <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100">Revisi &
+                    <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100">Revisi &
                         Catatan</a>
                 </div>
             </div>
-            <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-upload"></i> Upload Dokumen Akhir</a>
-            <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-book"></i> Arsip & Nilai</a>
-            <a href="" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-question-circle"></i> Bantuan</a>
         @endif
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
