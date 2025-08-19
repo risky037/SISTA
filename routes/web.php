@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BimbinganController;
+use App\Http\Controllers\LaporanProgressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,16 +22,24 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
+        return view('dashboard.admin');
     })->name('admin.dashboard')->middleware('role:admin');
 
     Route::get('/dosen/dashboard', function () {
-        return view('dosen.dashboard');
+        return view('dashboard.dosen');
     })->name('dosen.dashboard')->middleware('role:dosen');
 
     Route::get('/mahasiswa/dashboard', function () {
-        return view('mahasiswa.dashboard');
+        return view('dashboard.mahasiswa');
     })->name('mahasiswa.dashboard')->middleware('role:mahasiswa');
+});
+
+Route::resource('proposals', ProposalController::class);
+Route::resource('bimbingans', BimbinganController::class);
+Route::resource('laporan-progress', LaporanProgressController::class);
+
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('users', UserController::class);
 });
 
 require __DIR__ . '/auth.php';

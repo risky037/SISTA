@@ -19,6 +19,23 @@
             background-color: #4a5568;
             border-radius: 10px;
         }
+
+        /* Tambahkan CSS untuk animasi fade-in */
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 
@@ -45,6 +62,22 @@
             submenu.classList.toggle("hidden");
             icon.classList.toggle("fa-chevron-down");
             icon.classList.toggle("fa-chevron-up");
+        }
+
+        function openLogoutModal() {
+            const modal = document.getElementById("logoutModal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            setTimeout(() => {
+                modal.querySelector('.bg-white').classList.add('fade-in');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("logoutModal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+            modal.querySelector('.bg-white').classList.remove('fade-in');
         }
     </script>
 </body>

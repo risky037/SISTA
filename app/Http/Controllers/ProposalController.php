@@ -9,7 +9,6 @@ class ProposalController extends Controller
 {
     public function index()
     {
-        // List semua proposal (filter by role nanti di middleware)
         $proposals = Proposal::with(['mahasiswa', 'dosen'])->latest()->get();
         return view('proposals.index', compact('proposals'));
     }
