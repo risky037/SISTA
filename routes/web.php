@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BimbinganController;
 use App\Http\Controllers\LaporanProgressController;
@@ -41,5 +42,10 @@ Route::resource('laporan-progress', LaporanProgressController::class);
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('users', UserController::class);
 });
+
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
+    Route::resource('management/admin', AdminManagementController::class)->names('management.admin');
+});
+
 
 require __DIR__ . '/auth.php';

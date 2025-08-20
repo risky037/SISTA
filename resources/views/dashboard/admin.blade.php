@@ -24,7 +24,7 @@
         </div>
         <nav class="text-sm text-gray-500">
             <ol class="list-reset flex">
-                <li><a href="" class="hover:text-green-600">Home</a></li>
+                <li><a href="{{ route('admin.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-gray-700">Beranda</li>
             </ol>

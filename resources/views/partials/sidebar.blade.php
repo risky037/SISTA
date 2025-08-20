@@ -1,8 +1,8 @@
 <aside id="sidebar"
     class="flex flex-col bg-white border-r border-gray-200 w-64 min-h-screen sticky top-0 transition-all duration-300">
     <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-200">
-        <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png"
-            class="w-10 h-10 sidebar-full-item" alt="Logo SIA" />
+        <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png" class="w-10 h-10 sidebar-full-item"
+            alt="Logo SIA" />
         <span class="text-lg font-normal text-gray-900 sidebar-full-item">Sistem Informasi Tugas Akhir & Skripsi</span>
         <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png"
             class="w-10 h-10 hidden sidebar-mini-item mx-auto" alt="Logo SIA Mini">
@@ -15,8 +15,8 @@
                 <i class="fas fa-home"></i>
                 <span class="sidebar-full-item">Beranda</span>
             </a>
-            <a href="{{ route('users.index') }}"
-                class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.users') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+            <a href="{{ route('admin.management.admin.index') }}"
+                class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.admin.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                 <i class="fas fa-user-plus"></i>
                 <span class="sidebar-full-item">Admin</span>
                 <span class="tooltip hidden sidebar-mini-item">Admin</span>
@@ -27,7 +27,7 @@
                 <span class="sidebar-full-item">Data Mahasiswa</span>
                 <span class="tooltip hidden sidebar-mini-item">Data Mahasiswa</span>
             </a>
-             <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-user-tie"></i>Dosen Pembimbing</a>
             <a href="#" class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100"><i
                     class="fas fa-calendar-alt"></i>Jadwal Sidang</a>
