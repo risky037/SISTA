@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@yield('title') - SIA UICI</title>
+    <title>@yield('title' ?? 'Sista') - SIA UICI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="apple-touch-icon" href="https://sia.uici.ac.id/images/uici/logo-uici-baru.png">
     <link rel="shortcut icon" type="image/x-icon" href="https://sia.uici.ac.id/images/uici/logo-uici-baru.png">
@@ -20,7 +20,6 @@
             border-radius: 10px;
         }
 
-        /* Tambahkan CSS untuk animasi fade-in */
         .fade-in {
             animation: fadeIn 0.3s ease-out;
         }
@@ -41,11 +40,9 @@
 
 <body class="bg-gray-100 font-sans text-gray-900">
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
         @include('partials.sidebar')
 
-        <!-- Main -->
-        <main class="flex-1 flex flex-col">
+        <main id="main-content" class="flex-1 flex flex-col transition-all duration-300">
             @include('partials.topbar')
             <section class="flex-1 overflow-auto p-6">
                 <div class="max-w-7xl mx-auto space-y-6">
@@ -53,6 +50,21 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm fade-in">
+            <h2 class="text-lg font-bold mb-4">Konfirmasi Logout</h2>
+            <div class="mb-4 text-sm text-gray-700">
+                Anda yakin ingin logout?
+            </div>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeModal()"
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">Batal</button>
+                <button onclick="document.getElementById('logout-form').submit();"
+                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Ya, Logout</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -79,6 +91,39 @@
             modal.classList.remove("flex");
             modal.querySelector('.bg-white').classList.remove('fade-in');
         }
+
+        // Toggling Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+
+            sidebar.classList.toggle('w-64');
+            sidebar.classList.toggle('w-20');
+
+            // Toggle text and full icon
+            const fullItems = document.querySelectorAll('.sidebar-full-item');
+            const miniItems = document.querySelectorAll('.sidebar-mini-item');
+
+            fullItems.forEach(item => item.classList.toggle('hidden'));
+            miniItems.forEach(item => item.classList.toggle('hidden'));
+        }
+
+        // Toggling User Dropdown
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileMenuButton = document.getElementById('profile-menu-button');
+            const profileMenu = document.getElementById('profile-menu');
+
+            profileMenuButton.addEventListener('click', () => {
+                profileMenu.classList.toggle('hidden');
+            });
+
+            // Close the dropdown when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!profileMenuButton.contains(event.target) && !profileMenu.contains(event.target)) {
+                    profileMenu.classList.add('hidden');
+                }
+            });
+        });
     </script>
 </body>
 
