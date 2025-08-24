@@ -8,7 +8,7 @@ class CreateBimbingansTable extends Migration
 {
     public function up()
     {
-        Schema::create('bimbingan', function (Blueprint $table) {
+        Schema::create('bimbingans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('mahasiswa_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('dosen_id')->constrained('users')->onDelete('cascade');
@@ -25,6 +25,6 @@ class CreateBimbingansTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('bimbingan');
+        Schema::dropIfExists('bimbingans');
     }
 }

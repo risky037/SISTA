@@ -2,10 +2,6 @@
 
 @section('title', 'Edit Admin')
 
-@extends('layout.app')
-
-@section('title', 'Edit Admin')
-
 @section('content')
     <div class="flex justify-between items-center mb-4">
         <div>

@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminManagementController;
+use App\Http\Controllers\Admin\JadwalSidangManagementController;
 use App\Http\Controllers\Admin\MahasiswaManagementController;
 use App\Http\Controllers\Admin\DosenManagementController;
+use App\Http\Controllers\Admin\ProposalManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BimbinganController;
 use App\Http\Controllers\LaporanProgressController;
@@ -49,6 +51,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('management/admin', AdminManagementController::class)->names('management.admin');
     Route::resource('management/mahasiswa', MahasiswaManagementController::class)->names('management.mahasiswa');
     Route::resource('management/dosen', DosenManagementController::class)->names('management.dosen');
+    Route::resource('jadwal', JadwalSidangManagementController::class)->names('jadwal');
+    Route::resource('proposal', ProposalManagementController::class)->names('proposal');
 });
 
 
