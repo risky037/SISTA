@@ -40,10 +40,10 @@
 
 <body class="bg-gray-100 font-sans text-gray-900">
     <div class="flex min-h-screen">
-        @include('partials.sidebar')
+        @include('layouts.partials.sidebar')
 
         <main id="main-content" class="flex-1 flex flex-col transition-all duration-300 lg:ml-64">
-            @include('partials.topbar')
+            @include('layouts.partials.topbar')
             <section class="flex-1 overflow-auto p-6">
                 <div class="max-w-7xl mx-auto space-y-6">
                     @yield('content')
@@ -53,7 +53,7 @@
     </div>
 
     <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm fade-in">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
             <h2 class="text-lg font-bold mb-4">Konfirmasi Logout</h2>
             <div class="mb-4 text-sm text-gray-700">
                 Anda yakin ingin logout?
@@ -98,16 +98,14 @@
             const mainContent = document.getElementById('main-content');
             const toggleButtonIcon = document.getElementById('sidebar-toggle-icon');
 
-            // Mengubah class sidebar untuk menyembunyikan atau menampilkan
+            // Toggle the classes to show/hide the sidebar
             sidebar.classList.toggle('-translate-x-full');
-
-            // Menyesuaikan margin pada konten utama
             mainContent.classList.toggle('lg:ml-64');
             mainContent.classList.toggle('lg:ml-0');
 
-            // Mengubah ikon tombol collapse
-            toggleButtonIcon.classList.toggle('fa-arrow-left');
-            toggleButtonIcon.classList.toggle('fa-arrow-right');
+            // Check if the sidebar is currently collapsed and save the state
+            const isCollapsed = sidebar.classList.contains('-translate-x-full');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
         }
 
         // Toggling User Dropdown
@@ -125,6 +123,24 @@
                     profileMenu.classList.add('hidden');
                 }
             });
+
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+
+            // Get the saved state from localStorage
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+
+            // Apply the saved state
+            if (isCollapsed) {
+                sidebar.classList.add('-translate-x-full');
+                mainContent.classList.remove('lg:ml-64');
+                mainContent.classList.add('lg:ml-0');
+            } else {
+                // Default behavior: if no state or 'false', ensure it's uncollapsed
+                sidebar.classList.remove('-translate-x-full');
+                mainContent.classList.add('lg:ml-64');
+                mainContent.classList.remove('lg:ml-0');
+            }
         });
     </script>
 </body>
