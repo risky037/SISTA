@@ -1,3 +1,4 @@
+
 <aside id="sidebar"
     class="flex flex-col bg-white border-r border-gray-200 w-64 min-h-screen sticky top-0 transition-all duration-300">
     <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-200">
@@ -6,47 +7,7 @@
         <span class="text-lg font-normal text-gray-900 sidebar-full-item">Sistem Informasi Tugas Akhir & Skripsi</span>
         <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png"
             class="w-10 h-10 hidden sidebar-mini-item mx-auto" alt="Logo SIA Mini">
-    <!DOCTYPE html>
-<html>
-<title>W3.CSS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
-<body>
-
-<div class="w3-sidebar w3-bar-block w3-dark-white w3-animate-left" style="display:none" id="mySidebar">
-  <button class="w3-bar-item w3-button w3-large"
-  onclick="w3_close()">Close &times;</button>
- <a href="{{ route('admin.dashboard') }}"
-                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                <i class="fas fa-question-circle"></i>
-                <span class="sidebar-full-item">Bantuan</span>
-                <span class="tooltip hidden sidebar">Bantuan</span>
-  <a href="#" class="w3-bar-item w3-button">Link 2</a>
-  <a href="#" class="w3-bar-item w3-button">Link 3</a>
-</div>
-
-<div>
-  <button class="w3-button w3-white w3-xxlarge" onclick="w3_open()">&#9776;</button>
-  <div class="w3-container">
-    <h1>Animated Sidebar</h1>
-    <p>Click on the "hamburger menu" to slide in the side navigation.</p>
-    <p>W3.CSS provide the following animation classes if you want to experiment for yourself:</p>
-    <p>w3-animate-left, w3-animate-top, w3-anite-bottom, w3-animate-right, w3-animate-opacity, w3-animate-zoom</p>
-  </div>
-</div>
-
-<script>
-function w3_open() {
-    document.getElementById("mySidebar").style.display = "block";
-}
-function w3_close() {
-    document.getElementById("mySidebar").style.display = "none";
-}
-</script>
-     
-</body>
-</html> 
-
+    </div>
     <nav class="flex flex-col px-5 py-6 space-y-1 text-sm text-gray-600">
         @if (auth()->user()->role == 'admin')
             <span class="uppercase text-xs font-semibold mb-2 text-gray-400 sidebar-full-item">Navigasi</span>
@@ -61,15 +22,15 @@ function w3_close() {
                 <span class="sidebar-full-item">Admin</span>
                 <span class="tooltip hidden sidebar">Admin</span>
             </a>
-            <a href="{{ route('admin.management.mahasiswa.index') }}"
-                class="flex items-center gap-3 px-4 py-2 rounded-full  {{ request()->routeIs('admin.management.mahasiswa.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+            <a href="{{ route('users.index') }}"
+                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                 <i class="fas fa-user-graduate"></i>
                 <span class="sidebar-full-item">Data Mahasiswa</span>
                 <span class="tooltip hidden sidebar">Data Mahasiswa</span>
                 
             
-            <a href="{{ route('admin.management.dosen.index') }}"
-                class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.dosen.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+            <a href="{{ route('users.index') }}"
+                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                 <i class="fas fa-user-tie"></i>
                 <span class="sidebar-full-item">Dosen Pembimbing</span>
                 <span class="tooltip hidden sidebar">Dosen Pembimbing</span>
@@ -256,3 +217,4 @@ function w3_close() {
         @endif
     </nav>
 </aside>
+ 
