@@ -18,8 +18,10 @@
             </ol>
         </nav>
     </div>
-    <div class="p-6">
-        <a href="{{ route('admin.management.admin.create') }}" class="px-4 py-2 bg-green-600 text-white rounded">+ Tambah
+    <div class="p-6 bg-white rounded-lg shadow-md">
+        <a href="{{ route('admin.management.admin.create') }}"
+            class="px-4 py-2 bg-green-600 text-white rounded-md mb-4 inline-block hover:bg-green-700 transition-colors">
+            <i class="fas fa-plus mr-2"></i>Tambah
             Admin</a>
 
         @if (session('success'))
@@ -33,7 +35,7 @@
             </div>
         @endif
         <div class="overflow-x-auto">
-            <table class="table-auto w-full mt-4 border min-w-[600px]">
+            <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[800px]">
                 <thead class="bg-green-100">
                     <tr>
                         <th class="px-2 md:px-4 py-1 md:py-2 border text-left">Nama</th>

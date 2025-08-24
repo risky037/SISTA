@@ -48,7 +48,7 @@
             <h3 class="text-green-700 font-semibold mb-2">Data Mahasiswa</h3>
             <p class="text-gray-600 text-sm mb-3">Kelola informasi mahasiswa yang sedang mengerjakan Tugas Akhir & Skripsi.
             </p>
-            <a href="" class="text-green-600 text-sm font-semibold hover:underline">Lihat Data →</a>
+            <a href="{{ route('admin.management.mahasiswa.index') }}" class="text-green-600 text-sm font-semibold hover:underline">Lihat Data →</a>
         </div>
 
         <div class="bg-blue-50 p-4 rounded-lg shadow hover:shadow-md transition">
