@@ -6,13 +6,21 @@
             <span class="text-lg font-normal text-gray-900">Sistem Informasi Tugas Akhir & Skripsi</span>
         </div>
         <nav class="flex flex-col px-5 py-6 space-y-1 text-sm text-gray-600 overflow-y-auto">
+            <span class="uppercase text-xs font-semibold mb-2 text-gray-400">Navigasi</span>
+            <a href="{{ auth()->user()->role == 'admin'
+                ? route('admin.dashboard')
+                : (auth()->user()->role == 'mahasiswa'
+                    ? route('mahasiswa.dashboard')
+                    : route('dosen.dashboard')) }}"
+                class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.dashboard') ||
+                request()->routeIs('mahasiswa.dashboard') ||
+                request()->routeIs('dosen.dashboard')
+                    ? 'bg-green-600 text-white font-semibold'
+                    : 'hover:bg-gray-100 text-gray-600' }}">
+                <i class="fas fa-home"></i>
+                <span>Beranda</span>
+            </a>
             @if (auth()->user()->role == 'admin')
-                <span class="uppercase text-xs font-semibold mb-2 text-gray-400">Navigasi</span>
-                <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.dashboard') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-home"></i>
-                    <span>Beranda</span>
-                </a>
                 <a href="{{ route('admin.management.admin.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.admin.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-user-plus"></i>
@@ -38,57 +46,33 @@
                     <i class="fas fa-file-alt"></i>
                     <span>Proposal</span>
                 </a>
-                <a href="{{ route('users.index') }}"
+                <a href="#"
                     class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                     <i class="fas fa-cogs"></i>
                     <span>Pengaturan</span>
                 </a>
-                <div class="border-t border-gray-200 my-2"></div>
-                <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Bantuan</span>
-                </a>
-                <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Tentang</span>
-                </a>
             @elseif (auth()->user()->role == 'dosen')
-                <span class="uppercase text-xs font-semibold mb-2 text-gray-400">Navigasi</span>
-                <a href="{{ route('users.index') }}"
+                <a href="#"
                     class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                     <i class="fas fa-user-graduate"></i>
                     <span>Daftar Mahasiswa Bimbingan</span>
                 </a>
-                <a href="{{ route('users.index') }}"
+                <a href="#"
                     class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                     <i class="fas fa-calendar-check"></i>
                     <span>Jadwal Bimbingan</span>
                 </a>
-                <a href="{{ route('users.index') }}"
+                <a href="#"
                     class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                     <i class="fas fa-tasks"></i>
                     <span>Review Proposal/Skripsi</span>
                 </a>
-                <a href="{{ route('users.index') }}"
+                <a href="#"
                     class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                     <i class="fas fa-chart-line"></i>
                     <span>Laporan Progres Mahasiswa</span>
                 </a>
-                <div class="border-t border-gray-200 my-2"></div>
-                <a href="{{ route('users.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Bantuan</span>
-                </a>
-                <a href="{{ route('users.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Tentang</span>
-                </a>
             @elseif (auth()->user()->role == 'mahasiswa')
-                <span class="uppercase text-xs font-semibold mb-2 text-gray-400">Navigasi</span>
                 <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100">
                     <i class="fas fa-calendar-check"></i>
                     <span>Jadwal Seminar & Sidang</span>
@@ -119,17 +103,18 @@
                     <i class="fas fa-book"></i>
                     <span>Arsip & Nilai</span>
                 </a>
-                <div class="border-t border-gray-200 my-2"></div>
-                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Bantuan</span>
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Tentang</span>
-                </a>
             @endif
-
+            <div class="border-t border-gray-200 my-2"></div>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+                <i class="fas fa-question-circle"></i>
+                <span>Bantuan</span>
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+                <i class="fas fa-info-circle"></i>
+                <span>Tentang</span>
+            </a>
             <div class="border-t border-gray-200 my-2"></div>
             <a href="#" onclick="event.preventDefault(); openLogoutModal()"
                 class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-red-100 text-red-600">

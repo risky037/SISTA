@@ -19,35 +19,8 @@ Route::get('/', function () {
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('dashboard.admin');
-    })->name('admin.dashboard')->middleware('role:admin');
-
-    Route::get('/dosen/dashboard', function () {
-        return view('dashboard.dosen');
-    })->name('dosen.dashboard')->middleware('role:dosen');
-
-    Route::get('/mahasiswa/dashboard', function () {
-        return view('dashboard.mahasiswa');
-    })->name('mahasiswa.dashboard')->middleware('role:mahasiswa');
-});
-
-Route::resource('proposals', ProposalController::class);
-Route::resource('bimbingans', BimbinganController::class);
-Route::resource('laporan-progress', LaporanProgressController::class);
-
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('users', UserController::class);
-});
-
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
+    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
     Route::resource('management/admin', AdminManagementController::class)->names('management.admin');
     Route::resource('management/mahasiswa', MahasiswaManagementController::class)->names('management.mahasiswa');
     Route::resource('management/dosen', DosenManagementController::class)->names('management.dosen');
@@ -55,5 +28,32 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('proposal', ProposalManagementController::class)->names('proposal');
 });
 
+Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasiswa.')->group(function () {
+    Route::get('/dashboard', fn() => view('mahasiswa.dashboard'))->name('dashboard');
+});
+
+Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->group(function () {
+    Route::get('/dashboard', fn() => view('dosen.dashboard'))->name('dashboard');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 require __DIR__ . '/auth.php';
+
+
+
+
+
+// GAK PENTING
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('users', UserController::class);
+});
+
+Route::resource('proposals', ProposalController::class);
+Route::resource('bimbingans', BimbinganController::class);
+Route::resource('laporan-progress', LaporanProgressController::class);
+
