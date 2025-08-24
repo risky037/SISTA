@@ -1,7 +1,7 @@
 <header class="bg-green-700 flex items-center justify-between gap-3 px-6 py-3 sticky top-0 z-10">
     <!-- Toggle Sidebar -->
     <button onclick="toggleSidebar()" class="text-white text-lg focus:outline-none">
-        <i class="fas fa-bars"></i>
+        <i id="sidebar-toggle-icon" class="fas fa-bars"></i>
     </button>
 
     <!-- Profile Menu -->

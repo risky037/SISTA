@@ -42,7 +42,7 @@
     <div class="flex min-h-screen">
         @include('partials.sidebar')
 
-        <main id="main-content" class="flex-1 flex flex-col transition-all duration-300">
+        <main id="main-content" class="flex-1 flex flex-col transition-all duration-300 lg:ml-64">
             @include('partials.topbar')
             <section class="flex-1 overflow-auto p-6">
                 <div class="max-w-7xl mx-auto space-y-6">
@@ -96,16 +96,18 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
+            const toggleButtonIcon = document.getElementById('sidebar-toggle-icon');
 
-            sidebar.classList.toggle('w-64');
-            sidebar.classList.toggle('w-20');
+            // Mengubah class sidebar untuk menyembunyikan atau menampilkan
+            sidebar.classList.toggle('-translate-x-full');
 
-            // Toggle text and full icon
-            const fullItems = document.querySelectorAll('.sidebar-full-item');
-            const miniItems = document.querySelectorAll('.sidebar-mini-item');
+            // Menyesuaikan margin pada konten utama
+            mainContent.classList.toggle('lg:ml-64');
+            mainContent.classList.toggle('lg:ml-0');
 
-            fullItems.forEach(item => item.classList.toggle('hidden'));
-            miniItems.forEach(item => item.classList.toggle('hidden'));
+            // Mengubah ikon tombol collapse
+            toggleButtonIcon.classList.toggle('fa-arrow-left');
+            toggleButtonIcon.classList.toggle('fa-arrow-right');
         }
 
         // Toggling User Dropdown
