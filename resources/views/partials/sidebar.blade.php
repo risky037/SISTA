@@ -22,67 +22,66 @@
                 <span class="tooltip hidden sidebar">Admin</span>
             </a>
             <a href="{{ route('admin.management.mahasiswa.index') }}"
-                class="flex items-center gap-3 px-4 py-2 rounded-full  {{ request()->routeIs('admin.management.mahasiswa.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                <i class="fas fa-user-graduate"></i>
-                <span class="sidebar-full-item">Data Mahasiswa</span>
-                <span class="tooltip hidden sidebar">Data Mahasiswa</span>
+                class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.mahasiswa.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                <i class="fas fa-user-plus"></i>
+                <span class="sidebar-full-item">Mahasiswa</span>
+                <span class="tooltip hidden sidebar">Mahasiswa</span>
+            </a>
+            <a href="{{ route('admin.management.dosen.index') }}"
+                class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.dosen.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                <i class="fas fa-user-tie"></i>
+                <span class="sidebar-full-item">Dosen Pembimbing</span>
+                <span class="tooltip hidden sidebar">Dosen Pembimbing</span>
 
+                <a href="{{ route('admin.jadwal.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.jadwal.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="sidebar-full-item">Jadwal Sidang</span>
+                    <span class="tooltip hidden sidebar">Jadwal Sidang</span>
 
-                <a href="{{ route('admin.management.dosen.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.dosen.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-user-tie"></i>
-                    <span class="sidebar-full-item">Dosen Pembimbing</span>
-                    <span class="tooltip hidden sidebar">Dosen Pembimbing</span>
+                    <a href="{{ route('admin.proposal.index') }}"
+                        class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.proposal.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                        <i class="fas fa-file-alt"></i>
+                        <span class="sidebar-full-item">Proposal</span>
+                        <span class="tooltip hidden sidebar">Proposal</span>
 
-                    <a href="{{ route('admin.jadwal.index') }}"
-                        class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.jadwal.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span class="sidebar-full-item">Jadwal Sidang</span>
-                        <span class="tooltip hidden sidebar">Jadwal Sidang</span>
+                        <a href="{{ route('users.index') }}"
+                            class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+                            <i class="fas fa-cogs"></i>
+                            <span class="sidebar-full-item">Pengaturan</span>
+                            <span class="tooltip hidden sidebar">Pengaturan</span>
+                            <div class="border-t border-gray-200 my-2"></div>
 
-                        <a href="{{ route('admin.proposal.index') }}"
-                            class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.proposal.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                            <i class="fas fa-file-alt"></i>
-                            <span class="sidebar-full-item">Proposal</span>
-                            <span class="tooltip hidden sidebar">Proposal</span>
-
-                            <a href="{{ route('users.index') }}"
+                            <a href="{{ route('admin.dashboard') }}"
                                 class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                                <i class="fas fa-cogs"></i>
-                                <span class="sidebar-full-item">Pengaturan</span>
-                                <span class="tooltip hidden sidebar">Pengaturan</span>
-                                <div class="border-t border-gray-200 my-2"></div>
-
+                                <i class="fas fa-question-circle"></i>
+                                <span class="sidebar-full-item">Bantuan</span>
+                                <span class="tooltip hidden sidebar">Bantuan</span>
                                 <a href="{{ route('admin.dashboard') }}"
                                     class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span class="sidebar-full-item">Bantuan</span>
-                                    <span class="tooltip hidden sidebar">Bantuan</span>
+                                    <i class="fas fa-info-circle"></i>
+                                    <span class="sidebar-full-item">Tentang</span>
+                                    <span class="tooltip hidden sidebar">Tentang</span>
+                                    <div class="border-t border-gray-200 my-2"></div>
+                                    <a href="#" onclick="event.preventDefault(); openLogoutModal()"
+                                        class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-red-100 text-red-600">
+
+
+                                        <span class="tooltip hidden sidebar">Keluar</span>
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        style="display: none;">
+                                        @csrf
+                                    </form>
+                                @else
+                                    <span
+                                        class="uppercase text-xs font-semibold mb-2 text-gray-400 sidebar-full-item">Navigasi</span>
                                     <a href="{{ route('admin.dashboard') }}"
-                                        class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                                        <i class="fas fa-info-circle"></i>
-                                        <span class="sidebar-full-item">Tentang</span>
-                                        <span class="tooltip hidden sidebar">Tentang</span>
-                                        <div class="border-t border-gray-200 my-2"></div>
-                                        <a href="#" onclick="event.preventDefault(); openLogoutModal()"
-                                            class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-red-100 text-red-600">
-
-
-                                            <span class="tooltip hidden sidebar">Keluar</span>
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            style="display: none;">
-                                            @csrf
-                                        </form>
-                                    @else
-                                        <span
-                                            class="uppercase text-xs font-semibold mb-2 text-gray-400 sidebar-full-item">Navigasi</span>
-                                        <a href="{{ route('admin.dashboard') }}"
-                                            class="flex items-center gap-3 px-4 py-2 rounded-full bg-green-600 text-white font-semibold">
-                                            <i class="fas fa-home"></i>
-                                            <span class="sidebar-full-item">Beranda</span>
-                                            <span class="tooltip hidden sidebar">Beranda</span>
-                                        </a>
+                                        class="flex items-center gap-3 px-4 py-2 rounded-full bg-green-600 text-white font-semibold">
+                                        <i class="fas fa-home"></i>
+                                        <span class="sidebar-full-item">Beranda</span>
+                                        <span class="tooltip hidden sidebar">Beranda</span>
+                                    </a>
         @endif
         @if (auth()->user()->role == 'dosen')
             <a href="{{ route('users.index') }}"
