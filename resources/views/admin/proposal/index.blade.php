@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layouts.app')
 
 @section('title', 'Manajemen Proposal')
 
@@ -69,12 +69,39 @@
                             <td class="px-2 md:px-4 py-2 border flex flex-col md:flex-row gap-1 md:gap-2 items-center">
                                 <a href="{{ route('admin.proposal.edit', $p->id) }}"
                                     class="px-3 py-1 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition-colors">Edit</a>
-                                <form action="{{ route('admin.proposal.destroy', $p->id) }}" method="POST"
-                                    onsubmit="return confirm('Yakin ingin menghapus proposal ini?')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">Hapus</button>
-                                </form>
+                                <!-- Button Hapus -->
+<form id="delete-form-{{ $p->id }}" action="{{ route('admin.proposal.destroy', $p->id) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button type="button"
+        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-all duration-300"
+        onclick="confirmDelete({{ $p->id }})">
+        Hapus
+    </button>
+</form>
+
+<!-- SweetAlert2 Script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "Proposal ini akan dihapus secara permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e3342f',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        })
+    }
+</script>
+
                             </td>
                         </tr>
                     @empty

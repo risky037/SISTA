@@ -63,13 +63,41 @@
                             <td class="px-2 md:px-4 py-2 border flex flex-col md:flex-row gap-1 md:gap-2 items-center">
                                 <a href="{{ route('admin.management.mahasiswa.edit', $m->id) }}"
                                     class="px-3 py-1 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition-colors">Edit</a>
-                                <form action="{{ route('admin.management.mahasiswa.destroy', $m->id) }}" method="POST"
-                                    onsubmit="return confirm('Yakin ingin menghapus data mahasiswa ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">Hapus</button>
-                                </form>
+                                <form action="{{ route('admin.management.mahasiswa.destroy', $m->id) }}" method="POST" class="delete-form">
+    @csrf
+    @method('DELETE')
+    <button type="submit"
+        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+        Hapus
+    </button>
+</form>
+
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Ambil semua form dengan class delete-form
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // hentikan submit dulu
+
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: "Data mahasiswa ini akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // jalankan submit jika user pilih "Ya"
+                }
+            });
+        });
+    });
+</script>
+
                             </td>
                         </tr>
                     @empty
