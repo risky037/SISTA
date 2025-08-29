@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\DosenManagementController;
 use App\Http\Controllers\Admin\ProposalManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BimbinganController;
+use App\Http\Controllers\Dosen\BimbinganDosenController;
+use App\Http\Controllers\Dosen\ProposalDosenController;
 use App\Http\Controllers\LaporanProgressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -34,6 +36,13 @@ Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasi
 
 Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->group(function () {
     Route::get('/dashboard', fn() => view('dosen.dashboard'))->name('dashboard');
+
+    Route::get('bimbingan', [BimbinganDosenController::class, 'index'])->name('bimbingan.index');
+    Route::post('bimbingan/{id}/status', [BimbinganDosenController::class, 'updateStatus'])->name('bimbingan.updateStatus');
+    Route::post('bimbingan/{id}/catatan', [BimbinganDosenController::class, 'addCatatan'])->name('bimbingan.addCatatan');
+
+    Route::resource('proposals', ProposalDosenController::class)->only(['index','show'])->names('proposals');
+    Route::post('proposals/{id}/status', [ProposalDosenController::class, 'updateStatus'])->name('proposals.updateStatus');
 });
 
 Route::middleware('auth')->group(function () {

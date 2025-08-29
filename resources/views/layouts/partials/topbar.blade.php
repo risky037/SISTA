@@ -9,38 +9,46 @@
         <button id="profile-menu-button"
             class="flex items-center gap-3 text-white text-sm font-semibold focus:outline-none">
             <i class="fas fa-user text-lg"></i>
-            <span>310700012210123</span>
+            <span>
+                @auth
+                    @if (Auth::user()->role === 'admin' || Auth::user()->role === 'dosen')
+                        {{ Auth::user()->name }}
+                    @elseif (Auth::user()->role === 'mahasiswa')
+                        {{ Auth::user()->NIM }}
+                    @endif
+                @endauth
+            </span>
             <i class="fas fa-chevron-down text-xs"></i>
         </button>
 
         <div id="profile-menu"
-            class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 hidden z-20 fade-in">
+            class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-20 fade-in">
 
             <!-- Profil -->
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="fas fa-user-circle mr-2"></i> Profil
             </a>
 
             <!-- Notifikasi -->
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="fas fa-bell mr-2"></i> Notifikasi
             </a>
 
-            <!-- Dark Mode Toggle -->
+            {{-- <!-- Dark Mode Toggle -->
             <button id="darkModeBtn" onclick="toggleDarkMode()" 
-                class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                 <i id="darkModeIcon" class="fas fa-moon mr-2"></i> 
                 <span id="darkModeText">Mode Gelap</span>
-            </button>
+            </button> --}}
 
-            <div class="border-t border-gray-100 dark:border-gray-700 my-1"></div>
+            <div class="border-t border-gray-100 my-1"></div>
 
             <!-- Logout -->
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
             <a href="#" onclick="event.preventDefault(); openLogoutModal();"
-                class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="fas fa-sign-out-alt mr-2"></i> Logout
             </a>
         </div>

@@ -52,25 +52,25 @@
                     <span>Pengaturan</span>
                 </a>
             @elseif (auth()->user()->role == 'dosen')
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+                <a href="{{ route('dosen.bimbingan.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.bimbingan.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-user-graduate"></i>
-                    <span>Daftar Mahasiswa Bimbingan</span>
+                    <span>Mahasiswa Bimbingan</span>
                 </a>
                 <a href="#"
                     class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                     <i class="fas fa-calendar-check"></i>
                     <span>Jadwal Bimbingan</span>
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+                <a href="{{ route('dosen.proposals.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.proposals.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-tasks"></i>
                     <span>Review Proposal/Skripsi</span>
                 </a>
                 <a href="#"
                     class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                     <i class="fas fa-chart-line"></i>
-                    <span>Laporan Progres Mahasiswa</span>
+                    <span>Laporan Progres</span>
                 </a>
             @elseif (auth()->user()->role == 'mahasiswa')
                 <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100">
