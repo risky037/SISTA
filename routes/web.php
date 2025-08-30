@@ -23,9 +23,9 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middlew
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
-    Route::resource('management/admin', AdminManagementController::class)->names('management.admin');
-    Route::resource('management/mahasiswa', MahasiswaManagementController::class)->names('management.mahasiswa');
-    Route::resource('management/dosen', DosenManagementController::class)->names('management.dosen');
+    Route::resource('users/admin', AdminManagementController::class)->names('management.admin');
+    Route::resource('users/mahasiswa', MahasiswaManagementController::class)->names('management.mahasiswa');
+    Route::resource('users/dosen', DosenManagementController::class)->names('management.dosen');
     Route::resource('jadwal', JadwalSidangManagementController::class)->names('jadwal');
     Route::resource('proposal', ProposalManagementController::class)->names('proposal');
 });
