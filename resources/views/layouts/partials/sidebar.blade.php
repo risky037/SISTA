@@ -4,6 +4,10 @@
         <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-200">
             <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png" class="w-10 h-10" alt="Logo SIA" />
             <span class="text-lg font-normal text-gray-900">Sistem Informasi Tugas Akhir & Skripsi</span>
+            <button onclick="toggleSidebar()" id="sidebar-toggle-button"
+                class="lg:hidden p-2 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500 ml-auto">
+                <i class="fas fa-arrow-left"></i>
+            </button>
         </div>
         <nav class="flex flex-col px-5 py-6 space-y-1 text-sm text-gray-600 overflow-y-auto">
             <span class="uppercase text-xs font-semibold mb-2 text-gray-400">Navigasi</span>
