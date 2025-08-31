@@ -6,14 +6,11 @@ use App\Http\Controllers\Admin\MahasiswaManagementController;
 use App\Http\Controllers\Admin\DosenManagementController;
 use App\Http\Controllers\Admin\ProposalManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\BimbinganController;
 use App\Http\Controllers\Dosen\BimbinganDosenController;
+use App\Http\Controllers\Dosen\LaporanProgressDosenController;
 use App\Http\Controllers\Dosen\ProposalDosenController;
-use App\Http\Controllers\LaporanProgressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProposalController;
-use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,6 +41,8 @@ Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->grou
 
     Route::resource('proposals', ProposalDosenController::class)->only(['index','show'])->names('proposals');
     Route::post('proposals/{id}/status', [ProposalDosenController::class, 'updateStatus'])->name('proposals.updateStatus');
+
+    Route::resource('laporan-progress', LaporanProgressDosenController::class)->only(['index', 'show', 'update']);
 });
 
 Route::middleware('auth')->group(function () {
@@ -59,11 +58,11 @@ require __DIR__ . '/auth.php';
 
 
 // GAK PENTING
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('users', UserController::class);
-});
+// Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+//     Route::resource('users', UserController::class);
+// });
 
-Route::resource('proposals', ProposalController::class);
-Route::resource('bimbingans', BimbinganController::class);
-Route::resource('laporan-progress', LaporanProgressController::class);
+// Route::resource('proposals', ProposalController::class);
+// Route::resource('bimbingans', BimbinganController::class);
+// Route::resource('laporan-progress', LaporanProgressController::class);
 

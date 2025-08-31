@@ -71,8 +71,8 @@
                     <i class="fas fa-tasks"></i>
                     <span>Review Proposal/Skripsi</span>
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+                <a href="{{ route('dosen.laporan-progress.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.laporan-progress.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-chart-line"></i>
                     <span>Laporan Progres</span>
                 </a>

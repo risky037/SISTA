@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Bimbingan Mahasiswa')
+@section('title', 'Jadwal Bimbingan')
 
 @section('content')
     <div class="flex justify-between items-center mb-4">
@@ -12,7 +12,7 @@
             <ol class="list-reset flex">
                 <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">Daftar Bimbingan</li>
+                <li class="text-gray-700">Jadwal Bimbingan</li>
             </ol>
         </nav>
     </div>

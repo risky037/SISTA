@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LaporanProgress extends Model
 {
-     use HasFactory;
+    use HasFactory;
 
     protected $fillable = [
         'mahasiswa_id',
@@ -22,4 +22,10 @@ class LaporanProgress extends Model
     {
         return $this->belongsTo(User::class, 'mahasiswa_id');
     }
+
+    public function proposal()
+    {
+        return $this->hasOne(Proposal::class, 'mahasiswa_id', 'mahasiswa_id');
+    }
+
 }
