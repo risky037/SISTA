@@ -55,32 +55,34 @@
     </div>
 </header>
 
-<script>
-    function toggleDarkMode() {
-        const html = document.documentElement;
-        const icon = document.getElementById('darkModeIcon');
-        const text = document.getElementById('darkModeText');
+@push('scripts')
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('darkModeIcon');
+            const text = document.getElementById('darkModeText');
 
-        html.classList.toggle('dark');
+            html.classList.toggle('dark');
 
-        if (html.classList.contains('dark')) {
-            localStorage.setItem('theme', 'dark');
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-            text.textContent = 'Mode Terang';
-        } else {
-            localStorage.setItem('theme', 'light');
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
-            text.textContent = 'Mode Gelap';
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                text.textContent = 'Mode Terang';
+            } else {
+                localStorage.setItem('theme', 'light');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                text.textContent = 'Mode Gelap';
+            }
         }
-    }
 
-    // Saat halaman dimuat, cek localStorage
-    if (localStorage.getItem('theme') === 'dark') {
-        document.documentElement.classList.add('dark');
-        document.getElementById('darkModeIcon').classList.remove('fa-moon');
-        document.getElementById('darkModeIcon').classList.add('fa-sun');
-        document.getElementById('darkModeText').textContent = 'Mode Terang';
-    }
-</script>
+        // Saat halaman dimuat, cek localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.getElementById('darkModeIcon').classList.remove('fa-moon');
+            document.getElementById('darkModeIcon').classList.add('fa-sun');
+            document.getElementById('darkModeText').textContent = 'Mode Terang';
+        }
+    </script>
+@endpush

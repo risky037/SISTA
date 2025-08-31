@@ -36,6 +36,7 @@
             }
         }
     </style>
+    @stack('styles')
 </head>
 
 <body class="bg-gray-100 font-sans text-gray-900">
@@ -144,6 +145,7 @@
         });
     </script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @stack('scripts')
 </body>
 
 </html>

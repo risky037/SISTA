@@ -1,57 +1,83 @@
 @extends('layouts.app')
 
-@section('content')
-    <div class="p-6">
-        <h2 class="text-2xl font-bold mb-4">Detail Proposal</h2>
+@section('title', 'Detail Proposal')
 
-        {{-- Main card to display proposal details --}}
-        <div class="bg-white shadow rounded-lg p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Mahasiswa (Student) Name --}}
-                <div>
-                    <p class="text-gray-500 text-sm">Mahasiswa</p>
-                    <p class="font-semibold text-lg">{{ $proposal->mahasiswa->name }}</p>
-                </div>
-                {{-- Proposal Title --}}
-                <div>
-                    <p class="text-gray-500 text-sm">Judul</p>
-                    <p class="font-semibold text-lg">{{ $proposal->judul }}</p>
-                </div>
-                {{-- Proposal Description (takes full width on medium screens) --}}
-                <div class="md:col-span-2">
-                    <p class="text-gray-500 text-sm">Deskripsi</p>
-                    {{-- Displays description, or a dash if it's empty --}}
-                    <p class="font-semibold text-lg">{{ $proposal->deskripsi ?? '-' }}</p>
-                </div>
-                {{-- Proposal File Link --}}
-                <div>
-                    <p class="text-gray-500 text-sm">File Proposal</p>
-                    {{-- Links to the file stored in the 'storage' folder --}}
-                    <a href="{{ asset('storage/' . $proposal->file_proposal) }}" target="_blank"
-                        class="text-blue-600 hover:text-blue-800 underline font-semibold transition duration-200 ease-in-out">
-                        Lihat File Proposal
-                    </a>
-                </div>
-                {{-- Proposal Status --}}
-                <div>
-                    <p class="text-gray-500 text-sm">Status</p>
-                    {{-- Converts the status to a capitalized string (e.g., 'pending' becomes 'Pending') --}}
-                    <p class="font-semibold text-lg">{{ ucfirst($proposal->status) }}</p>
-                </div>
-                {{-- Dosen's Notes --}}
-                <div class="md:col-span-2">
-                    <p class="text-gray-500 text-sm">Catatan Dosen</p>
-                    {{-- Displays notes, or a dash if they're empty --}}
-                    <p class="font-semibold text-lg">{{ $proposal->catatan_dosen ?? '-' }}</p>
-                </div>
+@section('content')
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
+            <p class="text-gray-500 text-sm">Informasi lengkap mengenai proposal mahasiswa bimbingan Anda.</p>
+        </div>
+        <nav class="text-sm text-gray-500">
+            <ol class="list-reset flex">
+                <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li><a href="{{ route('dosen.proposals.index') }}" class="hover:text-green-600">Proposal</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li class="text-gray-700">Detail</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="p-6 bg-white rounded-lg shadow-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {{-- Nama Mahasiswa --}}
+            <div>
+                <p class="text-gray-500 text-sm">Mahasiswa</p>
+                <p class="text-gray-800 font-medium">{{ $proposal->mahasiswa->name }}</p>
             </div>
-            {{-- Back button to return to the list --}}
-            <div class="mt-6">
-                <a href="{{ route('dosen.proposals.index') }}"
-                    class="inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition duration-200 ease-in-out">
-                    Kembali ke Daftar
+
+            {{-- Judul Proposal --}}
+            <div>
+                <p class="text-gray-500 text-sm">Judul</p>
+                <p class="text-gray-800 font-medium">{{ $proposal->judul }}</p>
+            </div>
+
+            {{-- Deskripsi --}}
+            <div class="md:col-span-2">
+                <p class="text-gray-500 text-sm">Deskripsi</p>
+                <p class="text-gray-800 font-medium">{{ $proposal->deskripsi ?? '-' }}</p>
+            </div>
+
+            {{-- File Proposal --}}
+            <div>
+                <p class="text-gray-500 text-sm">File Proposal</p>
+                <a href="{{ asset('storage/' . $proposal->file_proposal) }}" target="_blank"
+                    class="text-blue-600 hover:text-blue-800 underline text-sm font-medium">
+                    Lihat File Proposal
                 </a>
             </div>
+
+            {{-- Status Proposal --}}
+            <div>
+                <p class="text-gray-500 text-sm">Status</p>
+                @php
+                    $statusClass = match ($proposal->status) {
+                        'pending' => 'bg-yellow-100 text-yellow-800',
+                        'revisi' => 'bg-orange-100 text-orange-800',
+                        'diterima' => 'bg-green-100 text-green-800',
+                        'ditolak' => 'bg-red-100 text-red-800',
+                        default => 'bg-gray-100 text-gray-800',
+                    };
+                @endphp
+                <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full {{ $statusClass }}">
+                    {{ ucfirst($proposal->status) }}
+                </span>
+            </div>
+
+            {{-- Catatan Dosen --}}
+            <div class="md:col-span-2">
+                <p class="text-gray-500 text-sm">Catatan Dosen</p>
+                <p class="text-gray-800 font-medium">{{ $proposal->catatan_dosen ?? '-' }}</p>
+            </div>
+        </div>
+
+        {{-- Tombol Kembali --}}
+        <div class="mt-6">
+            <a href="{{ route('dosen.proposals.index') }}"
+                class="inline-block bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
+                ← Kembali ke Daftar
+            </a>
         </div>
     </div>
 @endsection
