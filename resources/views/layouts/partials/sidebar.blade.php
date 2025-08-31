@@ -61,8 +61,8 @@
                     <i class="fas fa-user-graduate"></i>
                     <span>Mahasiswa Bimbingan</span>
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+                <a href="{{ route('dosen.jadwalbimbingan.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.jadwalbimbingan.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-calendar-check"></i>
                     <span>Jadwal Bimbingan</span>
                 </a>
@@ -109,13 +109,11 @@
                 </a>
             @endif
             <div class="border-t border-gray-200 my-2"></div>
-            <a href="#"
-                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                 <i class="fas fa-question-circle"></i>
                 <span>Bantuan</span>
             </a>
-            <a href="#"
-                class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
                 <i class="fas fa-info-circle"></i>
                 <span>Tentang</span>
             </a>

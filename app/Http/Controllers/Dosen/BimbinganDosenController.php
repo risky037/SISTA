@@ -43,4 +43,14 @@ class BimbinganDosenController extends Controller
 
         return redirect()->route('dosen.bimbingan.index')->with('success', 'Catatan berhasil ditambahkan');
     }
+    public function indexJadwal()
+    {
+        $bimbingans = Bimbingan::with('mahasiswa')
+            ->where('dosen_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return view('dosen.jadwal.index', compact('bimbingans'));
+    }
+
 }
