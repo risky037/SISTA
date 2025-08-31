@@ -33,7 +33,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($bimbingans as $bimbingan)
+                @forelse ($bimbingans as $bimbingan)
                     <tr>
                         <td class="px-6 py-4">
                             {{ \Carbon\Carbon::parse($bimbingan->tanggal_bimbingan)->translatedFormat('l, d F Y') }}
@@ -46,7 +46,11 @@
                             {{ $bimbingan->mahasiswa->name }}
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="3" class="text-center p-4 text-gray-500">Belum ada Jadwal Bimbingan.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

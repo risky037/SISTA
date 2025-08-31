@@ -36,7 +36,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($bimbingans as $bimbingan)
+                @forelse ($bimbingans as $bimbingan)
                     <tr>
                         <td class="px-6 py-4">
                             {{ $bimbingan->mahasiswa->name }}
@@ -116,7 +116,11 @@
                             </div>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center p-4 text-gray-500">Belum ada Mahasiswa Bimbingan.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
