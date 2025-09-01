@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\JadwalSidangManagementController;
 use App\Http\Controllers\Admin\MahasiswaManagementController;
 use App\Http\Controllers\Admin\DosenManagementController;
 use App\Http\Controllers\Admin\ProposalManagementController;
+use App\Http\Controllers\Admin\TemplateManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dosen\BimbinganDosenController;
 use App\Http\Controllers\Dosen\LaporanProgressDosenController;
@@ -26,6 +27,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('users/dosen', DosenManagementController::class)->names('management.dosen');
     Route::resource('jadwal', JadwalSidangManagementController::class)->names('jadwal');
     Route::resource('proposal', ProposalManagementController::class)->names('proposal');
+    Route::resource('templates', TemplateManagementController::class)->names('template');
 });
 
 Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasiswa.')->group(function () {
@@ -42,7 +44,7 @@ Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->grou
     Route::post('bimbingan/{id}/status', [BimbinganDosenController::class, 'updateStatus'])->name('bimbingan.updateStatus');
     Route::post('bimbingan/{id}/catatan', [BimbinganDosenController::class, 'addCatatan'])->name('bimbingan.addCatatan');
 
-    Route::resource('proposals', ProposalDosenController::class)->only(['index','show'])->names('proposals');
+    Route::resource('proposals', ProposalDosenController::class)->only(['index', 'show'])->names('proposals');
     Route::post('proposals/{id}/status', [ProposalDosenController::class, 'updateStatus'])->name('proposals.updateStatus');
 
     Route::resource('laporan-progress', LaporanProgressDosenController::class)->only(['index', 'show', 'update']);
