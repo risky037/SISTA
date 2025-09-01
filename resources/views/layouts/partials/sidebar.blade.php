@@ -32,7 +32,7 @@
                 </a>
                 <a href="{{ route('admin.management.mahasiswa.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.mahasiswa.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-user-plus"></i>
+                    <i class="fas fa-user-graduate"></i>
                     <span>Mahasiswa</span>
                 </a>
                 <a href="{{ route('admin.management.dosen.index') }}"
@@ -50,10 +50,10 @@
                     <i class="fas fa-file-alt"></i>
                     <span>Proposal</span>
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">
-                    <i class="fas fa-cogs"></i>
-                    <span>Pengaturan</span>
+                <a href="{{ route('admin.template.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.template.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                    <i class="fas fa-file-word"></i>
+                    <span>Template Skripsi</span>
                 </a>
             @elseif (auth()->user()->role == 'dosen')
                 <a href="{{ route('dosen.bimbingan.index') }}"
@@ -77,7 +77,8 @@
                     <span>Laporan Progres</span>
                 </a>
             @elseif (auth()->user()->role == 'mahasiswa')
-                <a href="{{ route('mahasiswa.jadwal-seminar') }}" class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('mahasiswa.jadwal-seminar') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                <a href="{{ route('mahasiswa.jadwal-seminar') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('mahasiswa.jadwal-seminar') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-calendar-check"></i>
                     <span>Jadwal Seminar & Sidang</span>
                 </a>
