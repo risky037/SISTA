@@ -25,6 +25,6 @@ class JadwalSeminarMahasiswaController extends Controller
             ->orderBy('waktu_mulai')
             ->get();
 
-        return view('mahasiswa.jadwal_seminar', compact('bimbingans'));
+        return view('mahasiswa.jadwal_seminar.index', compact('bimbingans'));
     }
 }

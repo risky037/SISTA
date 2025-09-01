@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dosen\BimbinganDosenController;
 use App\Http\Controllers\Dosen\LaporanProgressDosenController;
 use App\Http\Controllers\Dosen\ProposalDosenController;
+use App\Http\Controllers\Mahasiswa\JadwalSeminarMahasiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 
@@ -29,6 +30,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
 
 Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasiswa.')->group(function () {
     Route::get('/dashboard', fn() => view('mahasiswa.dashboard'))->name('dashboard');
+
+    Route::get('jadwal', [JadwalSeminarMahasiswaController::class, 'index'])->name('jadwal-seminar');
 });
 
 Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->group(function () {
