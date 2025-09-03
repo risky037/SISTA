@@ -2,31 +2,28 @@
 
 @section('content')
 <div class="container">
-    <h2>Pengajuan Proposal Skripsi</h2>
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
+    <h2>Ajukan Proposal Baru</h2>
 
-    <div class="card">
-        <div class="card-header">Formulir Pengajuan</div>
-        <div class="card-body">
-            <form action="{{ route('mahasiswa.proposal.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-3">
-                    <label for="judul_proposal" class="form-label">Judul Proposal</label>
-                    <input type="text" class="form-control" id="judul_proposal" name="judul_proposal" required>
-                </div>
-                <div class="mb-3">
-                    <label for="deskripsi_proposal" class="form-label">Deskripsi Singkat</label>
-                    <textarea class="form-control" id="deskripsi_proposal" name="deskripsi_proposal" rows="4" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="file_proposal" class="form-label">Unggah Berkas Proposal (PDF/DOCX)</label>
-                    <input type="file" class="form-control" id="file_proposal" name="file_proposal" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Ajukan Proposal</button>
-            </form>
+    <form action="{{ route('mahasiswa.proposals.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+
+        <div class="mb-3">
+            <label>Judul</label>
+            <input type="text" name="judul" class="form-control" required>
         </div>
-    </div>
+
+        <div class="mb-3">
+            <label>Deskripsi</label>
+            <textarea name="deskripsi" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>File Proposal (PDF)</label>
+            <input type="file" name="file_proposal" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Simpan</button>
+        <a href="{{ route('mahasiswa.proposals.index') }}" class="btn btn-secondary">Kembali</a>
+    </form>
 </div>
 @endsection
