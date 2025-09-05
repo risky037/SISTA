@@ -13,7 +13,7 @@ class ProposalMahasiswaController extends Controller
     public function index()
     {
         $proposals = Proposal::where('mahasiswa_id', Auth::id())->latest()->get();
-        return view('mahasiswa.Proposal.index', compact('Proposals'));
+        return view('mahasiswa.Proposal.index', compact('proposals'));
     }
 
     public function create()
@@ -30,7 +30,9 @@ class ProposalMahasiswaController extends Controller
         ]);
 
         $fileName = time() . '-' . $request->file('file_proposal')->getClientOriginalName();
-        $request->file('file_Proposal')->storeAs('public/proposals', $fileName);
+
+        // Simpan file ke storage/app/public/proposals
+        $request->file('file_proposal')->storeAs('proposals', $fileName, 'public');
 
         Proposal::create([
             'mahasiswa_id' => Auth::id(),
@@ -40,19 +42,19 @@ class ProposalMahasiswaController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('mahasiswa.Proposal.index')->with('success', 'Proposal berhasil diajukan!');
+        return redirect()->route('mahasiswa.proposals.index')->with('success', 'Proposal berhasil diajukan!');
     }
 
     public function show($id)
     {
         $proposal = Proposal::where('id', $id)->where('mahasiswa_id', Auth::id())->firstOrFail();
-        return view('mahasiswa.Proposal.show', compact('Proposal'));
+        return view('mahasiswa.Proposal.show', compact('proposal'));
     }
 
     public function edit($id)
     {
         $proposal = Proposal::where('id', $id)->where('mahasiswa_id', Auth::id())->firstOrFail();
-        return view('mahasiswa.Proposal.edit', compact('Proposal'));
+        return view('mahasiswa.Proposal.edit', compact('proposal'));
     }
 
     public function update(Request $request, $id)
@@ -69,29 +71,31 @@ class ProposalMahasiswaController extends Controller
         $proposal->deskripsi = $request->deskripsi;
 
         if ($request->hasFile('file_proposal')) {
-            if ($proposal->file_proposal && Storage::exists('public/proposals/' . $proposal->file_proposal)) {
-                Storage::delete('public/proposals/' . $proposal->file_proposal);
+            // Hapus file lama jika ada
+            if ($proposal->file_proposal && Storage::disk('public')->exists('proposals/' . $proposal->file_proposal)) {
+                Storage::disk('public')->delete('proposals/' . $proposal->file_proposal);
             }
+
             $fileName = time() . '-' . $request->file('file_proposal')->getClientOriginalName();
-            $request->file('file_proposal')->storeAs('public/proposals', $fileName);
+            $request->file('file_proposal')->storeAs('proposals', $fileName, 'public');
             $proposal->file_proposal = $fileName;
         }
 
         $proposal->save();
 
-        return redirect()->route('mahasiswa.Proposal.index')->with('success', 'Proposal berhasil diperbarui!');
+        return redirect()->route('mahasiswa.proposals.index')->with('success', 'Proposal berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
         $proposal = Proposal::where('id', $id)->where('mahasiswa_id', Auth::id())->firstOrFail();
 
-        if ($proposal->file_proposal && Storage::exists('public/Proposals/' . $Proposal->file_Proposal)) {
-            Storage::delete('public/Proposals/' . $proposal->file_proposal);
+        if ($proposal->file_proposal && Storage::disk('public')->exists('proposals/' . $proposal->file_proposal)) {
+            Storage::disk('public')->delete('proposals/' . $proposal->file_proposal);
         }
 
         $proposal->delete();
 
-        return redirect()->route('mahasiswa.Proposal.index')->with('success', 'Proposal berhasil dihapus!');
+        return redirect()->route('mahasiswa.proposals.index')->with('success', 'Proposal berhasil dihapus!');
     }
 }

@@ -96,7 +96,8 @@
                             Catatan</a>
                     </div>
                 </div>
-                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100">
+                <a href="{{ route('mahasiswa.proposals.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('mahasiswa.proposals.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-file-alt"></i>
                     <span>Proposal & Skripsi</span>
                 </a>
