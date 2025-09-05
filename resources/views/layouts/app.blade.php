@@ -69,14 +69,6 @@
     </div>
 
     <script>
-        function toggleSubmenu() {
-            const submenu = document.getElementById("submenu-progres");
-            const icon = document.getElementById("icon-progres");
-            submenu.classList.toggle("hidden");
-            icon.classList.toggle("fa-chevron-down");
-            icon.classList.toggle("fa-chevron-up");
-        }
-
         function openLogoutModal() {
             const modal = document.getElementById("logoutModal");
             modal.classList.remove("hidden");

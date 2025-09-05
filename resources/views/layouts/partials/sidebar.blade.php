@@ -25,21 +25,32 @@
                 <span>Beranda</span>
             </a>
             @if (auth()->user()->role == 'admin')
-                <a href="{{ route('admin.management.admin.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.admin.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Admin</span>
-                </a>
-                <a href="{{ route('admin.management.mahasiswa.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.mahasiswa.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Mahasiswa</span>
-                </a>
-                <a href="{{ route('admin.management.dosen.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.management.dosen.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-user-tie"></i>
-                    <span>Dosen Pembimbing</span>
-                </a>
+                <div x-data="{ open: {{ request()->routeIs('admin.management.*') ? 'true' : 'false' }} }" class="space-y-1">
+                    <button type="button" @click="open = !open"
+                        class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
+                        <i class="fas fa-users"></i>
+                        <span>Users</span>
+                        <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
+                            :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    <div x-show="open" x-collapse.duration.300ms class="space-y-1">
+                        <a href="{{ route('admin.management.admin.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.admin.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Admin</span>
+                        </a>
+                        <a href="{{ route('admin.management.mahasiswa.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.mahasiswa.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>Mahasiswa</span>
+                        </a>
+                        <a href="{{ route('admin.management.dosen.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.dosen.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Dosen Pembimbing</span>
+                        </a>
+                    </div>
+                </div>
                 <a href="{{ route('admin.jadwal.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.jadwal.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-calendar-alt"></i>
@@ -82,18 +93,22 @@
                     <i class="fas fa-calendar-check"></i>
                     <span>Jadwal Seminar & Sidang</span>
                 </a>
-                <div class="flex flex-col w-full">
-                    <button id="btn-progres" onclick="toggleSubmenu()"
-                        class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-100 justify-between w-full">
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button type="button" @click="open = !open"
+                        class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 hover:bg-gray-100 text-gray-600">
                         <span class="flex items-center gap-3"><i class="fas fa-tasks"></i> Progres Tugas Akhir</span>
-                        <i class="fas fa-chevron-down text-gray-400" id="icon-progres"></i>
+                        <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
+                            :class="{ 'rotate-180': open }"></i>
                     </button>
-                    <div id="submenu-progres" class="hidden flex-col pl-12 mt-1 space-y-1">
-                        <a href="#"
-                            class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100">Laporan Bab</a>
-                        <a href="#"
-                            class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100">Revisi &
-                            Catatan</a>
+                    <div x-show="open" x-collapse.duration.300ms class="space-y-1">
+                        <a href="#" class="flex items-center gap-3 px-8 py-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Laporan Bab</span>
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-8 py-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-pencil-alt"></i>
+                            <span>Revisi Catatan</span>
+                        </a>
                     </div>
                 </div>
                 <a href="{{ route('mahasiswa.proposals.index') }}"
