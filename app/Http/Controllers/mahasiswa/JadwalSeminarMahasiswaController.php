@@ -16,8 +16,6 @@ class JadwalSeminarMahasiswaController extends Controller
      */
     public function index()
     {
-        // Mengambil data bimbingan yang telah disetujui untuk mahasiswa yang sedang login.
-        // Relasi 'dosen' harus sudah ada di model Bimbingan.
         $bimbingans = Bimbingan::with('dosen')
             ->where('mahasiswa_id', Auth::id())
             ->where('status', 'approved')

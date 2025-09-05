@@ -1,26 +1,69 @@
 @extends('layouts.app')
 
+@section('title', 'Detail Proposal')
+
 @section('content')
-<div class="container">
-    <h2>Detail Proposal</h2>
-
-    <div class="mb-3">
-        <strong>Judul:</strong> {{ $proposal->judul }}
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
+            <p class="text-gray-500 text-sm">Halaman untuk melihat detail proposal skripsi Anda.</p>
+        </div>
+        <nav class="text-sm text-gray-500">
+            <ol class="list-reset flex">
+                <li><a href="{{ route('mahasiswa.dashboard') }}" class="hover:text-green-600">Home</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li><a href="{{ route('mahasiswa.proposals.index') }}" class="hover:text-green-600">Daftar Proposal</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li class="text-gray-700">Detail</li>
+            </ol>
+        </nav>
     </div>
 
-    <div class="mb-3">
-        <strong>Deskripsi:</strong> {{ $proposal->deskripsi }}
-    </div>
+    <div class="p-6 bg-white rounded-lg shadow-md">
+        <div class="space-y-4">
+            <div>
+                <strong class="block text-sm font-medium text-gray-700">Judul:</strong>
+                <p class="mt-1 text-gray-900">{{ $proposal->judul }}</p>
+            </div>
 
-    <div class="mb-3">
-        <strong>File Proposal:</strong>
-        <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank">Download</a>
-    </div>
+            <div>
+                <strong class="block text-sm font-medium text-gray-700">Deskripsi:</strong>
+                <p class="mt-1 text-gray-900">{{ $proposal->deskripsi }}</p>
+            </div>
 
-    <div class="mb-3">
-        <strong>Status:</strong> {{ ucfirst($proposal->status) }}
-    </div>
+            <div>
+                <strong class="block text-sm font-medium text-gray-700">File Proposal:</strong>
+                <p class="mt-1 text-gray-900">
+                    <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
+                        class="text-blue-600 hover:underline">
+                        Lihat/Download File
+                    </a>
+                </p>
+            </div>
 
-    <a href="{{ route('mahasiswa.proposals.index') }}" class="btn btn-secondary">Kembali</a>
-</div>
+            <div>
+                <strong class="block text-sm font-medium text-gray-700">Status:</strong>
+                @php
+                    $statusClass = match ($proposal->status) {
+                        'pending' => 'bg-yellow-100 text-yellow-800',
+                        'approved' => 'bg-green-100 text-green-800',
+                        'rejected' => 'bg-red-100 text-red-800',
+                        default => 'bg-gray-100 text-gray-800',
+                    };
+                @endphp
+                <p class="mt-1">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
+                        {{ ucfirst($proposal->status) }}
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <a href="{{ route('mahasiswa.proposals.index') }}"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                Kembali
+            </a>
+        </div>
+    </div>
 @endsection

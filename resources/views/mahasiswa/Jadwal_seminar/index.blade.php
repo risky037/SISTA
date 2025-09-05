@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center mb-4">
         <div>
             <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
-            <p class="text-gray-500 text-sm">Halaman untuk melihat  jadwal seminar yang terdaftar pada Anda.</p>
+            <p class="text-gray-500 text-sm">Halaman untuk melihat jadwal seminar yang terdaftar pada Anda.</p>
         </div>
         <nav class="text-sm text-gray-500">
             <ol class="list-reset flex">

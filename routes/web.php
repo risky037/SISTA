@@ -11,6 +11,7 @@ use App\Http\Controllers\Dosen\BimbinganDosenController;
 use App\Http\Controllers\Dosen\LaporanProgressDosenController;
 use App\Http\Controllers\Dosen\ProposalDosenController;
 use App\Http\Controllers\Mahasiswa\JadwalSeminarMahasiswaController;
+use App\Http\Controllers\Mahasiswa\ProposalMahasiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 
@@ -33,7 +34,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
 Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasiswa.')->group(function () {
     Route::get('/dashboard', fn() => view('mahasiswa.dashboard'))->name('dashboard');
 
-    Route::get('jadwal', [JadwalSeminarMahasiswaController::class, 'index'])->name('jadwal-seminar');
+    Route::get('jadwal-seminar', [JadwalSeminarMahasiswaController::class, 'index'])->name('jadwal-seminar');
+    Route::resource('proposals', ProposalMahasiswaController::class);
 });
 
 Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->group(function () {
@@ -57,17 +59,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-
-
-
-
-
-// GAK PENTING
-// Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-//     Route::resource('users', UserController::class);
-// });
-
-// Route::resource('proposals', ProposalController::class);
-// Route::resource('bimbingans', BimbinganController::class);
-// Route::resource('laporan-progress', LaporanProgressController::class);
-
