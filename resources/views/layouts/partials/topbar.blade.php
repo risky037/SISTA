@@ -14,7 +14,11 @@
                     @if (Auth::user()->role === 'admin' || Auth::user()->role === 'dosen')
                         {{ Auth::user()->name }}
                     @elseif (Auth::user()->role === 'mahasiswa')
-                        {{ Auth::user()->NIM }}
+                        @if (!empty(Auth::user()->NIM))
+                            {{ Auth::user()->NIM }}
+                        @else
+                            NIM belum diisi
+                        @endif
                     @endif
                 @endauth
             </span>
