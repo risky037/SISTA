@@ -24,7 +24,8 @@ class DokumenAkhirMahasiswaController extends Controller
      */
     public function create()
     {
-        return view('mahasiswa.dokumen.create');
+        $dokumen = DokumenAkhir::own()->latest()->get();
+        return view('mahasiswa.dokumen.create', compact('dokumen'));
     }
 
     /**
@@ -34,7 +35,7 @@ class DokumenAkhirMahasiswaController extends Controller
     {
         $request->validate([
             'judul' => 'required|string|max:255',
-            'file'  => 'required|mimes:pdf,doc,docx|max:5120' // max 5MB
+            'file' => 'required|mimes:pdf,doc,docx|max:5120' // max 5MB
         ]);
 
         // Simpan file ke storage/app/public/dokumen_akhir
@@ -42,11 +43,11 @@ class DokumenAkhirMahasiswaController extends Controller
 
         DokumenAkhir::create([
             'mahasiswa_id' => Auth::id(),
-            'judul'        => $request->judul,
-            'file'         => $path,
+            'judul' => $request->judul,
+            'file' => $path,
         ]);
 
-        return redirect()->route('mahasiswa.dokumen.index')
+        return redirect()->route('mahasiswa.dokumen-akhir.index')
             ->with('success', 'Dokumen berhasil diupload.');
     }
 

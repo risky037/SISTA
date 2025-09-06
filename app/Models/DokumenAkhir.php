@@ -16,7 +16,11 @@ class DokumenAkhir extends Model
         'mahasiswa_id',
         'judul',
         'file',
+        'tipe_dokumen',
+        'status',
+        'keterangan',
     ];
+
 
     /**
      * Relasi ke model User (mahasiswa).
