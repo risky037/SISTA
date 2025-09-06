@@ -101,6 +101,23 @@
             localStorage.setItem('sidebarCollapsed', isCollapsed);
         }
 
+        // Toggling Notif Sidebar
+        function toggleNotificationSidebar() {
+            const notifSidebar = document.getElementById('notification-sidebar');
+            notifSidebar.classList.toggle('translate-x-full');
+        }
+        document.addEventListener('click', (event) => {
+            const notifSidebar = document.getElementById('notification-sidebar');
+            const notifButton = document.getElementById(
+                'notif-button');
+
+            const isNotifSidebarOpen = !notifSidebar.classList.contains('translate-x-full');
+
+            if (isNotifSidebarOpen && !notifSidebar.contains(event.target) && !notifButton.contains(event.target)) {
+                notifSidebar.classList.add('translate-x-full');
+            }
+        });
+
         // Toggling User Dropdown
         document.addEventListener('DOMContentLoaded', () => {
             const profileMenuButton = document.getElementById('profile-menu-button');
