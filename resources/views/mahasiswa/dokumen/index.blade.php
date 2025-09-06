@@ -50,17 +50,23 @@
                                     class="text-blue-600 hover:underline">Lihat</a>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $d->created_at->format('d M Y') }}</td>
+                           
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                <form action="{{ route('mahasiswa.dokumen-akhir.destroy', $d->id) }}" method="POST"
-                                    class="inline"
-                                    onsubmit="return confirm('Yakin hapus dokumen ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 underline">
-                                        Hapus
-                                    </button>
-                                </form>
+                                <a href="{{ route('mahasiswa.dokumen-akhir.show', $d->id) }}"
+                                    class="text-blue-600 hover:text-blue-900 underline mr-2">Detail</a>
+                                @if ($d->status == 'pending' || $d->status == 'rejected')
+                                    <a href="{{ route('mahasiswa.dokumen-akhir.edit', $d->id) }}"
+                                        class="text-yellow-600 hover:text-yellow-900 underline mr-2">Edit</a>
+                                    <form action="{{ route('mahasiswa.dokumen-akhir.destroy', $d->id) }}" method="POST"
+                                        class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-900 underline"
+                                            onclick="return confirm('Yakin hapus dokumen ini?')">Hapus</button>
+                                    </form>
+                                @endif
                             </td>
+                               
                         </tr>
                     @empty
                         <tr>

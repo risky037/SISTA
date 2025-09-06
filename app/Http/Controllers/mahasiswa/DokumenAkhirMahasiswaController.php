@@ -20,7 +20,7 @@ class DokumenAkhirMahasiswaController extends Controller
     }
 
     /**
-     * Form untuk upload dokumen akhir (opsional, jika index sudah ada form upload, bisa dilewati).
+     * Form upload dokumen akhir.
      */
     public function create()
     {
@@ -29,16 +29,15 @@ class DokumenAkhirMahasiswaController extends Controller
     }
 
     /**
-     * Simpan dokumen akhir ke database dan storage.
+     * Simpan dokumen akhir ke database & storage.
      */
     public function store(Request $request)
     {
         $request->validate([
             'judul' => 'required|string|max:255',
-            'file' => 'required|mimes:pdf,doc,docx|max:5120' // max 5MB
+            'file' => 'required|mimes:pdf,doc,docx|max:5120', // max 5MB
         ]);
 
-        // Simpan file ke storage/app/public/dokumen_akhir
         $path = $request->file('file')->store('dokumen_akhir', 'public');
 
         DokumenAkhir::create([
@@ -52,18 +51,66 @@ class DokumenAkhirMahasiswaController extends Controller
     }
 
     /**
+     * Tampilkan detail dokumen.
+     */
+    public function show($id)
+    {
+        $dokumen = DokumenAkhir::where('mahasiswa_id', Auth::id())->findOrFail($id);
+
+        return view('mahasiswa.dokumen.show', compact('dokumen'));
+    }
+
+    /**
+     * Form edit dokumen.
+     */
+    public function edit($id)
+    {
+        $dokumen = DokumenAkhir::where('mahasiswa_id', Auth::id())->findOrFail($id);
+
+        return view('mahasiswa.dokumen.edit', compact('dokumen'));
+    }
+
+    /**
+     * Update dokumen akhir.
+     */
+    public function update(Request $request, $id)
+    {
+        $dokumen = DokumenAkhir::where('mahasiswa_id', Auth::id())->findOrFail($id);
+
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'file' => 'nullable|mimes:pdf,doc,docx|max:5120',
+        ]);
+
+        $dokumen->judul = $request->judul;
+
+        if ($request->hasFile('file')) {
+            // hapus file lama
+            if ($dokumen->file && Storage::disk('public')->exists($dokumen->file)) {
+                Storage::disk('public')->delete($dokumen->file);
+            }
+
+            $path = $request->file('file')->store('dokumen_akhir', 'public');
+            $dokumen->file = $path;
+        }
+
+        $dokumen->save();
+
+        return redirect()->route('mahasiswa.dokumen-akhir.index')
+            ->with('success', 'Dokumen berhasil diperbarui.');
+    }
+
+    /**
      * Hapus dokumen akhir.
      */
     public function destroy($id)
     {
         $dokumen = DokumenAkhir::where('mahasiswa_id', Auth::id())->findOrFail($id);
 
-        // Hapus file fisik
         if ($dokumen->file && Storage::disk('public')->exists($dokumen->file)) {
             Storage::disk('public')->delete($dokumen->file);
         }
 
-        // Hapus record dari database
         $dokumen->delete();
 
         return back()->with('success', 'Dokumen berhasil dihapus.');

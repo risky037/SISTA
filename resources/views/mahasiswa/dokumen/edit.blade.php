@@ -1,20 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Ajukan Dokumen Baru')
+@section('title', 'Edit Dokumen')
 
 @section('content')
     <div class="flex justify-between items-center mb-4">
         <div>
             <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
-            <p class="text-gray-500 text-sm">Halaman untuk mengajukan dokumen akhir baru.</p>
+            <p class="text-gray-500 text-sm">Halaman untuk memperbarui data Dokumen Akhir Anda.</p>
         </div>
         <nav class="text-sm text-gray-500">
             <ol class="list-reset flex">
                 <li><a href="{{ route('mahasiswa.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Tugas Akhir</a></li>
+                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Dokumen</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">Ajukan</li>
+                <li class="text-gray-700">Edit</li>
             </ol>
         </nav>
     </div>
@@ -30,33 +30,39 @@
             </div>
         @endif
 
-        <form action="{{ route('mahasiswa.dokumen-akhir.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('mahasiswa.dokumen-akhir.update', $dokumen->id) }}" method="POST"
+            enctype="multipart/form-data">
             @csrf
+            @method('PUT')
 
             <div class="mb-4">
                 <label for="judul" class="block text-sm font-medium text-gray-700">Judul</label>
-                <input type="text" id="judul" name="judul" value="{{ old('judul') }}"
+                <input type="text" id="judul" name="judul" value="{{ old('judul', $dokumen->judul) }}"
                     class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500" required>
             </div>
 
             <div class="mb-4">
                 <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
                 <textarea id="deskripsi" name="deskripsi" rows="4"
-                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('deskripsi') }}</textarea>
+                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('deskripsi', $dokumen->deskripsi) }}</textarea>
             </div>
 
             <div class="mb-6">
-                <label for="file" class="block text-sm font-medium text-gray-700">File Dokumen Akhir</label>
+                <label for="file" class="block text-sm font-medium text-gray-700">Ganti File Dokumen</label>
                 <input type="file" id="file" name="file"
-                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                    required>
-                <p class="mt-2 text-sm text-gray-500">File yang diizinkan: .pdf, .docx (maks. 2MB)</p>
+                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                @if ($dokumen->file)
+                    <p class="mt-2 text-sm text-gray-500">File saat ini: <a
+                            href="{{ asset('storage/' . $dokumen->file) }}" target="_blank"
+                            class="text-blue-600 hover:underline">{{ basename($dokumen->file) }}</a></p>
+                @endif
+                <p class="mt-1 text-sm text-gray-500">File yang diizinkan: .pdf, .docx (maks. 2MB)</p>
             </div>
 
             <div class="flex space-x-4">
                 <button type="submit"
                     class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                    Simpan
+                    Update
                 </button>
                 <a href="{{ route('mahasiswa.dokumen-akhir.index') }}"
                     class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
