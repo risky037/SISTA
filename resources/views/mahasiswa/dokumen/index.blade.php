@@ -25,7 +25,7 @@
         @endif
 
         <div class="flex justify-end mb-4">
-            <a href="{{ route('mahasiswa.dokumens.create') }}"
+            <a href="{{ route('mahasiswa.dokumen-akhir.create') }}"
                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                 + Upload Dokumen Baru
             </a>
@@ -51,7 +51,7 @@
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $d->created_at->format('d M Y') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                <form action="{{ route('mahasiswa.dokumens.destroy', $d->id) }}" method="POST"
+                                <form action="{{ route('mahasiswa.dokumen-akhir.destroy', $d->id) }}" method="POST"
                                     class="inline"
                                     onsubmit="return confirm('Yakin hapus dokumen ini?')">
                                     @csrf

@@ -79,7 +79,7 @@
                 </a>
                 <a href="{{ route('dosen.proposals.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.proposals.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                     <i class="fas fa-file-alt"></i>
+                    <i class="fas fa-file-alt"></i>
                     <span>Review Tugas Akhir</span>
                 </a>
                 <a href="{{ route('dosen.proposals.index') }}"
@@ -121,7 +121,8 @@
                     <i class="fas fa-file-alt"></i>
                     <span>Proposal & Skripsi</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-gray-100">
+                <a href="{{ route('mahasiswa.dokumen-akhir.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('mahasiswa.dokumen-akhir.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-file-upload"></i>
                     <span>Upload Dokumen Akhir</span>
                 </a>

@@ -12,6 +12,7 @@ use App\Http\Controllers\Dosen\LaporanProgressDosenController;
 use App\Http\Controllers\Dosen\ProposalDosenController;
 use App\Http\Controllers\Mahasiswa\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Mahasiswa\DokumenAkhirMahasiswaController;
+use App\Http\Controllers\Mahasiswa\ProposalMahasiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 
@@ -38,16 +39,11 @@ Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasi
     Route::get('jadwal', [JadwalSeminarMahasiswaController::class, 'index'])->name('jadwal-seminar');
 
     // Proposal
-    Route::resource('proposal', ProposalMahasiswaController::class);
-    Route::post('proposal/{id}/status', [ProposalMahasiswaController::class, 'updateStatus'])->name('proposal.updateStatus');
+    Route::resource('proposals', ProposalMahasiswaController::class)->names('proposals');
+    Route::post('proposals/{id}/status', [ProposalMahasiswaController::class, 'updateStatus'])->name('proposals.updateStatus');
 
     // Dokumen Akhir
-    Route::controller(DokumenAkhirMahasiswaController::class)->prefix('dokumen')->name('dokumen.')->group(function () {
-        Route::resource('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::delete('/{id}', 'destroy')->name('destroy');
-    });
+    Route::resource('dokumen-akhir', DokumenAkhirMahasiswaController::class)->names('dokumen-akhir');
 });
 
 
@@ -75,14 +71,3 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
-
-
-
-// GAK PENTING
-// Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-//     Route::resource('users', UserController::class);
-// });
-
-// Route::resource('proposals', ProposalController::class);
-// Route::resource('bimbingans', BimbinganController::class);
-// Route::resource('laporan-progress', LaporanProgressController::class);
