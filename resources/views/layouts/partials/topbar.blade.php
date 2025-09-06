@@ -34,16 +34,10 @@
             </a>
 
             <!-- Notifikasi -->
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            <a href="#" id="notif-button" onclick="event.preventDefault(); toggleNotificationSidebar();"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="fas fa-bell mr-2"></i> Notifikasi
             </a>
-
-            {{-- <!-- Dark Mode Toggle -->
-            <button id="darkModeBtn" onclick="toggleDarkMode()" 
-                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                <i id="darkModeIcon" class="fas fa-moon mr-2"></i> 
-                <span id="darkModeText">Mode Gelap</span>
-            </button> --}}
 
             <div class="border-t border-gray-100 my-1"></div>
 
@@ -58,35 +52,3 @@
         </div>
     </div>
 </header>
-
-@push('scripts')
-    <script>
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            const icon = document.getElementById('darkModeIcon');
-            const text = document.getElementById('darkModeText');
-
-            html.classList.toggle('dark');
-
-            if (html.classList.contains('dark')) {
-                localStorage.setItem('theme', 'dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                text.textContent = 'Mode Terang';
-            } else {
-                localStorage.setItem('theme', 'light');
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                text.textContent = 'Mode Gelap';
-            }
-        }
-
-        // Saat halaman dimuat, cek localStorage
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark');
-            document.getElementById('darkModeIcon').classList.remove('fa-moon');
-            document.getElementById('darkModeIcon').classList.add('fa-sun');
-            document.getElementById('darkModeText').textContent = 'Mode Terang';
-        }
-    </script>
-@endpush

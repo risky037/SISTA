@@ -1,3 +1,4 @@
+<!-- original-sidebar -->
 <aside id="sidebar"
     class="fixed inset-y-0 left-0 transform bg-white border-r border-gray-200 w-64 transition-transform duration-300 z-40">
     <div class="flex flex-col h-full">
@@ -150,5 +151,32 @@
                 @csrf
             </form>
         </nav>
+    </div>
+</aside>
+
+<!-- notification-sidebar -->
+<aside id="notification-sidebar"
+    class="fixed inset-y-0 right-0 transform translate-x-full bg-white border-l border-gray-200 w-80 transition-transform duration-300 z-40">
+    <div class="flex flex-col h-full">
+        <div class="flex items-center justify-between gap-2 px-5 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Notifikasi</h2>
+            <button onclick="toggleNotificationSidebar()"
+                class="p-2 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="p-4 overflow-y-auto">
+            <div class="space-y-4 text-sm text-gray-600">
+                <p class="text-center text-gray-400 mt-8">Tidak ada notifikasi baru.</p>
+                {{-- <div class="p-3 bg-blue-50 rounded-lg shadow-sm">
+                    <p class="font-semibold text-blue-800">Review Skripsi Baru</p>
+                    <p class="text-xs text-gray-500">Dari Mahasiswa: John Doe</p>
+                </div>
+                <div class="p-3 bg-green-50 rounded-lg shadow-sm">
+                    <p class="font-semibold text-green-800">Jadwal Sidang Terbit</p>
+                    <p class="text-xs text-gray-500">Tanggal: 25 Oktober 2025</p>
+                </div> --}}
+            </div>
+        </div>
     </div>
 </aside>
