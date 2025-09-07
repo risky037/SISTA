@@ -10,9 +10,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dosen\BimbinganDosenController;
 use App\Http\Controllers\Dosen\LaporanProgressDosenController;
 use App\Http\Controllers\Dosen\ProposalDosenController;
+use App\Http\Controllers\Dosen\NilaiDosenController;
 use App\Http\Controllers\Mahasiswa\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Mahasiswa\DokumenAkhirMahasiswaController;
 use App\Http\Controllers\Mahasiswa\ProposalMahasiswaController;
+use App\Http\Controllers\Mahasiswa\NilaiMahasiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 
@@ -44,10 +46,10 @@ Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasi
 
     // Dokumen Akhir
     Route::resource('dokumen-akhir', DokumenAkhirMahasiswaController::class)->names('dokumen-akhir');
+
+    // Nilai Mahasiswa
+    Route::resource('nilai', NilaiMahasiswaController::class)->only(['index', 'show'])->names('nilai');
 });
-
-
-
 
 Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->group(function () {
     Route::get('/dashboard', fn() => view('dosen.dashboard'))->name('dashboard');
@@ -61,6 +63,10 @@ Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->grou
     Route::post('proposals/{id}/status', [ProposalDosenController::class, 'updateStatus'])->name('proposals.updateStatus');
 
     Route::resource('laporan-progress', LaporanProgressDosenController::class)->only(['index', 'show', 'update']);
+
+    // Nilai Dosen (CRUD, termasuk upload nilai)
+    Route::resource('nilai', NilaiDosenController::class)->names('nilai');
+     
 });
 
 Route::middleware('auth')->group(function () {
@@ -70,4 +76,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-

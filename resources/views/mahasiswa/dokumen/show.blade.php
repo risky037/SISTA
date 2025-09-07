@@ -12,7 +12,7 @@
             <ol class="list-reset flex">
                 <li><a href="{{ route('mahasiswa.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li><a href="{{ route('mahasiswa.proposals.index') }}" class="hover:text-green-600">Daftar Dokumen Akhir</a></li>
+                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Dokumen Akhir</a></li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-gray-700">Detail</li>
             </ol>
@@ -34,7 +34,7 @@
             <div>
                 <strong class="block text-sm font-medium text-gray-700">File dokumen:</strong>
                 <p class="mt-1 text-gray-900">
-                    <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
+                    <a href="{{ asset('storage/dokumen_akhir/' . $dokumen->file_dokumen) }}" target="_blank"
                         class="text-blue-600 hover:underline">
                         Lihat/Download File
                     </a>
@@ -44,7 +44,7 @@
             <div>
                 <strong class="block text-sm font-medium text-gray-700">Status:</strong>
                 @php
-                    $statusClass = match ($proposal->status) {
+                    $statusClass = match ($dokumen->status) {
                         'pending' => 'bg-yellow-100 text-yellow-800',
                         'approved' => 'bg-green-100 text-green-800',
                         'rejected' => 'bg-red-100 text-red-800',
@@ -60,7 +60,7 @@
         </div>
 
         <div class="mt-6">
-            <a href="{{ route('mahasiswa.proposals.index') }}"
+            <a href="{{ route('mahasiswa.dokumen-akhir.index') }}"
                 class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                 Kembali
             </a>
