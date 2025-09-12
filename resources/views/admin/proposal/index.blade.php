@@ -50,8 +50,8 @@
                             };
                         @endphp
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-2 md:px-4 py-2 border break-words max-w-[150px]">{{ $p->mahasiswa->name }}</td>
-                            <td class="px-2 md:px-4 py-2 border break-words max-w-[150px]">{{ $p->dosen->name }}</td>
+                            <td class="px-2 md:px-4 py-2 border break-words max-w-[150px]">{{ $p->mahasiswa->name ?? '-'}}</td>
+                            <td class="px-2 md:px-4 py-2 border break-words max-w-[150px]">{{ $p->dosen->name ?? '-'}}</td>
                             <td class="px-2 md:px-4 py-2 border break-words max-w-[300px]">{{ $p->judul }}</td>
                             <td class="px-2 md:px-4 py-2 border">
                                 <span class="text-xs font-semibold px-2.5 py-0.5 rounded {{ $statusColor }}">
