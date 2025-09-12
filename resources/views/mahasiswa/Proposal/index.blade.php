@@ -37,6 +37,7 @@
                     <tr>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">Judul</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">Deskripsi</th>
+                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Dosen Pembimbing</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">File</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">Status</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-center">Aksi</th>
@@ -47,6 +48,9 @@
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $proposal->judul }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $proposal->deskripsi }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                {{ $proposal->dosen ? $proposal->dosen->name : '-' }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
                                     class="text-blue-600 hover:underline">Lihat</a>
@@ -83,7 +87,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center p-4 text-gray-500">Belum ada proposal yang diajukan.</td>
+                            <td colspan="6" class="text-center p-4 text-gray-500">Belum ada proposal yang diajukan.</td>
                         </tr>
                     @endforelse
                 </tbody>

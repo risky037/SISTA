@@ -58,6 +58,21 @@
                 @endif
                 <p class="mt-1 text-sm text-gray-500">File yang diizinkan: .pdf, .docx (maks. 2MB)</p>
             </div>
+            
+            <div class="mb-4">
+                <label for="dosen_pembimbing_id" class="block text-sm font-medium text-gray-700">Pilih Dosen
+                    Pembimbing</label>
+                <select id="dosen_pembimbing_id" name="dosen_pembimbing_id" required
+                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="" disabled>-- Pilih Dosen Pembimbing --</option>
+                    @foreach ($dosens as $dosen)
+                        <option value="{{ $dosen->id }}"
+                            {{ old('dosen_pembimbing_id', $proposal->dosen_pembimbing_id) == $dosen->id ? 'selected' : '' }}>
+                            {{ $dosen->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
             <div class="flex space-x-4">
                 <button type="submit"

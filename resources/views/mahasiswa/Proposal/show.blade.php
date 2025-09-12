@@ -32,6 +32,13 @@
             </div>
 
             <div>
+                <strong class="block text-sm font-medium text-gray-700">Dosen Pembimbing:</strong>
+                <p class="mt-1 text-gray-900">
+                    {{ $proposal->dosen ? $proposal->dosen->name : '-' }}
+                </p>
+            </div>
+
+            <div>
                 <strong class="block text-sm font-medium text-gray-700">File Proposal:</strong>
                 <p class="mt-1 text-gray-900">
                     <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
