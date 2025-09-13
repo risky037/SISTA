@@ -1,17 +1,22 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Nilai Mahasiswa')
+@section('title', 'Edit Nilai Mahasiswa')
 
 @section('content')
     <div class="flex justify-between items-center mb-4">
         <div>
             <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
-            <p class="text-gray-500 text-sm">Halaman untuk mengelola data nilai mahasiswa.</p>
+            <p class="text-gray-500 text-sm">Halaman untuk mengedit nilai mahasiswa.</p>
         </div>
-        <a href="{{ route('dosen.nilai.create') }}"
-           class="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
-            + Tambah Nilai
-        </a>
+        <nav class="text-sm text-gray-500">
+            <ol class="list-reset flex">
+                <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li><a href="{{ route('dosen.nilai.index') }}" class="hover:text-green-600">Nilai</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li class="text-gray-700">Edit Nilai</li>
+            </ol>
+        </nav>
     </div>
 
     <div class="p-6 bg-white rounded-lg shadow-md">
@@ -21,59 +26,58 @@
             </div>
         @endif
 
-        @if($nilai->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[700px]">
-                    <thead class="bg-green-100 text-gray-700">
-                        <tr>
-                            <th class="px-4 py-2 border">No</th>
-                            <th class="px-4 py-2 border text-left">Mahasiswa</th>
-                            <th class="px-4 py-2 border text-left">Komponen</th>
-                            <th class="px-4 py-2 border text-center">Nilai</th>
-                            <th class="px-4 py-2 border text-left">Keterangan</th>
-                            <th class="px-4 py-2 border text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($nilai as $index => $n)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 text-sm">{{ $index + 1 }}</td>
-                                <td class="px-4 py-2 text-sm font-medium text-gray-800">{{ $n->mahasiswa->nama ?? '-' }}</td>
-                                <td class="px-4 py-2 text-sm">{{ $n->komponen ?? '-' }}</td>
-                                <td class="px-4 py-2 text-center text-sm font-bold text-green-700">{{ $n->nilai ?? '-' }}</td>
-                                <td class="px-4 py-2 text-sm">
-                                    @if($n->nilai >= 70)
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">Lulus</span>
-                                    @else
-                                        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-700">Remedial</span>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-2 text-center">
-                                    <div class="flex justify-center gap-2">
-                                        <a href="{{ route('dosen.nilai.edit', $n->id) }}"
-                                           class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600">
-                                            Edit
-                                        </a>
-                                        <form action="{{ route('dosen.nilai.destroy', $n->id) }}" method="POST"
-                                              onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="px-3 py-1 bg-red-500 text-white rounded-md text-sm hover:bg-red-600">
-                                                Hapus
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <form action="{{ route('dosen.nilai.update', $nilai->id) }}" method="POST" class="space-y-4">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Proposal Mahasiswa</label>
+                <select name="proposal_id"
+                    class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required>
+                    <option value="">-- Pilih Proposal --</option>
+                    @foreach ($proposals as $proposal)
+                        <option value="{{ $proposal->id }}" {{ $proposal->id == $nilai->proposal_id ? 'selected' : '' }}>
+                            {{ $proposal->mahasiswa->name }} - "{{ $proposal->judul }}"
+                        </option>
+                    @endforeach
+                </select>
+                @error('proposal_id')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
-        @else
-            <div class="text-center p-6 bg-gray-50 border border-gray-200 rounded-lg text-gray-500">
-                Belum ada data nilai mahasiswa.
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Grade</label>
+                <select name="grade"
+                    class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required>
+                    <option value="">-- Pilih Grade --</option>
+                    @foreach (['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E'] as $grade)
+                        <option value="{{ $grade }}" {{ $grade == old('grade', $nilai->grade) ? 'selected' : '' }}>
+                            {{ $grade }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('grade')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
-        @endif
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Keterangan</label>
+                <textarea name="keterangan" rows="3"
+                    class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('keterangan', $nilai->keterangan) }}</textarea>
+                @error('keterangan')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
     </div>
 @endsection

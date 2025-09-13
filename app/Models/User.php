@@ -92,4 +92,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(LaporanProgress::class, 'mahasiswa_id');
     }
+
+    public function mahasiswaBimbinganProposal()
+    {
+        return $this->hasMany(Proposal::class, 'dosen_pembimbing_id')->with('mahasiswa');
+    }
+
+    // Nilai yang diberikan oleh dosen ini
+    public function nilaiDiberikan()
+    {
+        return $this->hasMany(Nilai::class, 'dosen_id');
+    }
+
+    // Nilai yang diterima oleh mahasiswa ini (melalui proposal)
+    public function nilaiDiterima()
+    {
+        return $this->hasManyThrough(
+            Nilai::class,
+            Proposal::class,
+            'mahasiswa_id', // Foreign key di Proposal
+            'proposal_id',  // Foreign key di Nilai
+            'id',           // Local key di User
+            'id'            // Local key di Proposal
+        );
+    }
+
 }

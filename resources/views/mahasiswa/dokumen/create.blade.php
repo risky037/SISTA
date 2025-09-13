@@ -12,7 +12,8 @@
             <ol class="list-reset flex">
                 <li><a href="{{ route('mahasiswa.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Tugas Akhir</a></li>
+                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Tugas Akhir</a>
+                </li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-gray-700">Ajukan</li>
             </ol>
@@ -40,9 +41,21 @@
             </div>
 
             <div class="mb-4">
-                <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                <textarea id="deskripsi" name="deskripsi" rows="4"
-                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('deskripsi') }}</textarea>
+                <label for="keterangan" class="block text-sm font-medium text-gray-700">keterangan</label>
+                <textarea id="keterangan" name="keterangan" rows="4"
+                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('keterangan') }}</textarea>
+            </div>
+
+            <div class="mb-6">
+                <label for="dosen_pembimbing_id" class="block text-sm font-medium text-gray-700">Pilih Dosen
+                    Pembimbing</label>
+                <select name="dosen_pembimbing_id" id="dosen_pembimbing_id" required
+                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">-- Pilih Dosen --</option>
+                    @foreach ($dosens as $dosen)
+                        <option value="{{ $dosen->id }}">{{ $dosen->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="mb-6">

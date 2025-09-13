@@ -36,8 +36,10 @@
                 <thead class="bg-green-100 text-gray-700">
                     <tr>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">Judul</th>
+                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Dosen</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">File</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">Tanggal Upload</th>
+                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Status</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -45,12 +47,24 @@
                     @forelse($dokumen as $d)
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $d->judul }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ $d->dosen->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm">
                                 <a href="{{ asset('storage/' . $d->file) }}" target="_blank"
                                     class="text-blue-600 hover:underline">Lihat</a>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $d->created_at->format('d M Y') }}</td>
-                           
+                            <td class="px-6 py-4 text-sm">
+                                @if ($d->status == 'approved')
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 capitalize">{{ $d->status }}</span>
+                                @elseif ($d->status == 'rejected')
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 capitalize">{{ $d->status }}</span>
+                                @else
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 capitalize">{{ $d->status }}</span>
+                                @endif
+                                </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <a href="{{ route('mahasiswa.dokumen-akhir.show', $d->id) }}"
                                     class="text-blue-600 hover:text-blue-900 underline mr-2">Detail</a>
@@ -66,11 +80,11 @@
                                     </form>
                                 @endif
                             </td>
-                               
+
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center p-4 text-gray-500">Belum ada dokumen yang diupload.</td>
+                            <td colspan="5" class="text-center p-4 text-gray-500">Belum ada dokumen yang diupload.</td>
                         </tr>
                     @endforelse
                 </tbody>

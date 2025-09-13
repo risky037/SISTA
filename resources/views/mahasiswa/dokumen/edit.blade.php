@@ -12,7 +12,8 @@
             <ol class="list-reset flex">
                 <li><a href="{{ route('mahasiswa.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Dokumen</a></li>
+                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Dokumen</a>
+                </li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-gray-700">Edit</li>
             </ol>
@@ -42,9 +43,24 @@
             </div>
 
             <div class="mb-4">
-                <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                <textarea id="deskripsi" name="deskripsi" rows="4"
-                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('deskripsi', $dokumen->deskripsi) }}</textarea>
+                <label for="keterangan" class="block text-sm font-medium text-gray-700">Keterangan</label>
+                <textarea id="keterangan" name="keterangan" rows="4"
+                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('keterangan', $dokumen->keterangan) }}</textarea>
+            </div>
+
+            <div class="mb-6">
+                <label for="dosen_pembimbing_id" class="block text-sm font-medium text-gray-700">Pilih Dosen
+                    Pembimbing</label>
+                <select name="dosen_pembimbing_id" id="dosen_pembimbing_id" required
+                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">-- Pilih Dosen --</option>
+                    @foreach ($dosens as $dosen)
+                        <option value="{{ $dosen->id }}"
+                            {{ old('dosen_pembimbing_id', $dokumen->dosen_pembimbing_id) == $dosen->id ? 'selected' : '' }}>
+                            {{ $dosen->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="mb-6">
@@ -52,9 +68,8 @@
                 <input type="file" id="file" name="file"
                     class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                 @if ($dokumen->file)
-                    <p class="mt-2 text-sm text-gray-500">File saat ini: <a
-                            href="{{ asset('storage/' . $dokumen->file) }}" target="_blank"
-                            class="text-blue-600 hover:underline">{{ basename($dokumen->file) }}</a></p>
+                    <p class="mt-2 text-sm text-gray-500">File saat ini: <a href="{{ asset('storage/' . $dokumen->file) }}"
+                            target="_blank" class="text-blue-600 hover:underline">{{ basename($dokumen->file) }}</a></p>
                 @endif
                 <p class="mt-1 text-sm text-gray-500">File yang diizinkan: .pdf, .docx (maks. 2MB)</p>
             </div>

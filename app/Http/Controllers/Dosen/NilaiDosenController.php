@@ -7,38 +7,76 @@ use App\Models\Nilai;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class NilaiDosenController extends Controller
 {
     public function index()
     {
         $nilai = Nilai::with('mahasiswa')->get();
-        return view('dosen.nilai.index', compact('nilai'));
+        $proposalsBelumDinilai = Auth::user()->mahasiswaBimbinganProposal()
+            ->whereDoesntHave('nilai')
+            ->get();
+        return view('dosen.nilai.index', compact('nilai', 'proposalsBelumDinilai'));
     }
 
     public function create()
     {
-        $mahasiswa = User::where('role', 'mahasiswa')->get();
-        return view('dosen.nilai.create', compact('mahasiswa'));
+        $proposals = Auth::user()->mahasiswaBimbinganProposal()->get();
+        return view('dosen.nilai.create', compact('proposals'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'mahasiswa_id' => 'required|exists:users,id',
-            'judul_tugas_akhir' => 'required|string',
-            'nilai' => 'required|integer|min:0|max:100',
+            'proposal_id' => 'required|exists:proposals,id',
+            'grade' => 'required|string',
             'keterangan' => 'nullable|string',
         ]);
 
+        $exists = Nilai::where('proposal_id', $request->proposal_id)->exists();
+
+        if ($exists) {
+            return redirect()->back()->withErrors(['proposal_id' => 'Proposal ini sudah memiliki nilai.'])->withInput();
+        }
+
         Nilai::create([
-            'mahasiswa_id' => $request->mahasiswa_id,
+            'proposal_id' => $request->proposal_id,
             'dosen_id' => Auth::id(),
-            'judul_tugas_akhir' => $request->judul_tugas_akhir,
-            'nilai' => $request->nilai,
+            'grade' => $request->grade,
             'keterangan' => $request->keterangan,
         ]);
 
         return redirect()->route('dosen.nilai.index')->with('success', 'Nilai berhasil ditambahkan.');
+    }
+    public function edit($id)
+    {
+        $nilai = Nilai::findOrFail($id); // Ambil data berdasarkan ID
+        $proposals = Auth::user()->mahasiswaBimbinganProposal()->get(); // Ambil semua proposal mahasiswa bimbingan dosen
+
+        return view('dosen.nilai.edit', compact('nilai', 'proposals'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $nilai = Nilai::findOrFail($id);
+        $request->validate([
+            'proposal_id' => [
+                'required',
+                'exists:proposals,id',
+                Rule::unique('nilais')->ignore($nilai->id),
+            ],
+            'grade' => 'required|string',
+            'keterangan' => 'nullable|string',
+        ]);
+
+        $nilai = Nilai::findOrFail($id);
+        $nilai->update([
+            'proposal_id' => $request->proposal_id,
+            'grade' => $request->grade,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('dosen.nilai.index')->with('success', 'Nilai berhasil diperbarui.');
     }
 }

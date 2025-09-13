@@ -9,24 +9,26 @@ class Nilai extends Model
 {
     use HasFactory;
 
-    protected $table = 'nilais'; // tabel di database
+    protected $table = 'nilais';
     protected $fillable = [
-        'mahasiswa_id',
+        'proposal_id',
         'dosen_id',
-        'judul_tugas_akhir',
-        'nilai',
-        'keterangan'
+        'grade',
+        'keterangan',
     ];
 
-    // Relasi ke mahasiswa
     public function mahasiswa()
     {
         return $this->belongsTo(User::class, 'mahasiswa_id');
     }
 
-    // Relasi ke dosen
     public function dosen()
     {
         return $this->belongsTo(User::class, 'dosen_id');
+    }
+
+    public function proposal()
+    {
+        return $this->belongsTo(Proposal::class, 'proposal_id');
     }
 }

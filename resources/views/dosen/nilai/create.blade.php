@@ -33,45 +33,31 @@
         <form action="{{ route('dosen.nilai.store') }}" method="POST" class="space-y-4">
             @csrf
 
-            <!-- Mahasiswa -->
+            <!-- Proposal -->
             <div>
-                <label class="block text-sm font-medium text-gray-700">Mahasiswa</label>
-                <select name="mahasiswa_id"
-                        class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                        required>
-                    <option value="">-- Pilih Mahasiswa --</option>
-                    @foreach($mahasiswa as $mhs)
-                        <option value="{{ $mhs->id }}">{{ $mhs->name }}</option>
+                <label class="block text-sm font-medium text-gray-700">Proposal Mahasiswa</label>
+                <select name="proposal_id"
+                    class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required>
+                    <option value="">-- Pilih Proposal --</option>
+                    @foreach ($proposals as $proposal)
+                        <option value="{{ $proposal->id }}">
+                            {{ $proposal->mahasiswa->name }} - "{{ $proposal->judul }}"
+                        </option>
                     @endforeach
                 </select>
             </div>
 
-            <!-- Judul Tugas Akhir -->
+            <!-- Grade -->
             <div>
-                <label class="block text-sm font-medium text-gray-700">Judul Tugas Akhir</label>
-                <input type="text" name="judul_tugas_akhir"
-                       class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                       required>
-            </div>
-
-            <!-- Nilai (Grade) -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Nilai (Grade)</label>
-                <select name="nilai"
-                        class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                        required>
+                <label class="block text-sm font-medium text-gray-700">Grade</label>
+                <select name="grade"
+                    class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required>
                     <option value="">-- Pilih Grade --</option>
-                    <option value="A+">A+</option>
-                    <option value="A">A</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B">B</option>
-                    <option value="B-">B-</option>
-                    <option value="C+">C+</option>
-                    <option value="C">C</option>
-                    <option value="C-">C-</option>
-                    <option value="D">D</option>
-                    <option value="E">E</option>
+                    @foreach (['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E'] as $grade)
+                        <option value="{{ $grade }}">{{ $grade }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -79,17 +65,16 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700">Keterangan</label>
                 <textarea name="keterangan" rows="3"
-                          class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                    class="mt-1 block w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
             </div>
 
             <!-- Tombol -->
             <div class="flex justify-end">
                 <a href="{{ route('dosen.nilai.index') }}"
-                   class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md mr-2 hover:bg-gray-300 transition">
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md mr-2 hover:bg-gray-300 transition">
                     Batal
                 </a>
-                <button type="submit"
-                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
                     Simpan
                 </button>
             </div>

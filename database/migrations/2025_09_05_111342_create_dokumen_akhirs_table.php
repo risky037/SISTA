@@ -11,14 +11,13 @@ class CreateDokumenAkhirsTable extends Migration
         Schema::create('dokumen_akhirs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('mahasiswa_id');
+            $table->foreignId('dosen_pembimbing_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('judul');
             $table->string('file');
-            $table->enum('tipe_dokumen', ['skripsi', 'tesis', 'dokumen_akhir'])->default('dokumen_akhir');
+            // $table->enum('tipe_dokumen', ['skripsi', 'tesis', 'dokumen_akhir'])->default('dokumen_akhir');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->text('keterangan')->nullable(); // catatan dosen/admin
+            $table->text('keterangan')->nullable();
             $table->timestamps();
-
-            // relasi ke tabel users (role mahasiswa)
             $table->foreign('mahasiswa_id')
                 ->references('id')
                 ->on('users')

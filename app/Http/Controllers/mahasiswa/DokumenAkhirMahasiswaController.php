@@ -25,7 +25,9 @@ class DokumenAkhirMahasiswaController extends Controller
     public function create()
     {
         $dokumen = DokumenAkhir::own()->latest()->get();
-        return view('mahasiswa.dokumen.create', compact('dokumen'));
+        $dosens = \App\Models\User::where('role', 'dosen')->get();
+
+        return view('mahasiswa.dokumen.create', compact('dokumen', 'dosens'));
     }
 
     /**
@@ -35,15 +37,19 @@ class DokumenAkhirMahasiswaController extends Controller
     {
         $request->validate([
             'judul' => 'required|string|max:255',
-            'file' => 'required|mimes:pdf,doc,docx|max:5120', // max 5MB
+            'file' => 'required|mimes:pdf,doc,docx|max:5120',
+            'dosen_pembimbing_id' => 'required|exists:users,id',
+            'keterangan' => 'nullable|string',
         ]);
 
         $path = $request->file('file')->store('dokumen_akhir', 'public');
 
         DokumenAkhir::create([
             'mahasiswa_id' => Auth::id(),
+            'dosen_pembimbing_id' => $request->dosen_pembimbing_id,
             'judul' => $request->judul,
             'file' => $path,
+            'keterangan' => $request->keterangan,
         ]);
 
         return redirect()->route('mahasiswa.dokumen-akhir.index')
@@ -67,7 +73,9 @@ class DokumenAkhirMahasiswaController extends Controller
     {
         $dokumen = DokumenAkhir::where('mahasiswa_id', Auth::id())->findOrFail($id);
 
-        return view('mahasiswa.dokumen.edit', compact('dokumen'));
+        $dosens = \App\Models\User::where('role', 'dosen')->get();
+
+        return view('mahasiswa.dokumen.edit', compact('dokumen', 'dosens'));
     }
 
     /**

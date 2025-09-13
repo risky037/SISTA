@@ -25,10 +25,15 @@
                 <strong class="block text-sm font-medium text-gray-700">Judul:</strong>
                 <p class="mt-1 text-gray-900">{{ $dokumen->judul }}</p>
             </div>
+            
+            <div>
+                <strong class="block text-sm font-medium text-gray-700">Dosen:</strong>
+                <p class="mt-1 text-gray-900">{{ $dokumen->dosen->name }}</p>
+            </div>
 
             <div>
-                <strong class="block text-sm font-medium text-gray-700">Deskripsi:</strong>
-                <p class="mt-1 text-gray-900">{{ $dokumen->deskripsi }}</p>
+                <strong class="block text-sm font-medium text-gray-700">Keterangan:</strong>
+                <p class="mt-1 text-gray-900">{{ $dokumen->keterangan }}</p>
             </div>
 
             <div>

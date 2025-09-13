@@ -13,7 +13,12 @@ class NilaiMahasiswaController extends Controller
      */
     public function index()
     {
-        $nilai = Nilai::where('mahasiswa_id', Auth::id())->get();
+        // Ambil nilai berdasarkan proposal mahasiswa yang sedang dibimbing oleh dosen yang sesuai dengan yang login
+        $nilai = Nilai::with('proposal') // Pastikan 'proposal' di-relasikan dengan baik pada model Nilai
+            ->whereHas('proposal', function ($query) {
+                $query->where('mahasiswa_id', Auth::id()); // Pastikan mahasiswa yang login yang dibimbing oleh dosen
+            })
+            ->get();
         return view('mahasiswa.nilai.index', compact('nilai'));
     }
 
@@ -22,9 +27,11 @@ class NilaiMahasiswaController extends Controller
      */
     public function show($id)
     {
-        $nilai = Nilai::where('mahasiswa_id', Auth::id())
-                      ->where('id', $id)
-                      ->firstOrFail();
+        $nilai = Nilai::where('id', $id)
+            ->whereHas('proposal', function ($query) {
+                $query->where('mahasiswa_id', Auth::id()); // Pastikan hanya nilai milik mahasiswa yang login
+            })
+            ->firstOrFail();
 
         return view('mahasiswa.nilai.show', compact('nilai'));
     }

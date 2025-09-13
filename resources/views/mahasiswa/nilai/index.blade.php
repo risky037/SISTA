@@ -18,24 +18,27 @@
     </div>
 
     <div class="p-6 bg-white rounded-lg shadow-md">
-        @if($nilai->count() > 0)
+        @if ($nilai->count() > 0)
             <div class="overflow-x-auto">
                 <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[600px]">
                     <thead class="bg-green-100 text-gray-700">
                         <tr>
-                            <th class="px-2 md:px-4 py-2 border text-left">Nama</th>
                             <th class="px-2 md:px-4 py-2 border text-left">Judul Tugas Akhir</th>
                             <th class="px-2 md:px-4 py-2 border text-center">Nilai</th>
                             <th class="px-2 md:px-4 py-2 border text-left">Keterangan</th>
+                            <th class="px-2 md:px-4 py-2 border text-left">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($nilai as $n)
+                        @foreach ($nilai as $n)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">{{ $n->mahasiswa->name }}</td>
-                                <td class="px-4 py-3">{{ $n->judul_tugas_akhir }}</td>
-                                <td class="px-4 py-3 text-center font-semibold text-green-700">{{ $n->nilai }}</td>
+                                <td class="px-4 py-3">{{ $n->proposal->judul ?? 'Tidak ada judul' }}</td>
+                                <td class="px-4 py-3 text-center font-semibold text-green-700">{{ $n->grade }}</td>
                                 <td class="px-4 py-3 text-sm text-gray-500">{{ $n->keterangan ?? '-' }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">
+                                    <a href="{{ route('mahasiswa.nilai.show', $n->id) }}"
+                                        class="text-blue-600 hover:text-blue-900 underline mr-2">Detail</a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

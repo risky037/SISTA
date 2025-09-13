@@ -14,9 +14,9 @@ class DokumenAkhir extends Model
 
     protected $fillable = [
         'mahasiswa_id',
+        'dosen_pembimbing_id',
         'judul',
         'file',
-        'tipe_dokumen',
         'status',
         'keterangan',
     ];
@@ -28,6 +28,11 @@ class DokumenAkhir extends Model
     public function mahasiswa()
     {
         return $this->belongsTo(User::class, 'mahasiswa_id');
+    }
+
+    public function dosen()
+    {
+        return $this->belongsTo(User::class, 'dosen_pembimbing_id');
     }
 
     /**
