@@ -137,6 +137,11 @@
                     <i class="fas fa-book"></i>
                     <span>Arsip & Nilai</span>
                 </a>
+                <a href="{{ route('mahasiswa.template.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('mahasiswa.template.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                    <i class="fas fa-file-word"></i>
+                    <span>Download Template</span>
+                </a>
             @endif
             <div class="border-t border-gray-200 my-2"></div>
             <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-full hover:bg-green-100 text-gray-600">

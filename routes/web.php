@@ -16,6 +16,7 @@ use App\Http\Controllers\Mahasiswa\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Mahasiswa\DokumenAkhirMahasiswaController;
 use App\Http\Controllers\Mahasiswa\ProposalMahasiswaController;
 use App\Http\Controllers\Mahasiswa\NilaiMahasiswaController;
+use App\Http\Controllers\Mahasiswa\TemplateMahasiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 
@@ -50,6 +51,7 @@ Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasi
 
     // Nilai Mahasiswa
     Route::resource('nilai', NilaiMahasiswaController::class)->only(['index', 'show'])->names('nilai');
+    Route::get('templates', [TemplateMahasiswaController::class, 'index'])->name('template.index');
 });
 
 Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->group(function () {
