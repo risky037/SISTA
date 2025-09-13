@@ -22,7 +22,7 @@ use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('home')->middleware('guest');
+})->name('home');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
