@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProposalManagementController;
 use App\Http\Controllers\Admin\TemplateManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dosen\BimbinganDosenController;
+use App\Http\Controllers\Dosen\DokumenAkhirDosenController;
 use App\Http\Controllers\Dosen\LaporanProgressDosenController;
 use App\Http\Controllers\Dosen\ProposalDosenController;
 use App\Http\Controllers\Dosen\NilaiDosenController;
@@ -64,9 +65,13 @@ Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->grou
 
     Route::resource('laporan-progress', LaporanProgressDosenController::class)->only(['index', 'show', 'update']);
 
+    Route::get('dokumen-akhir', [DokumenAkhirDosenController::class, 'index'])->name('dokumen-akhir.index');
+    Route::get('dokumen-akhir/{id}', [DokumenAkhirDosenController::class, 'show'])->name('dokumen-akhir.show');
+    Route::post('dokumen-akhir/{id}/update-status', [DokumenAkhirDosenController::class, 'updateStatus'])->name('dokumen-akhir.updateStatus');
+
     // Nilai Dosen (CRUD, termasuk upload nilai)
     Route::resource('nilai', NilaiDosenController::class)->names('nilai');
-     
+
 });
 
 Route::middleware('auth')->group(function () {

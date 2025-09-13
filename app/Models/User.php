@@ -116,5 +116,14 @@ class User extends Authenticatable
             'id'            // Local key di Proposal
         );
     }
+    public function dokumenAkhirsAsMahasiswa()
+    {
+        return $this->hasMany(DokumenAkhir::class, 'mahasiswa_id');
+    }
+
+    public function dokumenAkhirsAsDosen()
+    {
+        return $this->hasMany(DokumenAkhir::class, 'dosen_pembimbing_id');
+    }
 
 }
