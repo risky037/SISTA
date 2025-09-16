@@ -20,7 +20,7 @@ use App\Http\Controllers\Mahasiswa\TemplateMahasiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 
-Route::get('/', fn() => view('welcome'))->name('home');
+Route::get('/', fn() => view('welcome'))->name('home')->middleware('guest');
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
@@ -62,6 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::view('/bantuan', 'static.general', ['page' => 'bantuan'])->name('bantuan');
+    Route::view('/tentang', 'static.general', ['page' => 'tentang'])->name('tentang');
 });
 
 require __DIR__ . '/auth.php';
