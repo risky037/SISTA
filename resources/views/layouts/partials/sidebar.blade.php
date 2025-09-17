@@ -104,23 +104,7 @@
                     <i class="fas fa-calendar-check"></i>
                     <span>Jadwal Seminar & Sidang</span>
                 </a>
-                <div x-data="{ open: false }" class="space-y-1">
-                    <button type="button" @click="open = !open"
-                        class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 hover:bg-gray-100 text-gray-600">
-                        <span class="flex items-center gap-3"><i class="fas fa-tasks"></i> Progres Tugas Akhir</span>
-                        <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
-                            :class="{ 'rotate-180': open }"></i>
-                    </button>
-                    <div x-show="open" x-collapse.duration.300ms class="space-y-1">
-                        <a href="#" class="flex items-center gap-3 px-8 py-2 rounded-full hover:bg-gray-100">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Laporan Bab</span>
-                        </a>
-                        <a href="#" class="flex items-center gap-3 px-8 py-2 rounded-full hover:bg-gray-100">
-                            <i class="fas fa-pencil-alt"></i>
-                            <span>Revisi Catatan</span>
-                        </a>
-                    </div>
+                
                 </div>
                 <a href="{{ route('mahasiswa.proposals.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('mahasiswa.proposals.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
