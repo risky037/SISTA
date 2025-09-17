@@ -84,7 +84,7 @@
                                 {{-- <td class="px-4 py-3">{{ $proposal->judul ?? '-' }}</td> --}}
                                 <td class="px-4 py-3">
                                     @if ($proposal->file_proposal)
-                                        <a href="{{ asset('storage/proposals' . $proposal->file_proposal) }}"
+                                        <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}"
                                             target="_blank" class="text-blue-600 hover:underline">
                                             {{ $proposal->judul ?? '-' }}
                                         </a>

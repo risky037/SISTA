@@ -24,15 +24,33 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'no_hp' => 'nullable|string|max:20',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ];
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->role === 'mahasiswa') {
+            $rules['NIM'] = 'required|string|max:50|unique:users,NIM,' . $user->id;
+            $rules['prodi'] = 'required|string|max:100';
+        } elseif ($user->role === 'dosen') {
+            $rules['NIDN'] = 'required|string|max:50|unique:users,NIDN,' . $user->id;
+            $rules['bidang_keahlian'] = 'required|string|max:100';
         }
 
-        $request->user()->save();
+        $validated = $request->validate($rules);
+
+        // Upload foto
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto')->store('profile_pictures', 'public');
+            $validated['foto'] = $foto;
+        }
+
+        $user->update($validated);
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

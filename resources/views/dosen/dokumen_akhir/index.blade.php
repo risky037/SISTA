@@ -26,7 +26,7 @@
 
         <div class="relative overflow-visible">
             <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[600px]">
-                <thead class="bg-blue-100 text-gray-700">
+                <thead class="bg-green-100 text-gray-700">
                     <tr>
                         <th class="px-2 md:px-4 py-2 border text-left">Mahasiswa</th>
                         <th class="px-2 md:px-4 py-2 border text-left">Judul</th>

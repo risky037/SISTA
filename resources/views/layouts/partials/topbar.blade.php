@@ -29,7 +29,7 @@
             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-20 fade-in">
 
             <!-- Profil -->
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <i class="fas fa-user-circle mr-2"></i> Profil
             </a>
 
