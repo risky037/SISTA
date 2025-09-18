@@ -94,12 +94,16 @@
                 </div>
 
                 {{-- Prodi --}}
-                <div>
+                <div class="relative">
                     <label class="block text-sm font-medium text-gray-700">Program Studi</label>
-                    <input type="text" name="prodi" value="{{ old('prodi', $user->prodi) }}"
-                        class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mt-2">
+                    <input type="text" name="prodi" id="prodi-input" value="{{ old('prodi', $user->prodi) }}"
+                        class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                        placeholder="Ketik untuk mencari Program Studi">
+                    <div id="prodi-suggestions"
+                        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto">
+                    </div>
                     @error('prodi')
-                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                     @enderror
                 </div>
             @elseif ($user->role === 'dosen')
@@ -114,13 +118,17 @@
                 </div>
 
                 {{-- Bidang Keahlian --}}
-                <div>
+                <div class="relative">
                     <label class="block text-sm font-medium text-gray-700">Bidang Keahlian</label>
-                    <input type="text" name="bidang_keahlian"
+                    <input type="text" name="bidang_keahlian" id="bidang-keahlian-input"
                         value="{{ old('bidang_keahlian', $user->bidang_keahlian) }}"
-                        class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mt-2">
+                        class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                        placeholder="Ketik untuk mencari Bidang Keahlian">
+                    <div id="bidang-keahlian-suggestions"
+                        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto">
+                    </div>
                     @error('bidang_keahlian')
-                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                     @enderror
                 </div>
             @endif
@@ -158,6 +166,88 @@
                 };
                 reader.readAsDataURL(file);
             }
+        });
+
+        const staticProdiList = [
+            'Informatika',
+            'Teknik Industri',
+            'Bisnis Digital',
+            'Sains Data',
+            'Digital Neuropsikologi',
+            'Komunikasi Digital',
+            'Teknologi Industri Pertanian',
+        ];
+
+        const staticBidangKeahlianList = [
+            'Informatika',
+            'Teknik Industri',
+            'Bisnis Digital',
+            'Sains Data',
+            'Digital Neuropsikologi',
+            'Komunikasi Digital',
+            'Teknologi Industri Pertanian',
+        ];
+
+        // Fungsi render suggestion
+        function renderSuggestions(data, suggestionsContainer, inputElement) {
+            suggestionsContainer.innerHTML = '';
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.textContent = item;
+                    suggestionItem.classList.add('px-4', 'py-2', 'cursor-pointer', 'hover:bg-green-100');
+
+                    // Ganti dari 'click' ke 'mousedown' agar tidak terganggu blur
+                    suggestionItem.addEventListener('mousedown', (e) => {
+                        e.preventDefault(); // Penting: mencegah input blur
+                        inputElement.value = item;
+                        suggestionsContainer.classList.add('hidden');
+                    });
+
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+                suggestionsContainer.classList.remove('hidden');
+            } else {
+                suggestionsContainer.classList.add('hidden');
+            }
+        }
+
+        function setupStaticAutocomplete(inputId, suggestionsId, dataList) {
+            const input = document.getElementById(inputId);
+            const suggestionsContainer = document.getElementById(suggestionsId);
+            let debounceTimeout;
+
+            // Saat input di-focus, tampilkan semua
+            input.addEventListener('focus', function() {
+                renderSuggestions(dataList, suggestionsContainer, input);
+            });
+
+            input.addEventListener('input', function() {
+                clearTimeout(debounceTimeout);
+                const keyword = this.value.trim().toLowerCase();
+
+                debounceTimeout = setTimeout(() => {
+                    const filteredData = dataList.filter(item => item.toLowerCase().includes(keyword));
+                    renderSuggestions(filteredData, suggestionsContainer, input);
+                }, 300);
+            });
+
+            // Saat klik di luar input & suggestions, sembunyikan
+            document.addEventListener('click', function(e) {
+                if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                    suggestionsContainer.classList.add('hidden');
+                }
+            });
+        }
+
+        // Jalankan ketika DOM siap
+        document.addEventListener('DOMContentLoaded', function() {
+            @if ($user->role === 'mahasiswa')
+                setupStaticAutocomplete('prodi-input', 'prodi-suggestions', staticProdiList);
+            @elseif ($user->role === 'dosen')
+                setupStaticAutocomplete('bidang-keahlian-input', 'bidang-keahlian-suggestions',
+                    staticBidangKeahlianList);
+            @endif
         });
     </script>
 @endpush
