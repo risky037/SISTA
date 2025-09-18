@@ -188,7 +188,6 @@
             'Teknologi Industri Pertanian',
         ];
 
-        // Fungsi render suggestion
         function renderSuggestions(data, suggestionsContainer, inputElement) {
             suggestionsContainer.innerHTML = '';
             if (data.length > 0) {
@@ -197,9 +196,8 @@
                     suggestionItem.textContent = item;
                     suggestionItem.classList.add('px-4', 'py-2', 'cursor-pointer', 'hover:bg-green-100');
 
-                    // Ganti dari 'click' ke 'mousedown' agar tidak terganggu blur
                     suggestionItem.addEventListener('mousedown', (e) => {
-                        e.preventDefault(); // Penting: mencegah input blur
+                        e.preventDefault();
                         inputElement.value = item;
                         suggestionsContainer.classList.add('hidden');
                     });
@@ -217,7 +215,6 @@
             const suggestionsContainer = document.getElementById(suggestionsId);
             let debounceTimeout;
 
-            // Saat input di-focus, tampilkan semua
             input.addEventListener('focus', function() {
                 renderSuggestions(dataList, suggestionsContainer, input);
             });
@@ -232,7 +229,6 @@
                 }, 300);
             });
 
-            // Saat klik di luar input & suggestions, sembunyikan
             document.addEventListener('click', function(e) {
                 if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                     suggestionsContainer.classList.add('hidden');
@@ -240,7 +236,6 @@
             });
         }
 
-        // Jalankan ketika DOM siap
         document.addEventListener('DOMContentLoaded', function() {
             @if ($user->role === 'mahasiswa')
                 setupStaticAutocomplete('prodi-input', 'prodi-suggestions', staticProdiList);
