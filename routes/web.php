@@ -10,8 +10,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dosen\BimbinganDosenController;
 use App\Http\Controllers\Dosen\DokumenAkhirDosenController;
 use App\Http\Controllers\Dosen\LaporanProgressDosenController;
+use App\Http\Controllers\Dosen\NilaiDokumenAkhirController;
+use App\Http\Controllers\Dosen\NilaiProposalController;
 use App\Http\Controllers\Dosen\ProposalDosenController;
-use App\Http\Controllers\Dosen\NilaiDosenController;
 use App\Http\Controllers\Mahasiswa\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Mahasiswa\DokumenAkhirMahasiswaController;
 use App\Http\Controllers\Mahasiswa\ProposalMahasiswaController;
@@ -55,7 +56,8 @@ Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->grou
     Route::get('dokumen-akhir', [DokumenAkhirDosenController::class, 'index'])->name('dokumen-akhir.index');
     Route::get('dokumen-akhir/{id}', [DokumenAkhirDosenController::class, 'show'])->name('dokumen-akhir.show');
     Route::post('dokumen-akhir/{id}/status', [DokumenAkhirDosenController::class, 'updateStatus'])->name('dokumen-akhir.updateStatus');
-    Route::resource('nilai', NilaiDosenController::class)->names('nilai');
+    Route::resource('nilai-proposal', NilaiProposalController::class)->names('nilai-proposal');
+    Route::resource('nilai-dokumen-akhir', NilaiDokumenAkhirController::class)->names('nilai-dokumen-akhir');
 });
 
 Route::middleware('auth')->group(function () {

@@ -12,7 +12,8 @@ return new class extends Migration {
     {
         Schema::create('nilais', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('proposal_id')->constrained()->onDelete('cascade');
+            $table->foreignId('proposal_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('dokumen_akhir_id')->nullable()->constrained('dokumen_akhirs')->onDelete('cascade');
             $table->foreignId('dosen_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('grade');
             $table->text('keterangan')->nullable();

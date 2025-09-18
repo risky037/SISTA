@@ -35,7 +35,7 @@
                             :class="{ 'rotate-180': open }"></i>
                     </button>
                     <div x-show="open" x-collapse.duration.300ms class="space-y-1">
-                        <a href="{{ route('admin.management.admin.index') }}"
+                        <a href="{{ route('dosen.nilai-proposal.index') }}"
                             class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.admin.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                             <i class="fas fa-user-plus"></i>
                             <span>Admin</span>
@@ -78,25 +78,41 @@
                     <i class="fas fa-calendar-check"></i>
                     <span>Jadwal Bimbingan</span>
                 </a>
-                <a href="{{ route('dosen.dokumen-akhir.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.dokumen-akhir.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Review Tugas Akhir</span>
-                </a>
                 <a href="{{ route('dosen.proposals.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.proposals.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-tasks"></i>
                     <span>Review Proposal/Skripsi</span>
                 </a>
+                <a href="{{ route('dosen.dokumen-akhir.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.dokumen-akhir.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Review Dokumen Akhir</span>
+                </a>
+                <div x-data="{ open: {{ request()->routeIs('dosen.nilai-proposal.*') || request()->routeIs('dosen.nilai-dokumen-akhir.*') ? 'true' : 'false' }} }" class="space-y-1">
+                    <button type="button" @click="open = !open"
+                        class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.nilai-proposal.*') || request()->routeIs('dosen.nilai-dokumen-akhir.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
+                        <i class="fas fa-book"></i>
+                        <span>Nilai Mahasiswa</span>
+                        <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
+                            :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    <div x-show="open" x-collapse.duration.300ms class="space-y-1">
+                        <a href="{{ route('dosen.nilai-proposal.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.nilai-proposal.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-clipboard"></i>
+                            <span>Proposal</span>
+                        </a>
+                        <a href="{{ route('dosen.nilai-dokumen-akhir.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.nilai-dokumen-akhir.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Dokumen Akhir</span>
+                        </a>
+                    </div>
+                </div>
                 <a href="{{ route('dosen.laporan-progress.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.laporan-progress.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-chart-line"></i>
                     <span>Laporan Progres</span>
-                </a>
-                <a href="{{ route('dosen.nilai.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.nilai.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-book"></i>
-                    <span>Nilai Mahasiswa</span>
                 </a>
             @elseif (auth()->user()->role == 'mahasiswa')
                 <a href="{{ route('mahasiswa.jadwal-seminar') }}"
@@ -163,14 +179,14 @@
         <div class="p-4 overflow-y-auto">
             <div class="space-y-4 text-sm text-gray-600">
                 <p class="text-center text-gray-400 mt-8">Tidak ada notifikasi baru.</p>
-                {{-- <div class="p-3 bg-blue-50 rounded-lg shadow-sm">
+                <div class="p-3 bg-blue-50 rounded-lg shadow-sm">
                     <p class="font-semibold text-blue-800">Review Skripsi Baru</p>
                     <p class="text-xs text-gray-500">Dari Mahasiswa: John Doe</p>
                 </div>
                 <div class="p-3 bg-green-50 rounded-lg shadow-sm">
                     <p class="font-semibold text-green-800">Jadwal Sidang Terbit</p>
                     <p class="text-xs text-gray-500">Tanggal: 25 Oktober 2025</p>
-                </div> --}}
+                </div>
             </div>
         </div>
     </div>

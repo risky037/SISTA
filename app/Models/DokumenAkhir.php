@@ -34,6 +34,10 @@ class DokumenAkhir extends Model
     {
         return $this->belongsTo(User::class, 'dosen_pembimbing_id');
     }
+    public function nilai()
+    {
+        return $this->hasOne(Nilai::class, 'dokumen_akhir_id');
+    }
 
     /**
      * Relasi opsional ke Proposal (jika ada).

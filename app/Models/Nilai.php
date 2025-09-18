@@ -12,6 +12,7 @@ class Nilai extends Model
     protected $table = 'nilais';
     protected $fillable = [
         'proposal_id',
+        'dokumen_akhir_id',
         'dosen_id',
         'grade',
         'keterangan',
@@ -30,5 +31,10 @@ class Nilai extends Model
     public function proposal()
     {
         return $this->belongsTo(Proposal::class, 'proposal_id');
+    }
+
+    public function dokumenAkhir()
+    {
+        return $this->belongsTo(DokumenAkhir::class, 'dokumen_akhir_id');
     }
 }

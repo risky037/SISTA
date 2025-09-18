@@ -14,7 +14,6 @@ class CreateDokumenAkhirsTable extends Migration
             $table->foreignId('dosen_pembimbing_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('judul');
             $table->string('file');
-            // $table->enum('tipe_dokumen', ['skripsi', 'tesis', 'dokumen_akhir'])->default('dokumen_akhir');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('keterangan')->nullable();
             $table->timestamps();

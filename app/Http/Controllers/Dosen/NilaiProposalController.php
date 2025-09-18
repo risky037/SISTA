@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Nilai;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-
-class NilaiDosenController extends Controller
+class NilaiProposalController extends Controller
 {
     public function index()
     {
@@ -17,13 +16,13 @@ class NilaiDosenController extends Controller
         $proposalsBelumDinilai = Auth::user()->mahasiswaBimbinganProposal()
             ->whereDoesntHave('nilai')
             ->get();
-        return view('dosen.nilai.index', compact('nilai', 'proposalsBelumDinilai'));
+        return view('dosen.nilai_proposal.index', compact('nilai', 'proposalsBelumDinilai'));
     }
 
     public function create()
     {
         $proposals = Auth::user()->mahasiswaBimbinganProposal()->get();
-        return view('dosen.nilai.create', compact('proposals'));
+        return view('dosen.nilai_proposal.create', compact('proposals'));
     }
 
     public function store(Request $request)
@@ -47,14 +46,14 @@ class NilaiDosenController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
-        return redirect()->route('dosen.nilai.index')->with('success', 'Nilai berhasil ditambahkan.');
+        return redirect()->route('dosen.nilai-proposal.index')->with('success', 'Nilai berhasil ditambahkan.');
     }
     public function edit($id)
     {
-        $nilai = Nilai::findOrFail($id); // Ambil data berdasarkan ID
-        $proposals = Auth::user()->mahasiswaBimbinganProposal()->get(); // Ambil semua proposal mahasiswa bimbingan dosen
+        $nilai = Nilai::findOrFail($id);
+        $proposals = Auth::user()->mahasiswaBimbinganProposal()->get();
 
-        return view('dosen.nilai.edit', compact('nilai', 'proposals'));
+        return view('dosen.nilai_proposal.edit', compact('nilai', 'proposals'));
     }
 
     public function update(Request $request, $id)
@@ -77,6 +76,6 @@ class NilaiDosenController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
-        return redirect()->route('dosen.nilai.index')->with('success', 'Nilai berhasil diperbarui.');
+        return redirect()->route('dosen.nilai-proposal.index')->with('success', 'Nilai berhasil diperbarui.');
     }
 }

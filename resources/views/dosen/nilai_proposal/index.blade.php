@@ -12,14 +12,21 @@
             <ol class="list-reset flex">
                 <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">Nilai Mahasiswa</li>
+                <li class="text-gray-700">Nilai Proposal</li>
             </ol>
         </nav>
     </div>
 
     <div class="p-6 bg-white rounded-lg shadow-md">
+
+        @if (session('success'))
+            <div class="bg-green-100 text-green-800 p-3 rounded-md border border-green-400 mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <div class="flex justify-end mb-4">
-            <a href="{{ route('dosen.nilai.create') }}"
+            <a href="{{ route('dosen.nilai-proposal.create') }}"
                 class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition">
                 + Tambah Nilai
             </a>
@@ -31,7 +38,7 @@
                 <thead class="bg-green-100 text-gray-700">
                     <tr>
                         <th class="px-2 md:px-4 py-2 border text-left">Mahasiswa</th>
-                        <th class="px-2 md:px-4 py-2 border text-left">Judul Tugas Akhir</th>
+                        <th class="px-2 md:px-4 py-2 border text-left">Judul Proposal</th>
                         <th class="px-2 md:px-4 py-2 border text-center">Nilai</th>
                         <th class="px-2 md:px-4 py-2 border text-left">Keterangan</th>
                         <th class="px-2 md:px-4 py-2 border text-center">Aksi</th>
@@ -41,19 +48,21 @@
                     @forelse ($nilai as $n)
                         <tr class="hover:bg-gray-50">
                             <td class="px-4 py-3">{{ $n->proposal->mahasiswa->name ?? '-' }}</td>
-                            <td class="px-4 py-3">{{ $n->proposal->judul ?? '-' }}</td>
+                            <td class="px-4 py-3">
+                                @if ($n->proposal->file_proposal)
+                                    <a href="{{ asset('storage/proposals/' . $n->proposal->file_proposal) }}" target="_blank"
+                                        class="text-blue-600 hover:underline">
+                                        {{ $n->proposal->judul ?? '-' }}
+                                    </a>
+                                @else
+                                    {{ $n->proposal->judul ?? '-' }}
+                                @endif
+                            </td>
                             <td class="px-4 py-3 text-center font-semibold text-gray-700">{{ $n->grade ?? '-' }}</td>
                             <td class="px-4 py-3 text-sm text-gray-500">{{ $n->keterangan ?? '-' }}</td>
                             <td class="px-4 py-3 text-center text-sm font-medium">
-                                <a href="{{ route('dosen.nilai.edit', $n->id) }}"
-                                    class="text-yellow-600 hover:text-yellow-900 underline mr-2">✏️ Edit</a>
-                                {{-- <form action="{{ route('dosen.nilai.destroy', $n->id) }}" method="POST" class="inline"
-                                    onsubmit="return confirm('Yakin ingin menghapus nilai ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 underline">🗑️
-                                        Hapus</button>
-                                </form> --}}
+                                <a href="{{ route('dosen.nilai-proposal.edit', $n->id) }}"
+                                    class="text-yellow-600 hover:text-yellow-900 underline mr-2">Edit</a>
                             </td>
                         </tr>
                     @empty
@@ -81,7 +90,6 @@
                         @foreach ($proposalsBelumDinilai as $proposal)
                             <tr class="hover:bg-yellow-50">
                                 <td class="px-4 py-3">{{ $proposal->mahasiswa->name ?? '-' }}</td>
-                                {{-- <td class="px-4 py-3">{{ $proposal->judul ?? '-' }}</td> --}}
                                 <td class="px-4 py-3">
                                     @if ($proposal->file_proposal)
                                         <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}"
