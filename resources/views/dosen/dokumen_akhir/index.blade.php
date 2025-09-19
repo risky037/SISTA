@@ -32,7 +32,7 @@
                         <th class="px-2 md:px-4 py-2 border text-left">Judul</th>
                         <th class="px-2 md:px-4 py-2 border text-center">File</th>
                         <th class="px-2 md:px-4 py-2 border text-center">Status</th>
-                        <th class="px-2 md:px-4 py-2 border text-left">Keterangan</th>
+                        <th class="px-2 md:px-4 py-2 border text-left">Catatan Dosen</th>
                         <th class="px-2 md:px-4 py-2 border text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -59,7 +59,7 @@
                                     {{ ucfirst($dok->status) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $dok->keterangan ?? '-' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $dok->catatan_dosen ?? '-' }}</td>
                             <td class="px-6 py-4 text-center text-sm font-medium">
                                 <div x-data="{ open: false }" class="relative inline-block text-left">
                                     <button type="button" @click="open = !open"
@@ -103,11 +103,11 @@
                                                 </select>
                                             </div>
                                             <div class="block">
-                                                <label for="keterangan-{{ $dok->id }}"
+                                                <label for="catatan_dosen-{{ $dok->id }}"
                                                     class="text-xs font-semibold text-gray-700">Catatan:</label>
-                                                <textarea name="keterangan" id="keterangan-{{ $dok->id }}" rows="2"
+                                                <textarea name="catatan_dosen" id="catatan_dosen-{{ $dok->id }}" rows="2"
                                                     class="mt-1 block w-full border rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                                                    placeholder="Tambahkan catatan">{{ $dok->keterangan }}</textarea>
+                                                    placeholder="Tambahkan catatan">{{ $dok->catatan_dosen }}</textarea>
                                             </div>
                                             <div class="block">
                                                 <button type="submit"

@@ -39,7 +39,7 @@ class DokumenAkhirMahasiswaController extends Controller
             'judul' => 'required|string|max:255',
             'file' => 'required|mimes:pdf,doc,docx|max:5120',
             'dosen_pembimbing_id' => 'required|exists:users,id',
-            'keterangan' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
         ]);
 
         $path = $request->file('file')->store('dokumen_akhir', 'public');
@@ -49,7 +49,7 @@ class DokumenAkhirMahasiswaController extends Controller
             'dosen_pembimbing_id' => $request->dosen_pembimbing_id,
             'judul' => $request->judul,
             'file' => $path,
-            'keterangan' => $request->keterangan,
+            'deskripsi' => $request->deskripsi,
         ]);
 
         return redirect()->route('mahasiswa.dokumen-akhir.index')

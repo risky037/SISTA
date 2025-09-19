@@ -32,8 +32,8 @@
             </div>
 
             <div>
-                <strong class="block text-sm font-medium text-gray-700">Keterangan:</strong>
-                <p class="mt-1 text-gray-900">{{ $dokumen->keterangan }}</p>
+                <strong class="block text-sm font-medium text-gray-700">Deskripsi:</strong>
+                <p class="mt-1 text-gray-900">{{ $dokumen->deskripsi }}</p>
             </div>
 
             <div>

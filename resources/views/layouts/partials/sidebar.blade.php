@@ -68,26 +68,48 @@
                     <span>Template Skripsi</span>
                 </a>
             @elseif (auth()->user()->role == 'dosen')
-                <a href="{{ route('dosen.bimbingan.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.bimbingan.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Mahasiswa Bimbingan</span>
-                </a>
-                <a href="{{ route('dosen.jadwalbimbingan.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.jadwalbimbingan.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Jadwal Bimbingan</span>
-                </a>
-                <a href="{{ route('dosen.proposals.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.proposals.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-tasks"></i>
-                    <span>Review Proposal/Skripsi</span>
-                </a>
-                <a href="{{ route('dosen.dokumen-akhir.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.dokumen-akhir.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Review Dokumen Akhir</span>
-                </a>
+                <div x-data="{ openBimbingan: false }">
+                    <button type="button" @click="openBimbingan = !openBimbingan"
+                        class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.bimbingan.*') || request()->routeIs('dosen.jadwalbimbingan.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <span>Bimbingan</span>
+                        <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
+                            :class="{ 'rotate-180': openBimbingan }"></i>
+                    </button>
+                    <div x-show="openBimbingan" x-collapse.duration.300ms class="space-y-1">
+                        <a href="{{ route('dosen.bimbingan.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.bimbingan.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>Mahasiswa Bimbingan</span>
+                        </a>
+                        <a href="{{ route('dosen.jadwalbimbingan.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.jadwalbimbingan.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Jadwal Bimbingan</span>
+                        </a>
+                    </div>
+                </div>
+                <div x-data="{ openReview: false }">
+                    <button type="button" @click="openReview = !openReview"
+                        class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.proposals.*') || request()->routeIs('dosen.dokumen-akhir.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
+                        <i class="fas fa-file-signature"></i>
+                        <span>Review</span>
+                        <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
+                            :class="{ 'rotate-180': openReview }"></i>
+                    </button>
+                    <div x-show="openReview" x-collapse.duration.300ms class="space-y-1">
+                        <a href="{{ route('dosen.proposals.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.proposals.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-tasks"></i>
+                            <span>Proposal/Skripsi</span>
+                        </a>
+                        <a href="{{ route('dosen.dokumen-akhir.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.dokumen-akhir.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Dokumen Akhir</span>
+                        </a>
+                    </div>
+                </div>
                 <div x-data="{ open: {{ request()->routeIs('dosen.nilai-proposal.*') || request()->routeIs('dosen.nilai-dokumen-akhir.*') ? 'true' : 'false' }} }" class="space-y-1">
                     <button type="button" @click="open = !open"
                         class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.nilai-proposal.*') || request()->routeIs('dosen.nilai-dokumen-akhir.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
