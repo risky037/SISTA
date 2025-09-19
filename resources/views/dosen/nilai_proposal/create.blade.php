@@ -29,6 +29,7 @@
                 </ul>
             </div>
         @endif
+        <p class="text-sm text-gray-500 mb-4 italic">Hanya proposal yang sudah direview yang dapat dinilai.</p>
 
         <form action="{{ route('dosen.nilai-proposal.store') }}" method="POST" class="space-y-4">
             @csrf
@@ -40,9 +41,11 @@
                     required>
                     <option value="">-- Pilih Proposal --</option>
                     @foreach ($proposals as $proposal)
-                        <option value="{{ $proposal->id }}">
-                            {{ $proposal->mahasiswa->name }} - "{{ $proposal->judul }}"
-                        </option>
+                        @if ($proposal->status !== 'pending' && $proposal->nilai === null)
+                            <option value="{{ $proposal->id }}">
+                                {{ $proposal->mahasiswa->name }} - "{{ $proposal->judul }}" - {{$proposal->status}}
+                            </option>
+                        @endif
                     @endforeach
                 </select>
             </div>

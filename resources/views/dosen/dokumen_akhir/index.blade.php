@@ -20,7 +20,7 @@
     <div class="p-6 bg-white rounded-lg shadow-md">
         @if (session('success'))
             <div class="bg-green-100 text-green-800 p-3 rounded-md border border-green-400 mb-4">
-                {{ session('success') }}
+                {!! session('success') !!}
             </div>
         @endif
 

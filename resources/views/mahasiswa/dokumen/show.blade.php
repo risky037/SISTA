@@ -12,7 +12,8 @@
             <ol class="list-reset flex">
                 <li><a href="{{ route('mahasiswa.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Dokumen Akhir</a></li>
+                <li><a href="{{ route('mahasiswa.dokumen-akhir.index') }}" class="hover:text-green-600">Daftar Dokumen
+                        Akhir</a></li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-gray-700">Detail</li>
             </ol>
@@ -24,11 +25,6 @@
             <div>
                 <strong class="block text-sm font-medium text-gray-700">Judul:</strong>
                 <p class="mt-1 text-gray-900">{{ $dokumen->judul }}</p>
-            </div>
-            
-            <div>
-                <strong class="block text-sm font-medium text-gray-700">Dosen:</strong>
-                <p class="mt-1 text-gray-900">{{ $dokumen->dosen->name }}</p>
             </div>
 
             <div>
@@ -47,6 +43,16 @@
             </div>
 
             <div>
+                <strong class="block text-sm font-medium text-gray-700">Dosen:</strong>
+                <p class="mt-1 text-gray-900">{{ $dokumen->dosen->name }}</p>
+            </div>
+
+            <div>
+                <strong class="block text-sm font-medium text-gray-700">Catatan Dosen:</strong>
+                <p class="mt-1 text-gray-900">{{ $dokumen->catatan_dosen ?? 'tidak ada catatan dari dosen' }}</p>
+            </div>
+
+            <div>
                 <strong class="block text-sm font-medium text-gray-700">Status:</strong>
                 @php
                     $statusClass = match ($dokumen->status) {
@@ -55,10 +61,15 @@
                         'rejected' => 'bg-red-100 text-red-800',
                         default => 'bg-gray-100 text-gray-800',
                     };
+                    $statusText = match ($dokumen->status) {
+                        'approved' => 'diterima',
+                        'rejected' => 'ditolak',
+                        default => ucfirst($dokumen->status),
+                    };
                 @endphp
                 <p class="mt-1">
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                        {{ ucfirst($dokumen->status) }}
+                         {{ $statusText }}
                     </span>
                 </p>
             </div>

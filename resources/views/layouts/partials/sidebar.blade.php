@@ -35,7 +35,7 @@
                             :class="{ 'rotate-180': open }"></i>
                     </button>
                     <div x-show="open" x-collapse.duration.300ms class="space-y-1">
-                        <a href="{{ route('dosen.nilai-proposal.index') }}"
+                        <a href="{{ route('admin.management.admin.index') }}"
                             class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.admin.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                             <i class="fas fa-user-plus"></i>
                             <span>Admin</span>
@@ -68,7 +68,7 @@
                     <span>Template Skripsi</span>
                 </a>
             @elseif (auth()->user()->role == 'dosen')
-                <div x-data="{ openBimbingan: false }">
+                <div x-data="{ openBimbingan: {{ request()->routeIs('dosen.bimbingan.*') || request()->routeIs('dosen.jadwalbimbingan.*') ? 'true' : 'false' }} }" class="space-y-1">
                     <button type="button" @click="openBimbingan = !openBimbingan"
                         class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.bimbingan.*') || request()->routeIs('dosen.jadwalbimbingan.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
                         <i class="fas fa-chalkboard-teacher"></i>
@@ -89,7 +89,7 @@
                         </a>
                     </div>
                 </div>
-                <div x-data="{ openReview: false }">
+                <div x-data="{ openReview: {{ request()->routeIs('dosen.proposals.*') || request()->routeIs('dosen.dokumen-akhir.*') ? 'true' : 'false' }} }" class="space-y-1">
                     <button type="button" @click="openReview = !openReview"
                         class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.proposals.*') || request()->routeIs('dosen.dokumen-akhir.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
                         <i class="fas fa-file-signature"></i>

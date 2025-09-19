@@ -20,7 +20,7 @@
     <div class="p-6 bg-white rounded-lg shadow-md">
         @if (session('success'))
             <div class="bg-green-100 text-green-800 p-3 rounded-md border border-green-400 mb-4">
-                {{ session('success') }}
+                {!! session('success') !!}
             </div>
         @endif
 
@@ -54,9 +54,9 @@
                             <td class="px-6 py-4">
                                 {{ $proposal->judul }}
                             </td>
-                            <td class="px-6 py-4 text-center text-sm font-medium">
-                                <a href="{{ asset('storage/' . $proposal->file_proposal) }}" target="_blank"
-                                    class="text-blue-600 hover:text-blue-900 underline">Lihat</a>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
+                                    class="text-blue-600 hover:underline">Lihat Proposal</a>
                             </td>
                             <td class="px-6 py-4 text-center text-sm">
                                 <span

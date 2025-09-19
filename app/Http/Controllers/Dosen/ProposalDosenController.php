@@ -38,6 +38,13 @@ class ProposalDosenController extends Controller
             'catatan_dosen' => $request->catatan_dosen,
         ]);
 
-        return redirect()->route('dosen.proposals.index')->with('success', 'Status proposal diperbarui.');
+        $pesan = 'Status proposal diperbarui. ';
+
+        if ($request->status === 'diterima') {
+            $pesan .= '<a href="' . route('dosen.nilai-proposal.create') . '" class="underline text-green-700 hover:text-green-900 font-semibold">Beri nilai sekarang!</a>';
+        }
+
+        return redirect()->route('dosen.proposals.index')->with('success', $pesan);
     }
+
 }

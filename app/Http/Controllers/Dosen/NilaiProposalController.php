@@ -5,18 +5,24 @@ namespace App\Http\Controllers\Dosen;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Nilai;
-use App\Models\User;
+use App\Models\Proposal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 class NilaiProposalController extends Controller
 {
     public function index()
     {
-        $nilai = Nilai::with('mahasiswa')->get();
+        $nilai = Nilai::with('proposal.mahasiswa')->whereNotNull('proposal_id')->get();
         $proposalsBelumDinilai = Auth::user()->mahasiswaBimbinganProposal()
+            ->where('status', '!=', 'pending')
             ->whereDoesntHave('nilai')
             ->get();
-        return view('dosen.nilai_proposal.index', compact('nilai', 'proposalsBelumDinilai'));
+
+        $jumlahProposalYangBelumDireview = Proposal::where('dosen_pembimbing_id', auth()->id())
+            ->where('status', 'pending')
+            ->count();
+
+        return view('dosen.nilai_proposal.index', compact('nilai', 'proposalsBelumDinilai', 'jumlahProposalYangBelumDireview'));
     }
 
     public function create()
@@ -33,8 +39,13 @@ class NilaiProposalController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        $exists = Nilai::where('proposal_id', $request->proposal_id)->exists();
+        $proposal = Proposal::findOrFail($request->proposal_id);
 
+        if ($proposal->status == 'pending') {
+            return redirect()->back()->withErrors(['proposal_id' => 'Proposal ini masih pending, harap review terlebih dahulu.'])->withInput();
+        }
+
+        $exists = Nilai::where('proposal_id', $request->proposal_id)->exists();
         if ($exists) {
             return redirect()->back()->withErrors(['proposal_id' => 'Proposal ini sudah memiliki nilai.'])->withInput();
         }

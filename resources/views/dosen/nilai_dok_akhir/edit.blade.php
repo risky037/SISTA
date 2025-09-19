@@ -38,7 +38,7 @@
                     <option value="">-- Pilih Dokumen --</option>
                     @foreach ($dokumenAkhir as $dok)
                         <option value="{{ $dok->id }}" {{ $dok->id == $nilai->dokumen_akhir_id ? 'selected' : '' }}>
-                            {{ $dok->mahasiswa->name }} - "{{ $dok->judul }}"
+                            {{ $dok->mahasiswa->name }} - "{{ $dok->judul }}" - {{$dok->status}}
                         </option>
                     @endforeach
                 </select>

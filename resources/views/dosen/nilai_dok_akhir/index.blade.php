@@ -32,7 +32,8 @@
         </div>
 
         <div class="relative overflow-x-auto">
-            <h2 class="text-lg font-semibold mb-4">Dokumen Akhir yang Sudah Dinilai</h2>
+            <h2 class="text-lg font-semibold">Dokumen Akhir yang Sudah Dinilai</h2>
+            <p class="text-sm text-gray-500 mb-4 italic">Hanya dokumen yang sudah direview yang dapat dinilai.</p>
             <table class="table-auto w-full mt-2 border border-gray-200 rounded-lg min-w-[600px]">
                 <thead class="bg-green-100 text-gray-700">
                     <tr>
@@ -88,26 +89,36 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($dokumenBelumDinilai as $dokumen)
-                            <tr class="hover:bg-yellow-50">
-                                <td class="px-4 py-3">{{ $dokumen->mahasiswa->name ?? '-' }}</td>
-                                <td class="px-4 py-3">
-                                    @if ($dokumen->file)
-                                        <a href="{{ $dokumen->file_url }}" target="_blank"
-                                            class="text-blue-600 hover:underline">
+                            @if ($dokumen->status !== 'pending')
+                                <tr class="hover:bg-yellow-50">
+                                    <td class="px-4 py-3">{{ $dokumen->mahasiswa->name ?? '-' }}</td>
+                                    <td class="px-4 py-3">
+                                        @if ($dokumen->file)
+                                            <a href="{{ $dokumen->file_url }}" target="_blank"
+                                                class="text-blue-600 hover:underline">
+                                                {{ $dokumen->judul ?? '-' }}
+                                            </a>
+                                        @else
                                             {{ $dokumen->judul ?? '-' }}
-                                        </a>
-                                    @else
-                                        {{ $dokumen->judul ?? '-' }}
-                                    @endif
-                                </td>
-                            </tr>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
             </div>
         @else
             <div class="text-center p-4 bg-yellow-50 border border-yellow-200 text-yellow-600 rounded-lg">
-                Semua dokumen akhir sudah memiliki nilai.
+                @if ($jumlahDokumenPending > 0)
+                    Belum ada dokumen akhir yang siap dinilai.
+                    <a href="{{ route('dosen.dokumen-akhir.index') }}"
+                        class="underline text-green-600 hover:text-green-800 font-medium">
+                        Klik di sini untuk mereview dokumen
+                    </a>
+                @else
+                    Semua dokumen akhir sudah memiliki nilai.
+                @endif
             </div>
         @endif
     </div>

@@ -15,11 +15,16 @@ class NilaiDokumenAkhirController extends Controller
     {
         $nilai = Nilai::with('dokumenAkhir.mahasiswa')->whereNotNull('dokumen_akhir_id')->get();
 
-        $dokumenBelumDinilai = DokumenAkhir::where('dosen_pembimbing_id', Auth::id())
+        $dokumenBelumDinilai = DokumenAkhir::where('dosen_pembimbing_id', auth()->id())
+            ->where('status', '!=', 'pending')
             ->whereDoesntHave('nilai')
             ->get();
 
-        return view('dosen.nilai_dok_akhir.index', compact('nilai', 'dokumenBelumDinilai'));
+        $jumlahDokumenPending = DokumenAkhir::where('dosen_pembimbing_id', auth()->id())
+            ->where('status', 'pending')
+            ->count();
+
+        return view('dosen.nilai_dok_akhir.index', compact('nilai', 'dokumenBelumDinilai', 'jumlahDokumenPending'));
     }
 
     public function create()
@@ -36,8 +41,13 @@ class NilaiDokumenAkhirController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        $exists = Nilai::where('dokumen_akhir_id', $request->dokumen_akhir_id)->exists();
+        $dokumenAkhir = DokumenAkhir::findOrFail($request->dokumen_akhir_id);
 
+        if ($dokumenAkhir->status == 'pending') {
+            return redirect()->back()->withErrors(['dokumen_akhir_id' => 'Dokumen akhir ini masih pending, harap review terlebih dahulu.'])->withInput();
+        }
+
+        $exists = Nilai::where('dokumen_akhir_id', $request->dokumen_akhir_id)->exists();
         if ($exists) {
             return redirect()->back()->withErrors(['dokumen_akhir_id' => 'Dokumen akhir ini sudah memiliki nilai.'])->withInput();
         }
