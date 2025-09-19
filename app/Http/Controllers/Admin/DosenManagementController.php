@@ -31,6 +31,11 @@ class DosenManagementController extends Controller
             'NIDN' => 'required|numeric|digits_between:8,10|unique:users,NIDN',
             'bidang_keahlian' => 'required|string',
             'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+        ], [
+            'NIDN.required' => 'NIDN wajib diisi.',
+            'NIDN.numeric' => 'NIDN harus berupa angka.',
+            'NIDN.digits_between' => 'NIDN harus terdiri dari 8 sampai 10 digit.',
+            'NIDN.unique' => 'NIDN sudah digunakan oleh dosen lain.',
         ]);
 
         $data = $request->all();
@@ -61,6 +66,11 @@ class DosenManagementController extends Controller
             'NIDN' => 'required|numeric|digits_between:8,10|unique:users,NIDN,' . $dosen->id,
             'bidang_keahlian' => 'required|string',
             'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+        ], [
+            'NIDN.required' => 'NIDN wajib diisi.',
+            'NIDN.numeric' => 'NIDN harus berupa angka.',
+            'NIDN.digits_between' => 'NIDN harus terdiri dari 8 sampai 10 digit.',
+            'NIDN.unique' => 'NIDN sudah digunakan oleh dosen lain.',
         ]);
 
         $data = $request->except(['_token', '_method', 'password']);

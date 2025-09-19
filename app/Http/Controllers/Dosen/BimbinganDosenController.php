@@ -47,6 +47,7 @@ class BimbinganDosenController extends Controller
     {
         $bimbingans = Bimbingan::with('mahasiswa')
             ->where('dosen_id', auth()->id())
+            ->where('status', 'approved')
             ->latest()
             ->get();
 

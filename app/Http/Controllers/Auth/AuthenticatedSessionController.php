@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -18,32 +19,80 @@ class AuthenticatedSessionController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        // \Log::info('Using local AuthenticatedSessionController');
+        $role = $request->input('role');
+        $input = $request->input('email');
+        $password = $request->input('password');
 
         $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
             'role' => ['required', 'in:admin,dosen,mahasiswa'],
+            'password' => ['required', 'string'],
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        switch ($role) {
+            case 'admin':
+                $request->validate([
+                    'email' => ['required', 'email'],
+                ], [
+                    'email.required' => 'Email admin wajib diisi.',
+                    'email.email' => 'Format email admin tidak valid.',
+                ]);
+                $field = 'email';
+                break;
+
+            case 'mahasiswa':
+                $request->validate([
+                    'email' => ['required', 'regex:/^\d{8,12}$/'],
+                ], [
+                    'email.required' => 'NIM mahasiswa wajib diisi.',
+                    'email.regex' => 'NIM harus berupa angka dengan panjang 8 sampai 12 digit.',
+                ]);
+                $field = 'NIM';
+                break;
+
+            case 'dosen':
+                if (filter_var($input, FILTER_VALIDATE_EMAIL)) {
+                    $field = 'email';
+                    $request->validate([
+                        'email' => ['required', 'email'],
+                    ], [
+                        'email.required' => 'Email dosen wajib diisi.',
+                        'email.email' => 'Format email dosen tidak valid.',
+                    ]);
+                } else {
+                    $request->validate([
+                        'email' => ['required', 'regex:/^\d{10}$/'],
+                    ], [
+                        'email.required' => 'NIDN dosen wajib diisi.',
+                        'email.regex' => 'NIDN harus berupa 10 digit angka.',
+                    ]);
+                    $field = 'NIDN';
+                }
+                break;
+
+            default:
+                return back()->withErrors(['role' => 'Role tidak valid'])->withInput();
+        }
+
+        $user = User::where($field, $input)
+            ->where('role', $role)
+            ->first();
+
+        if (!$user) {
             return back()->withErrors([
-                'email' => 'Email atau password salah.',
+                'email' => "Data $role dengan $field '$input' tidak ditemukan.",
             ])->withInput();
         }
 
-        $request->session()->regenerate();
-
-        $user = Auth::user();
-
-        if ($user->role !== $request->input('role')) {
-            Auth::logout();
-            return redirect()->route('home')->withErrors([
-                'email' => 'Role tidak sesuai dengan akun Anda.',
-            ]);
+        if (!Hash::check($password, $user->password)) {
+            return back()->withErrors([
+                'password' => 'Password salah.',
+            ])->withInput();
         }
 
-        logger('Login Success:', ['user' => $user]);
+        Auth::login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        logger('Login berhasil', ['user' => $user]);
 
         return match ($user->role) {
             'admin' => redirect()->route('admin.dashboard'),
@@ -62,7 +111,6 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');
