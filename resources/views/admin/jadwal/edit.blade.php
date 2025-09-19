@@ -31,8 +31,7 @@
                 </ul>
             </div>
         @endif
-
-        <form action="{{ route('admin.jadwal.update', $jadwal->id) }}" method="POST" class="space-y-4">
+        <form action="{{ route('admin.jadwal.update', ['jadwal' => $jadwal->id]) }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
 

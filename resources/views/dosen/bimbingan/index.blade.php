@@ -50,6 +50,7 @@
                         </td>
                         @php
                             $statusClass = match ($bimbingan->status) {
+                                'pending' => 'bg-yellow-100 text-yellow-800',
                                 'approved' => 'bg-green-100 text-green-800',
                                 'rejected' => 'bg-red-100 text-red-800',
                                 default => 'bg-gray-100 text-gray-800',
@@ -84,9 +85,8 @@
                                     x-transition:leave="transition ease-in duration-75"
                                     x-transition:leave-start="transform opacity-100 scale-100"
                                     x-transition:leave-end="transform opacity-0 scale-95"
-                                    class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none"
+                                    class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-20"
                                     role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                                    {{-- Form untuk Update Status --}}
                                     <form action="{{ route('dosen.bimbingan.updateStatus', $bimbingan->id) }}"
                                         method="POST" class="py-1 px-4 space-y-2" role="none">
                                         @csrf

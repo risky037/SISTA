@@ -30,6 +30,11 @@ class MahasiswaManagementController extends Controller
             'NIM' => 'required|numeric|digits_between:12,15|unique:users,NIM',
             'prodi' => 'required|string',
             'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+        ], [
+            'NIM.required' => 'NIM wajib diisi.',
+            'NIM.numeric' => 'NIM harus berupa angka.',
+            'NIM.digits_between' => 'NIM harus terdiri dari 12 sampai 15 digit.',
+            'NIM.unique' => 'NIM sudah digunakan oleh pengguna lain.',
         ]);
 
         $data = $request->all();
@@ -55,11 +60,16 @@ class MahasiswaManagementController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$mahasiswa->id,
+            'email' => 'required|email|unique:users,email,' . $mahasiswa->id,
             'no_hp' => 'nullable|string',
             'NIM' => 'required|numeric|digits_between:12,15|unique:users,NIM,' . $mahasiswa->id,
             'prodi' => 'required|string',
             'foto' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+        ], [
+            'NIM.required' => 'NIM wajib diisi.',
+            'NIM.numeric' => 'NIM harus berupa angka.',
+            'NIM.digits_between' => 'NIM harus terdiri dari 12 sampai 15 digit.',
+            'NIM.unique' => 'NIM sudah digunakan oleh pengguna lain.',
         ]);
 
         $data = $request->all();

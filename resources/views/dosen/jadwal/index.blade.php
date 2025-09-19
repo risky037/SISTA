@@ -24,6 +24,8 @@
             </div>
         @endif
 
+        <p class="text-sm text-gray-500 mb-4 italic"> Jadwal yang ditampilkan di bawah ini adalah jadwal bimbingan yang
+            telah disetujui (approved).</p>
         <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[600px]">
             <thead class="bg-green-100 text-gray-700">
                 <tr>
@@ -48,10 +50,16 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="text-center p-4 text-gray-500">Belum ada Jadwal Bimbingan.</td>
+                        <td colspan="3" class="text-center p-4 text-gray-500">
+                            Belum ada Jadwal Bimbingan yang disetujui.
+                            <br>
+                            <a href="{{ route('dosen.bimbingan.index') }}" class="text-green-600 hover:underline">
+                                Cek permintaan bimbingan mahasiswa
+                            </a>
+                        </td>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                @endempty
+        </tbody>
+    </table>
+</div>
 @endsection

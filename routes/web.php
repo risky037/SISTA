@@ -18,8 +18,8 @@ use App\Http\Controllers\Mahasiswa\DokumenAkhirMahasiswaController;
 use App\Http\Controllers\Mahasiswa\ProposalMahasiswaController;
 use App\Http\Controllers\Mahasiswa\NilaiMahasiswaController;
 use App\Http\Controllers\Mahasiswa\TemplateMahasiswaController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('welcome'))->name('home')->middleware('guest');
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
@@ -29,7 +29,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('admin', AdminManagementController::class)->names('management.admin');
     Route::resource('mahasiswa', MahasiswaManagementController::class)->names('management.mahasiswa');
     Route::resource('dosen', DosenManagementController::class)->names('management.dosen');
-    Route::resource('jadwal-sidang', JadwalSidangManagementController::class)->names('jadwal');
+    Route::resource('jadwal-sidang', JadwalSidangManagementController::class)->names('jadwal')->parameters(['jadwal-sidang' => 'jadwal']);
     Route::resource('proposal', ProposalManagementController::class)->names('proposal');
     Route::resource('template', TemplateManagementController::class)->names('template');
 });
