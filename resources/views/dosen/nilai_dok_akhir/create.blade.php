@@ -12,7 +12,8 @@
             <ol class="list-reset flex">
                 <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li><a href="{{ route('dosen.nilai-dokumen-akhir.index') }}" class="hover:text-green-600">Nilai Dokumen Akhir</a></li>
+                <li><a href="{{ route('dosen.nilai-dokumen-akhir.index') }}" class="hover:text-green-600">Nilai Dokumen
+                        Akhir</a></li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-gray-700">Tambah</li>
             </ol>
@@ -29,6 +30,7 @@
                 </ul>
             </div>
         @endif
+        <p class="text-sm text-gray-500 mb-4 italic">Hanya dokumen yang sudah direview yang dapat dinilai.</p>
 
         <form action="{{ route('dosen.nilai-dokumen-akhir.store') }}" method="POST" class="space-y-4">
             @csrf
@@ -40,9 +42,11 @@
                     required>
                     <option value="">-- Pilih Dokumen --</option>
                     @foreach ($dokumenAkhir as $dok)
-                        <option value="{{ $dok->id }}">
-                            {{ $dok->mahasiswa->name }} - "{{ $dok->judul }}"
-                        </option>
+                        @if ($dok->status !== 'pending' && $dok->nilai === null)
+                            <option value="{{ $dok->id }}">
+                                {{ $dok->mahasiswa->name }} - "{{ $dok->judul }}" - {{$dok->status}}
+                            </option>
+                        @endif
                     @endforeach
                 </select>
             </div>

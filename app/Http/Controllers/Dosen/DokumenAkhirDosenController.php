@@ -44,6 +44,8 @@ class DokumenAkhirDosenController extends Controller
         $dok->catatan_dosen = $request->catatan_dosen;
         $dok->save();
 
-        return redirect()->route('dosen.dokumen-akhir.index')->with('success', 'Status dokumen akhir berhasil diperbarui.');
+        return redirect()
+            ->route('dosen.dokumen-akhir.index')
+            ->with('success', 'Status dokumen akhir berhasil diperbarui. <a href="' . route('dosen.nilai-dokumen-akhir.index') . '" class="underline text-green-700 hover:text-green-900 font-semibold">Beri nilai sekarang!</a>');
     }
 }

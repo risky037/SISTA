@@ -35,9 +35,10 @@
             <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[600px]">
                 <thead class="bg-green-100 text-gray-700">
                     <tr>
+                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Tanggal Upload</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">Judul</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">Deskripsi</th>
-                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Dosen Pembimbing</th>
+                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Dosen</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">File</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-left">Status</th>
                         <th scope="col" class="px-2 md:px-4 py-2 border text-center">Aksi</th>
@@ -45,7 +46,8 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($proposals as $proposal)
-                        <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $proposal->created_at->format('d M Y') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $proposal->judul }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $proposal->deskripsi }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
@@ -59,8 +61,8 @@
                                 @php
                                     $statusClass = match ($proposal->status) {
                                         'pending' => 'bg-yellow-100 text-yellow-800',
-                                        'approved' => 'bg-green-100 text-green-800',
-                                        'rejected' => 'bg-red-100 text-red-800',
+                                        'diterima' => 'bg-green-100 text-green-800',
+                                        'ditolak' => 'bg-red-100 text-red-800',
                                         default => 'bg-gray-100 text-gray-800',
                                     };
                                 @endphp

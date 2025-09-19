@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('judul');
             $table->text('deskripsi')->nullable();
             $table->string('file_proposal');
-            $table->enum('status', ['pending', 'revisi', 'diterima', 'ditolak'])->default('pending');
+            $table->enum('status', ['pending', 'diterima', 'ditolak'])->default('pending');
             $table->text('catatan_dosen')->nullable();
             $table->timestamps();
 

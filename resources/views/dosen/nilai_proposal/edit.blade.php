@@ -38,7 +38,7 @@
                     <option value="">-- Pilih Proposal --</option>
                     @foreach ($proposals as $proposal)
                         <option value="{{ $proposal->id }}" {{ $proposal->id == $nilai->proposal_id ? 'selected' : '' }}>
-                            {{ $proposal->mahasiswa->name }} - "{{ $proposal->judul }}"
+                            {{ $proposal->mahasiswa->name }} - "{{ $proposal->judul }}" - {{$proposal->status}}
                         </option>
                     @endforeach
                 </select>
