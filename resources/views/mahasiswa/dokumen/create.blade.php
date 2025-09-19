@@ -41,9 +41,9 @@
             </div>
 
             <div class="mb-4">
-                <label for="keterangan" class="block text-sm font-medium text-gray-700">keterangan</label>
-                <textarea id="keterangan" name="keterangan" rows="4"
-                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('keterangan') }}</textarea>
+                <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                <textarea id="deskripsi" name="deskripsi" rows="4"
+                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500">{{ old('deskripsi') }}</textarea>
             </div>
 
             <div class="mb-6">

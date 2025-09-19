@@ -18,7 +18,8 @@ class DokumenAkhir extends Model
         'judul',
         'file',
         'status',
-        'keterangan',
+        'deskripsi',
+        'catatan_dosen',
     ];
 
 

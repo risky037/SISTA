@@ -49,8 +49,12 @@
             </span>
         </div>
         <div class="mb-4">
-            <h3 class="text-gray-800 text-lg font-semibold">Keterangan</h3>
-            <p class="text-gray-500">{{ $dok->keterangan ?? '-' }}</p>
+            <h3 class="text-gray-800 text-lg font-semibold">Deskripsi</h3>
+            <p class="text-gray-500">{{ $dok->deskripsi ?? '-' }}</p>
+        </div>
+        <div class="mb-4">
+            <h3 class="text-gray-800 text-lg font-semibold">Catatan dari dosen</h3>
+            <p class="text-gray-500">{{ $dok->catatan_dosen ?? 'belum ada catatan dari anda' }}</p>
         </div>
         <div class="flex justify-start mt-4">
             <a href="{{ route('dosen.dokumen-akhir.index') }}"

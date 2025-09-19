@@ -33,7 +33,7 @@ class DokumenAkhirDosenController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
-            'keterangan' => 'nullable|string',
+            'catatan_dosen' => 'nullable|string',
         ]);
 
         $dok = DokumenAkhir::where('dosen_pembimbing_id', Auth::id())
@@ -41,7 +41,7 @@ class DokumenAkhirDosenController extends Controller
             ->firstOrFail();
 
         $dok->status = $request->status;
-        $dok->keterangan = $request->keterangan;
+        $dok->catatan_dosen = $request->catatan_dosen;
         $dok->save();
 
         return redirect()->route('dosen.dokumen-akhir.index')->with('success', 'Status dokumen akhir berhasil diperbarui.');
