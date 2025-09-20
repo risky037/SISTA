@@ -105,7 +105,7 @@
                                                 <select name="status" id="status-{{ $proposal->id }}"
                                                     class="mt-1 block w-full border rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                                                     <option value="pending" @selected($proposal->status == 'pending')>Pending</option>
-                                                    <option value="revisi" @selected($proposal->status == 'revisi')>Revisi</option>
+                                                    
                                                     <option value="diterima" @selected($proposal->status == 'diterima')>Diterima</option>
                                                     <option value="ditolak" @selected($proposal->status == 'ditolak')>Ditolak</option>
                                                 </select>
