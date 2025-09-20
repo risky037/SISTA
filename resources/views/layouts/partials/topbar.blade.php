@@ -8,7 +8,19 @@
     <div class="relative">
         <button id="profile-menu-button"
             class="flex items-center gap-3 text-white text-sm font-semibold focus:outline-none">
-            <i class="fas fa-user text-lg"></i>
+            <span>
+                @auth
+                    @if (Auth::user()->role === 'admin')
+                        <i class="fas fa-user-shield text-lg"></i>
+                    @elseif (Auth::user()->role === 'dosen')
+                        <i class="fas fa-user-tie text-lg"></i>
+                    @elseif (Auth::user()->role === 'mahasiswa')
+                        <i class="fas fa-user-graduate text-lg"></i>
+                    @else
+                        <i class="fas fa-user text-lg"></i>
+                    @endif
+                @endauth
+            </span>
             <span>
                 @auth
                     @if (Auth::user()->role === 'admin' || Auth::user()->role === 'dosen')

@@ -27,11 +27,14 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middlew
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
     Route::resource('admin', AdminManagementController::class)->names('management.admin');
-    Route::resource('mahasiswa', MahasiswaManagementController::class)->names('management.mahasiswa');
+    Route::resource('mahasiswa', MahasiswaManagementController::class)->except(['show'])->names('management.mahasiswa');
     Route::resource('dosen', DosenManagementController::class)->names('management.dosen');
     Route::resource('jadwal-sidang', JadwalSidangManagementController::class)->names('jadwal')->parameters(['jadwal-sidang' => 'jadwal']);
     Route::resource('proposal', ProposalManagementController::class)->names('proposal');
     Route::resource('template', TemplateManagementController::class)->names('template');
+
+    Route::post('mahasiswa/import', [MahasiswaManagementController::class, 'import'])->name('management.mahasiswa.import');
+    Route::post('dosen/import', [DosenManagementController::class, 'import'])->name('management.dosen.import');
 });
 
 Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasiswa.')->group(function () {

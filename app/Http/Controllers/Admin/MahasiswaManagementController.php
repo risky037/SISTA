@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\MahasiswaImport;
+use Maatwebsite\Excel\Validators\ValidationException;
+use Illuminate\Database\UniqueConstraintViolationException;
 
 class MahasiswaManagementController extends Controller
 {
@@ -95,5 +99,31 @@ class MahasiswaManagementController extends Controller
         $mahasiswa->delete();
 
         return redirect()->route('admin.management.mahasiswa.index')->with('success', "Mahasiswa \"$mahasiswaName\" berhasil dihapus.");
+    }
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        try {
+            Excel::import(new MahasiswaImport, $request->file('file'));
+
+            return redirect()->route('admin.management.mahasiswa.index')->with('success', 'Data mahasiswa berhasil diimport!');
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
+            $messages = [];
+            foreach ($failures as $failure) {
+                $row = $failure->row();
+                $errors = $failure->errors();
+                $messages[] = "Baris {$row}: " . implode(', ', $errors);
+            }
+
+            return redirect()->back()->with('error', 'Gagal mengimpor data: ' . implode('<br>', $messages));
+        } catch (UniqueConstraintViolationException $e) {
+            return redirect()->back()->with('error', 'Gagal mengimpor data: Terdapat duplikasi data (NIM atau email) yang tidak valid.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
+        }
     }
 }
