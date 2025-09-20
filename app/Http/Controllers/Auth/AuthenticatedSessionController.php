@@ -41,10 +41,10 @@ class AuthenticatedSessionController extends Controller
 
             case 'mahasiswa':
                 $request->validate([
-                    'email' => ['required', 'regex:/^\d{8,12}$/'],
+                    'email' => ['required', 'regex:/^\d{8,15}$/'],
                 ], [
                     'email.required' => 'NIM mahasiswa wajib diisi.',
-                    'email.regex' => 'NIM harus berupa angka dengan panjang 8 sampai 12 digit.',
+                    'email.regex' => 'NIM harus berupa angka dengan panjang 8 sampai 15 digit.',
                 ]);
                 $field = 'NIM';
                 break;

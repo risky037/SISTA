@@ -37,7 +37,7 @@
                     <div x-show="open" x-collapse.duration.300ms class="space-y-1">
                         <a href="{{ route('admin.management.admin.index') }}"
                             class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.admin.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                            <i class="fas fa-user-plus"></i>
+                            <i class="fas fa-user-shield"></i>
                             <span>Admin</span>
                         </a>
                         <a href="{{ route('admin.management.mahasiswa.index') }}"

@@ -7,12 +7,16 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Imports\DosenImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
+use Illuminate\Database\UniqueConstraintViolationException;
 
 class DosenManagementController extends Controller
 {
     public function index()
     {
-        $dosen = User::where('role', 'dosen')->get();
+        $dosen = User::where('role', 'dosen')->latest()->paginate(10);
         return view('admin.management.dosen.index', compact('dosen'));
     }
 
@@ -98,5 +102,31 @@ class DosenManagementController extends Controller
         }
         $dosen->delete();
         return redirect()->route('admin.management.dosen.index')->with('success', "Data Dosen \"{$dosen->name}\" berhasil diperbarui.");
+    }
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        try {
+            Excel::import(new DosenImport, $request->file('file'));
+
+            return redirect()->route('admin.management.dosen.index')->with('success', 'Data dosen berhasil diimport!');
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
+            $messages = [];
+            foreach ($failures as $failure) {
+                $row = $failure->row();
+                $errors = $failure->errors();
+                $messages[] = "Baris {$row}: " . implode(', ', $errors);
+            }
+
+            return redirect()->back()->with('error', 'Gagal mengimpor data:<br>' . implode('<br>', $messages));
+        } catch (UniqueConstraintViolationException $e) {
+            return redirect()->back()->with('error', 'Gagal mengimpor data: Terdapat duplikasi data (NIDN atau email) yang tidak valid.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
+        }
     }
 }
