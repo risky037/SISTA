@@ -56,6 +56,9 @@
             <a href="#" id="notif-button" onclick="event.preventDefault(); toggleNotificationSidebar();"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 relative">
                 <i class="fas fa-bell mr-2"></i> Notifikasi
+                @if ($unreadCount > 0)
+                    <span class="absolute top-1 right-2 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
+                @endif
             </a>
 
             <div class="border-t border-gray-100 my-1"></div>

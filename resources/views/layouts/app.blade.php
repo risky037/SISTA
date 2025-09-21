@@ -35,11 +35,29 @@
                 transform: scale(1);
             }
         }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .preloader-fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
     </style>
     @stack('styles')
 </head>
 
 <body class="bg-gray-100 font-sans text-gray-900">
+    <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-100/75 backdrop-blur-sm">
+        <div class="h-12 w-12 animate-spin rounded-full border-4 border-solid border-green-500 border-t-transparent">
+        </div>
+    </div>
     <div class="flex min-h-screen">
         @include('layouts.partials.sidebar')
 
@@ -151,6 +169,21 @@
                 sidebar.classList.remove('-translate-x-full');
                 mainContent.classList.add('lg:ml-64');
                 mainContent.classList.remove('lg:ml-0');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.classList.add('preloader-fade-out');
+
+                    preloader.addEventListener('animationend', () => {
+                        preloader.style.display = 'none';
+                    }, {
+                        once: true
+                    });
+                }, 500);
             }
         });
     </script>

@@ -20,6 +20,7 @@ return [
     ],
     'boolean' => ':attribute harus bernilai true atau false',
     'confirmed' => 'Konfirmasi :attribute tidak cocok.',
+    'current_password' => 'Kata sandi yang Anda masukkan salah.',
     'date' => ':attribute bukan tanggal yang valid.',
     'date_equals' => ':attribute harus berisi tanggal yang sama dengan :date.',
     'date_format' => ':attribute tidak cocok dengan format :format.',
@@ -113,5 +114,8 @@ return [
         ],
     ],
 
-    'attributes' => [],
+    'attributes' => [
+        'current_password' => 'kata sandi saat ini',
+        'password' => 'kata sandi baru',
+    ],
 ];
