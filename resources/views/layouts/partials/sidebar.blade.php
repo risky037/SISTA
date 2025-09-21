@@ -3,8 +3,10 @@
     class="fixed inset-y-0 left-0 transform bg-white border-r border-gray-200 w-64 transition-transform duration-300 z-40">
     <div class="flex flex-col h-full">
         <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-200">
-            <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png" class="w-10 h-10" alt="Logo SIA" />
-            <span class="text-lg font-normal text-gray-900">Sistem Informasi Tugas Akhir & Skripsi</span>
+            <a href="{{ route(Auth::user()->role . '.dashboard') }}" class="flex items-center gap-2">
+                <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png" class="w-10 h-10" alt="Logo SIA" />
+                <span class="text-lg font-normal text-gray-900">Sistem Informasi Tugas Akhir & Skripsi</span>
+            </a>
             <button onclick="toggleSidebar()" id="sidebar-toggle-button"
                 class="lg:hidden p-2 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500 ml-auto">
                 <i class="fas fa-arrow-left"></i>
