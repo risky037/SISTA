@@ -147,5 +147,73 @@ class DummyDataSeeder extends Seeder
                 'is_read' => $faker->boolean(50),
             ]);
         }
+        // Tambahan dummy data untuk user dosen@email.com dan mahasiswa@email.com
+        $dosenFixed = User::where('email', 'dosen@email.com')->first();
+        $mahasiswaFixed = User::where('email', 'mahasiswa@email.com')->first();
+
+        if ($dosenFixed && $mahasiswaFixed && !Proposal::where('mahasiswa_id', $mahasiswaFixed->id)->exists()) {
+            // Buat proposal
+            $proposalStatus = $faker->randomElement(['pending', 'diterima', 'ditolak']);
+            $proposal = Proposal::create([
+                'mahasiswa_id' => $mahasiswaFixed->id,
+                'dosen_pembimbing_id' => $dosenFixed->id,
+                'judul' => 'Proposal ' . $faker->jobTitle,
+                'deskripsi' => $faker->paragraph,
+                'file_proposal' => 'proposal/' . Str::slug($mahasiswaFixed->name) . '_proposal.pdf',
+                'status' => $proposalStatus,
+                'catatan_dosen' => $proposalStatus !== 'pending' ? $faker->sentence : null,
+            ]);
+
+            if ($proposalStatus !== 'pending') {
+                Nilai::create([
+                    'proposal_id' => $proposal->id,
+                    'dosen_id' => $dosenFixed->id,
+                    'grade' => $faker->randomElement($gradeNames),
+                    'keterangan' => $faker->sentence,
+                ]);
+            }
+
+            // Bimbingan
+            Bimbingan::create([
+                'mahasiswa_id' => $mahasiswaFixed->id,
+                'dosen_id' => $dosenFixed->id,
+                'tanggal_bimbingan' => $faker->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
+                'waktu_mulai' => $faker->time('H:i:s'),
+                'waktu_selesai' => $faker->time('H:i:s'),
+                'status' => 'approved',
+                'catatan_dosen' => $faker->sentence,
+            ]);
+
+            // Dokumen akhir
+            $dokumenStatus = $faker->randomElement(['pending', 'approved', 'rejected']);
+            $dokumen = DokumenAkhir::create([
+                'mahasiswa_id' => $mahasiswaFixed->id,
+                'dosen_pembimbing_id' => $dosenFixed->id,
+                'judul' => 'Skripsi ' . $faker->jobTitle,
+                'deskripsi' => $faker->paragraph,
+                'file' => 'skripsi/' . Str::slug($mahasiswaFixed->name) . '_skripsi.pdf',
+                'status' => $dokumenStatus,
+                'catatan_dosen' => $dokumenStatus !== 'pending' ? $faker->sentence : null,
+            ]);
+
+            if ($dokumenStatus !== 'pending') {
+                Nilai::create([
+                    'dokumen_akhir_id' => $dokumen->id,
+                    'dosen_id' => $dosenFixed->id,
+                    'grade' => $faker->randomElement($gradeNames),
+                    'keterangan' => $faker->sentence,
+                ]);
+            }
+
+            // Notifikasi
+            Notification::create([
+                'user_id' => $mahasiswaFixed->id,
+                'title' => 'Proposal Anda telah disetujui',
+                'message' => 'Proposal Anda telah ditinjau oleh dosen pembimbing.',
+                'link' => '/proposal/' . $proposal->id,
+                'is_read' => false,
+            ]);
+        }
+
     }
 }
