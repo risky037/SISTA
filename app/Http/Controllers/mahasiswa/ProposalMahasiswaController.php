@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
+use App\Helpers\NotifyHelper;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendNotificationJob;
 use Illuminate\Http\Request;
 use App\Models\Proposal;
 use App\Models\User;
@@ -29,13 +31,13 @@ class ProposalMahasiswaController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'file_proposal' => 'required|mimes:pdf|max:2048',
-            'dosen_pembimbing_id' => 'required|exists:users,id', // validasi dosen
+            'dosen_pembimbing_id' => 'required|exists:users,id',
         ]);
 
         $fileName = time() . '-' . $request->file('file_proposal')->getClientOriginalName();
         $request->file('file_proposal')->storeAs('proposals', $fileName, 'public');
 
-        Proposal::create([
+        $proposal = Proposal::create([
             'mahasiswa_id' => Auth::id(),
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
@@ -43,6 +45,25 @@ class ProposalMahasiswaController extends Controller
             'status' => 'pending',
             'dosen_pembimbing_id' => $request->dosen_pembimbing_id,
         ]);
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            NotifyHelper::send(
+                $admin->id,
+                'Pengajuan Proposal Baru',
+                auth()->user()->name . ' telah mengunggah proposal.',
+                route('admin.proposal.index')
+            );
+        }
+
+        if ($proposal->dosen_pembimbing_id) {
+            NotifyHelper::send(
+                $proposal->dosen_pembimbing_id,
+                'Proposal Mahasiswa Baru',
+                auth()->user()->name . ' telah mengunggah proposal.',
+                route('dosen.proposals.index')
+            );
+        }
 
         return redirect()->route('mahasiswa.proposals.index')->with('success', 'Proposal berhasil diajukan!');
     }

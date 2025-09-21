@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
+use App\Helpers\NotifyHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\DokumenAkhir;
+use App\Models\User;
 
 class DokumenAkhirMahasiswaController extends Controller
 {
@@ -44,13 +46,32 @@ class DokumenAkhirMahasiswaController extends Controller
 
         $path = $request->file('file')->store('dokumen_akhir', 'public');
 
-        DokumenAkhir::create([
+        $dokumen = DokumenAkhir::create([
             'mahasiswa_id' => Auth::id(),
             'dosen_pembimbing_id' => $request->dosen_pembimbing_id,
             'judul' => $request->judul,
             'file' => $path,
             'deskripsi' => $request->deskripsi,
         ]);
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            NotifyHelper::send(
+                $admin->id,
+                'Dokumen Akhir Diupload',
+                auth()->user()->name . ' telah mengunggah dokumen akhir.',
+                route('admin.proposal.index')
+            );
+        }
+
+        if ($dokumen->dosen_pembimbing_id) {
+            NotifyHelper::send(
+                $dokumen->dosen_pembimbing_id,
+                'Dokumen Akhir Mahasiswa',
+                auth()->user()->name . ' telah mengunggah dokumen akhir.',
+                route('dosen.dokumen-akhir.index')
+            );
+        }
 
         return redirect()->route('mahasiswa.dokumen-akhir.index')
             ->with('success', 'Dokumen berhasil diupload.');

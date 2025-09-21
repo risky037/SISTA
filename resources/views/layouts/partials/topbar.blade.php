@@ -4,6 +4,10 @@
         <i id="sidebar-toggle-icon" class="fas fa-bars"></i>
     </button>
 
+    @php
+        $unreadCount = getUnreadNotificationCount();
+    @endphp
+
     <!-- Profile Menu -->
     <div class="relative">
         <button id="profile-menu-button"
@@ -35,6 +39,9 @@
                 @endauth
             </span>
             <i class="fas fa-chevron-down text-xs"></i>
+            @if ($unreadCount > 0)
+                <span class="absolute top-1 right-2 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
+            @endif
         </button>
 
         <div id="profile-menu"
@@ -47,7 +54,7 @@
 
             <!-- Notifikasi -->
             <a href="#" id="notif-button" onclick="event.preventDefault(); toggleNotificationSidebar();"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 relative">
                 <i class="fas fa-bell mr-2"></i> Notifikasi
             </a>
 

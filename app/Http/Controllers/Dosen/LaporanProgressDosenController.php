@@ -3,45 +3,43 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
-use App\Models\LaporanProgress;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use App\Models\Proposal;
+use App\Models\DokumenAkhir;
+use App\Models\Bimbingan;
+use App\Models\Nilai;
 
 class LaporanProgressDosenController extends Controller
 {
     public function index()
     {
-        $laporan = LaporanProgress::with(['mahasiswa', 'proposal'])
-            ->whereHas('proposal', function ($q) {
-                $q->where('dosen_pembimbing_id', Auth::id());
-            })
-            ->latest()
-            ->get();
+        $dosenId = Auth::id();
 
-        return view('dosen.laporan.index', compact('laporan'));
-    }
+        $totalProposal = Proposal::where('dosen_pembimbing_id', $dosenId)->count();
+        $proposalStatus = Proposal::where('dosen_pembimbing_id', $dosenId)
+            ->selectRaw("status, COUNT(*) as total")
+            ->groupBy('status')
+            ->pluck('total', 'status');
 
+        $totalDokumen = DokumenAkhir::where('dosen_pembimbing_id', $dosenId)->count();
+        $dokumenStatus = DokumenAkhir::where('dosen_pembimbing_id', $dosenId)
+            ->selectRaw("status, COUNT(*) as total")
+            ->groupBy('status')
+            ->pluck('total', 'status');
 
-    public function show($id)
-    {
-        $laporan = LaporanProgress::with('mahasiswa')->findOrFail($id);
-        return view('dosen.laporan.show', compact('laporan'));
-    }
+        $totalBimbingan = Bimbingan::where('dosen_id', $dosenId)->count();
 
-    public function update(Request $request, $id)
-    {
-        $laporan = LaporanProgress::findOrFail($id);
+        $totalNilaiProposal = Nilai::whereNotNull('proposal_id')->where('dosen_id', $dosenId)->count();
+        $totalNilaiDokumen = Nilai::whereNotNull('dokumen_akhir_id')->where('dosen_id', $dosenId)->count();
 
-        $request->validate([
-            'status' => 'required|in:submitted,reviewed',
-            'catatan_dosen' => 'nullable|string'
-        ]);
-
-        $laporan->update([
-            'status' => $request->status,
-            'catatan_dosen' => $request->catatan_dosen,
-        ]);
-
-        return redirect()->route('dosen.laporan-progress.index')->with('success', 'Laporan berhasil diperbarui');
+        return view('dosen.laporan.index', compact(
+            'totalProposal',
+            'proposalStatus',
+            'totalDokumen',
+            'dokumenStatus',
+            'totalBimbingan',
+            'totalNilaiProposal',
+            'totalNilaiDokumen'
+        ));
     }
 }

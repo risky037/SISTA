@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dosen;
 
+use App\Helpers\NotifyHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Nilai;
@@ -58,6 +59,13 @@ class NilaiDokumenAkhirController extends Controller
             'grade' => $request->grade,
             'keterangan' => $request->keterangan,
         ]);
+        
+        NotifyHelper::send(
+            $dokumenAkhir->mahasiswa_id,
+            'Nilai Dokumen Akhir',
+            'Dosen telah memberikan nilai untuk dokumen akhir Anda.',
+            route('mahasiswa.nilai.index')
+        );
 
         return redirect()->route('dosen.nilai-dokumen-akhir.index')->with('success', 'Nilai dokumen akhir berhasil ditambahkan.');
     }

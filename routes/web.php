@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DosenManagementController;
 use App\Http\Controllers\Admin\ProposalManagementController;
 use App\Http\Controllers\Admin\TemplateManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Dosen\BimbinganDosenController;
 use App\Http\Controllers\Dosen\DokumenAkhirDosenController;
 use App\Http\Controllers\Dosen\LaporanProgressDosenController;
@@ -25,7 +26,7 @@ Route::get('/', fn() => view('welcome'))->name('home')->middleware('guest');
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
     Route::resource('admin', AdminManagementController::class)->names('management.admin');
     Route::resource('mahasiswa', MahasiswaManagementController::class)->except(['show'])->names('management.mahasiswa');
     Route::resource('dosen', DosenManagementController::class)->names('management.dosen');
@@ -38,7 +39,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
 });
 
 Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasiswa.')->group(function () {
-    Route::get('/dashboard', fn() => view('mahasiswa.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
     Route::get('jadwal-seminar', [JadwalSeminarMahasiswaController::class, 'index'])->name('jadwal-seminar');
     Route::resource('proposal', ProposalMahasiswaController::class)->names('proposals');
     Route::post('proposal/{id}/status', [ProposalMahasiswaController::class, 'updateStatus'])->name('proposals.updateStatus');
@@ -48,7 +49,7 @@ Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasi
 });
 
 Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->group(function () {
-    Route::get('/dashboard', fn() => view('dosen.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dosen'])->name('dashboard');
     Route::get('bimbingan', [BimbinganDosenController::class, 'index'])->name('bimbingan.index');
     Route::get('jadwal-bimbingan', [BimbinganDosenController::class, 'indexJadwal'])->name('jadwalbimbingan.index');
     Route::post('bimbingan/{id}/status', [BimbinganDosenController::class, 'updateStatus'])->name('bimbingan.updateStatus');
@@ -70,6 +71,19 @@ Route::middleware('auth')->group(function () {
 
     Route::view('/bantuan', 'static.general', ['page' => 'bantuan'])->name('bantuan');
     Route::view('/tentang', 'static.general', ['page' => 'tentang'])->name('tentang');
+
+    Route::get('/notifications/{notification}', [DashboardController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+    Route::get('/dashboard', function () {
+        $user = Auth::user();
+
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'dosen' => redirect()->route('dosen.dashboard'),
+            'mahasiswa' => redirect()->route('mahasiswa.dashboard'),
+            default => abort(403),
+        };
+    })->name('dashboard');
 });
 
 require __DIR__ . '/auth.php';

@@ -12,11 +12,7 @@
         </div>
         <nav class="flex flex-col px-5 py-6 space-y-1 text-sm text-gray-600 overflow-y-auto">
             <span class="uppercase text-xs font-semibold mb-2 text-gray-400">Navigasi</span>
-            <a href="{{ auth()->user()->role == 'admin'
-                ? route('admin.dashboard')
-                : (auth()->user()->role == 'mahasiswa'
-                    ? route('mahasiswa.dashboard')
-                    : route('dosen.dashboard')) }}"
+            <a href="{{ route(Auth::user()->role . '.dashboard') }}"
                 class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.dashboard') ||
                 request()->routeIs('mahasiswa.dashboard') ||
                 request()->routeIs('dosen.dashboard')
@@ -60,7 +56,7 @@
                 <a href="{{ route('admin.proposal.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.proposal.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-file-alt"></i>
-                    <span>Proposal</span>
+                    <span>Proposal & Dokumen Akhir</span>
                 </a>
                 <a href="{{ route('admin.template.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.template.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
@@ -200,15 +196,29 @@
         </div>
         <div class="p-4 overflow-y-auto">
             <div class="space-y-4 text-sm text-gray-600">
-                <p class="text-center text-gray-400 mt-8">Tidak ada notifikasi baru.</p>
-                <div class="p-3 bg-blue-50 rounded-lg shadow-sm">
-                    <p class="font-semibold text-blue-800">Review Skripsi Baru</p>
-                    <p class="text-xs text-gray-500">Dari Mahasiswa: John Doe</p>
-                </div>
-                <div class="p-3 bg-green-50 rounded-lg shadow-sm">
-                    <p class="font-semibold text-green-800">Jadwal Sidang Terbit</p>
-                    <p class="text-xs text-gray-500">Tanggal: 25 Oktober 2025</p>
-                </div>
+                @php
+                    $notifications = getCachedNotifications();
+                @endphp
+
+                @foreach ($notifications as $notif)
+                    @php
+                        $colorClasses = match ($notif['type']) {
+                            'warning' => 'bg-yellow-50 text-yellow-800',
+                            'info' => 'bg-blue-50 text-blue-800',
+                            'success' => 'bg-green-50 text-green-800',
+                            default => 'bg-gray-50 text-gray-800',
+                        };
+
+                        $readClass = $notif['is_read'] ? '' : 'border-l-4 border-blue-500';
+                    @endphp
+
+                    <a href="{{ is_numeric($notif['id']) ? route('notifications.markAsRead', $notif['id']) : $notif['link'] }}"
+                        class="block p-3 rounded-lg shadow-sm {{ $colorClasses }} {{ $readClass }}">
+                        <p class="font-bold">{{ $notif['title'] }}</p>
+                        <p class="font-semibold text-sm">{{ $notif['message'] }}</p>
+                        <p class="text-xs text-gray-500 mt-1">Klik untuk detail</p>
+                    </a>
+                @endforeach
             </div>
         </div>
     </div>
