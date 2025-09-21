@@ -202,25 +202,29 @@
                     $notifications = getCachedNotifications();
                 @endphp
 
-                @foreach ($notifications as $notif)
-                    @php
-                        $colorClasses = match ($notif['type']) {
-                            'warning' => 'bg-yellow-50 text-yellow-800',
-                            'info' => 'bg-blue-50 text-blue-800',
-                            'success' => 'bg-green-50 text-green-800',
-                            default => 'bg-gray-50 text-gray-800',
-                        };
+                @if (count($notifications) > 0)
+                    @foreach ($notifications as $notif)
+                        @php
+                            $colorClasses = match ($notif['type']) {
+                                'warning' => 'bg-yellow-50 text-yellow-800',
+                                'info' => 'bg-blue-50 text-blue-800',
+                                'success' => 'bg-green-50 text-green-800',
+                                default => 'bg-gray-50 text-gray-800',
+                            };
 
-                        $readClass = $notif['is_read'] ? '' : 'border-l-4 border-blue-500';
-                    @endphp
+                            $readClass = $notif['is_read'] ? '' : 'border-l-4 border-blue-500';
+                        @endphp
 
-                    <a href="{{ is_numeric($notif['id']) ? route('notifications.markAsRead', $notif['id']) : $notif['link'] }}"
-                        class="block p-3 rounded-lg shadow-sm {{ $colorClasses }} {{ $readClass }}">
-                        <p class="font-bold">{{ $notif['title'] }}</p>
-                        <p class="font-semibold text-sm">{{ $notif['message'] }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Klik untuk detail</p>
-                    </a>
-                @endforeach
+                        <a href="{{ is_numeric($notif['id']) ? route('notifications.markAsRead', $notif['id']) : $notif['link'] }}"
+                            class="block p-3 rounded-lg shadow-sm {{ $colorClasses }} {{ $readClass }}">
+                            <p class="font-bold">{{ $notif['title'] }}</p>
+                            <p class="font-semibold text-sm">{{ $notif['message'] }}</p>
+                            <p class="text-xs text-gray-500 mt-1">Klik untuk detail</p>
+                        </a>
+                    @endforeach
+                @else
+                    <p class="text-center text-gray-500">Tidak ada notifikasi</p>
+                @endif
             </div>
         </div>
     </div>
