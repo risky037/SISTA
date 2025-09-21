@@ -30,6 +30,8 @@
                     <th scope="col" class="px-2 md:px-4 py-2 border text-left">Hari, Tanggal</th>
                     <th scope="col" class="px-2 md:px-4 py-2 border text-left">Jam</th>
                     <th scope="col" class="px-2 md:px-4 py-2 border text-left">Mahasiswa</th>
+                    <th scope="col" class="px-2 md:px-4 py-2 border text-left">Dosen</th>
+                    <th scope="col" class="px-2 md:px-4 py-2 border text-left">Catatan</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +46,12 @@
                         </td>
                         <td class="px-6 py-4">
                             {{ $bimbingan->mahasiswa->name }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $bimbingan->dosen->name }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $bimbingan->catatan_dosen ?? 'belum ada catatan dari dosen' }}
                         </td>
                     </tr>
                 @empty

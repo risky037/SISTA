@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\NotifyHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Bimbingan;
 use App\Models\User;
@@ -32,7 +33,7 @@ class JadwalSidangManagementController extends Controller
             'waktu_selesai' => 'required|after:waktu_mulai',
         ]);
 
-        Bimbingan::create([
+        $jadwal = Bimbingan::create([
             'mahasiswa_id' => $request->mahasiswa_id,
             'dosen_id' => $request->dosen_id,
             'tanggal_bimbingan' => $request->tanggal_bimbingan,
@@ -40,6 +41,13 @@ class JadwalSidangManagementController extends Controller
             'waktu_selesai' => $request->waktu_selesai,
             'status' => 'pending',
         ]);
+
+        NotifyHelper::send(
+            $jadwal->dosen_id,
+            'Jadwal Baru dari Admin',
+            'Anda memiliki jadwal baru dari admin untuk bimbingan/sidang.',
+            route('dosen.bimbingan.index')
+        );
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal sidang berhasil dibuat');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dosen;
 
+use App\Helpers\NotifyHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Nilai;
@@ -57,6 +58,13 @@ class NilaiProposalController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
+        NotifyHelper::send(
+            $proposal->mahasiswa_id,
+            'Nilai Proposal',
+            'Dosen telah memberikan nilai untuk proposal Anda.',
+            route('mahasiswa.nilai.index')
+        );
+        
         return redirect()->route('dosen.nilai-proposal.index')->with('success', 'Nilai berhasil ditambahkan.');
     }
     public function edit($id)

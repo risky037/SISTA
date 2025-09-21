@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center mb-4">
         <div>
             <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
-            <p class="text-gray-500 text-sm">Halaman untuk meninjau laporan progress yang diajukan oleh mahasiswa.</p>
+            <p class="text-gray-500 text-sm">Halaman untuk meninjau progress yang mahasiswa.</p>
         </div>
         <nav class="text-sm text-gray-500">
             <ol class="list-reset flex">
@@ -18,58 +18,88 @@
     </div>
 
     <div class="p-6 bg-white rounded-lg shadow-md">
-        @if (session('success'))
-            <div class="bg-green-100 text-green-800 p-3 rounded-md border border-green-400 mb-4">
-                {{ session('success') }}
+        <h2 class="text-lg font-semibold mb-4">Statistik Progress Mahasiswa</h2>
+        <div class="my-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 bg-green-100 rounded">
+                <div class="text-sm text-gray-600">Total Bimbingan</div>
+                <div class="text-2xl font-bold">{{ $totalBimbingan }}</div>
             </div>
-        @endif
+            <div class="p-4 bg-blue-100 rounded">
+                <div class="text-sm text-gray-600">Proposal Dinilai</div>
+                <div class="text-2xl font-bold">{{ $totalNilaiProposal }}</div>
+            </div>
+            <div class="p-4 bg-yellow-100 rounded">
+                <div class="text-sm text-gray-600">Dokumen Akhir Dinilai</div>
+                <div class="text-2xl font-bold">{{ $totalNilaiDokumen }}</div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {{-- Grafik Proposal --}}
+            <div class="bg-gray-100 p-4 rounded">
+                <h3 class="font-semibold mb-2">Status Proposal</h3>
+                @if (
+                    ($proposalStatus['pending'] ?? 0) == 0 &&
+                        ($proposalStatus['diterima'] ?? 0) == 0 &&
+                        ($proposalStatus['ditolak'] ?? 0) == 0)
+                    <p class="text-center text-gray-500 py-10">Belum ada proposal yang diajukan.</p>
+                @else
+                    <canvas id="proposalChart"></canvas>
+                @endif
+            </div>
 
-        <div class="overflow-x-auto">
-            <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[600px]">
-                <thead class="bg-green-100 text-gray-700">
-                    <tr>
-                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Mahasiswa</th>
-                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Judul Laporan</th>
-                        <th scope="col" class="px-2 md:px-4 py-2 border text-center">Status</th>
-                        <th scope="col" class="px-2 md:px-4 py-2 border text-left">Catatan Dosen</th>
-                        <th scope="col" class="px-2 md:px-4 py-2 border text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($laporan as $row)
-                        @php
-                            $statusClass = match ($row->status) {
-                                'submitted' => 'bg-yellow-100 text-yellow-800',
-                                'approved' => 'bg-green-100 text-green-800',
-                                default => 'bg-gray-100 text-gray-800',
-                            };
-                        @endphp
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $row->mahasiswa->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ $row->judul_laporan }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                                    {{ ucfirst($row->status) }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $row->catatan_dosen ?? '-' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                <a href="{{ route('dosen.laporan-progress.show', $row->id) }}"
-                                    class="text-blue-600 hover:text-blue-900 underline">
-                                    Lihat Detail
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center p-4 text-gray-500">Belum ada laporan progress.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            {{-- Grafik Dokumen Akhir --}}
+            <div class="bg-gray-100 p-4 rounded">
+                <h3 class="font-semibold mb-2">Status Dokumen Akhir</h3>
+                @if (
+                    ($dokumenStatus['pending'] ?? 0) == 0 &&
+                        ($dokumenStatus['approved'] ?? 0) == 0 &&
+                        ($dokumenStatus['rejected'] ?? 0) == 0)
+                    <p class="text-center text-gray-500 py-10">Belum ada dokumen akhir yang diajukan.</p>
+                @else
+                    <canvas id="dokumenChart"></canvas>
+                @endif
+            </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        if (document.getElementById('proposalChart')) {
+            const proposalChart = new Chart(document.getElementById('proposalChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Diterima', 'Ditolak'],
+                    datasets: [{
+                        label: 'Proposal',
+                        data: [
+                            {{ $proposalStatus['pending'] ?? 0 }},
+                            {{ $proposalStatus['diterima'] ?? 0 }},
+                            {{ $proposalStatus['ditolak'] ?? 0 }}
+                        ],
+                        backgroundColor: ['#fbbf24', '#10b981', '#ef4444']
+                    }]
+                }
+            });
+        }
+
+        if (document.getElementById('dokumenChart')) {
+            const dokumenChart = new Chart(document.getElementById('dokumenChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Pending', 'Approved', 'Rejected'],
+                    datasets: [{
+                        label: 'Dokumen Akhir',
+                        data: [
+                            {{ $dokumenStatus['pending'] ?? 0 }},
+                            {{ $dokumenStatus['approved'] ?? 0 }},
+                            {{ $dokumenStatus['rejected'] ?? 0 }}
+                        ],
+                        backgroundColor: ['#fbbf24', '#10b981', '#ef4444']
+                    }]
+                }
+            });
+        }
+    </script>
+@endpush

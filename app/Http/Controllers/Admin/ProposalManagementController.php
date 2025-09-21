@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DokumenAkhir;
 use App\Models\Proposal;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,8 +13,9 @@ class ProposalManagementController extends Controller
 {
     public function index()
     {
-        $proposals = Proposal::with(['mahasiswa', 'dosen'])->paginate(10);
-        return view('admin.proposal.index', compact('proposals'));
+        $proposals = Proposal::with(['mahasiswa', 'dosen'])->latest()->get();
+        $dokumens = DokumenAkhir::with(['mahasiswa', 'dosen'])->latest()->get();
+        return view('admin.proposal.index', compact('proposals', 'dokumens'));
     }
 
     public function create()

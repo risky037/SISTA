@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dosen;
 
+use App\Helpers\NotifyHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,6 +45,13 @@ class DokumenAkhirDosenController extends Controller
         $dok->catatan_dosen = $request->catatan_dosen;
         $dok->save();
 
+        NotifyHelper::send(
+            $dok->mahasiswa_id,
+            'Catatan Dokumen akhir dari Dosen',
+            'Dosen telah memberikan catatan pada dokumen akhir Anda.',
+            route('mahasiswa.dokumen-akhir.show', $dok->id)
+        );
+        
         return redirect()
             ->route('dosen.dokumen-akhir.index')
             ->with('success', 'Status dokumen akhir berhasil diperbarui. <a href="' . route('dosen.nilai-dokumen-akhir.index') . '" class="underline text-green-700 hover:text-green-900 font-semibold">Beri nilai sekarang!</a>');

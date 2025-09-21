@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\NotifyHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Template;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -38,6 +40,16 @@ class TemplateManagementController extends Controller
             'file_path' => $path,
             'aturan_format' => $request->aturan_format,
         ]);
+        
+        $mahasiswas = User::where('role', 'mahasiswa')->get();
+        foreach ($mahasiswas as $mhs) {
+            NotifyHelper::send(
+                $mhs->id,
+                'Template Baru Tersedia',
+                'Admin telah menerbitkan template baru.',
+                route('mahasiswa.template.index')
+            );
+        }
 
         return redirect()->route('admin.template.index')->with('success', 'Template berhasil ditambahkan');
     }

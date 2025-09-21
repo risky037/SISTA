@@ -53,7 +53,7 @@
 
             <div class="mb-6">
                 <label for="file" class="block text-sm font-medium text-gray-700">Upload File Template</label>
-                <input type="file" id="file" name="file"
+                <input type="file" id="file" name="file" accept=".pdf,.docx"
                     class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                     required>
                 <p class="mt-2 text-sm text-gray-500">File yang diizinkan: .pdf, .docx (maks. 2MB)</p>

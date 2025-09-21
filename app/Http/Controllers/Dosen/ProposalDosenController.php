@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dosen;
 
+use App\Helpers\NotifyHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
@@ -43,7 +44,12 @@ class ProposalDosenController extends Controller
         if ($request->status === 'diterima') {
             $pesan .= '<a href="' . route('dosen.nilai-proposal.create') . '" class="underline text-green-700 hover:text-green-900 font-semibold">Beri nilai sekarang!</a>';
         }
-
+        NotifyHelper::send(
+            $proposal->mahasiswa_id,
+            'Catatan Proposal dari Dosen',
+            'Dosen telah memberikan catatan atau perubahan status pada proposal Anda.',
+            route('mahasiswa.proposals.show', $proposal->id)
+        );
         return redirect()->route('dosen.proposals.index')->with('success', $pesan);
     }
 

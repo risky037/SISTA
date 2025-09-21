@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Proposal')
+@section('title', 'Detail Dokumen Akhir')
 
 @section('content')
     <div class="flex justify-between items-center mb-4">
@@ -35,7 +35,7 @@
             <div>
                 <strong class="block text-sm font-medium text-gray-700">File dokumen:</strong>
                 <p class="mt-1 text-gray-900">
-                    <a href="{{ asset('storage/dokumen_akhir/' . $dokumen->file_dokumen) }}" target="_blank"
+                    <a href="{{ asset('storage/' . $dokumen->file) }}" target="_blank"
                         class="text-blue-600 hover:underline">
                         Lihat/Download File
                     </a>
