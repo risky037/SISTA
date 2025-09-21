@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email' => 'admin@email.com',
-            'no_hp' => '081234567890',
+            'no_hp' => '081352991280',
             'role' => 'admin',
             'NIM' => null,
             'NIDN' => null,
