@@ -55,8 +55,7 @@
 
 <body class="bg-gray-100 font-sans text-gray-900">
     <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-100/75 backdrop-blur-sm">
-        <div class="h-12 w-12 animate-spin rounded-full border-4 border-solid border-green-500 border-t-transparent">
-        </div>
+        <img src="{{ asset('img/loader.gif') }}" alt="Loading..." class="h-24 w-24">
     </div>
     <div class="flex min-h-screen">
         @include('layouts.partials.sidebar')
@@ -177,7 +176,6 @@
             if (preloader) {
                 setTimeout(() => {
                     preloader.classList.add('preloader-fade-out');
-
                     preloader.addEventListener('animationend', () => {
                         preloader.style.display = 'none';
                     }, {
