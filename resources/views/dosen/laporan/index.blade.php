@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center mb-4">
         <div>
             <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
-            <p class="text-gray-500 text-sm">Halaman untuk meninjau progress yang mahasiswa.</p>
+            <p class="text-gray-500 text-sm">Visualisasi progres laporan mahasiswa dalam bentuk grafik dan tabel detail.</p>
         </div>
         <nav class="text-sm text-gray-500">
             <ol class="list-reset flex">
@@ -103,3 +103,4 @@
         }
     </script>
 @endpush
+
