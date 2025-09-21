@@ -61,7 +61,7 @@
                                         disabled>Hapus</button>
                                 @else
                                     <form action="{{ route('admin.management.admin.destroy', $admin->id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin hapus?')">
+                                        class="delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -84,3 +84,7 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(event){event.preventDefault();Swal.fire({title:'Yakin hapus Akun ini?',text:"Anda tidak akan bisa mengembalikan ini!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})})});</script>
+@endpush

@@ -66,7 +66,7 @@
                                 <a href="{{ route('admin.jadwal.edit', $j->id) }}"
                                     class="px-3 py-1 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition-colors">Edit</a>
                                 <form action="{{ route('admin.jadwal.destroy', $j->id) }}" method="POST"
-                                    onsubmit="return confirm('Yakin ingin menghapus jadwal ini?')">
+                                    class="delete-form">
                                     @csrf @method('DELETE')
                                     <button type="submit"
                                         class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">Hapus</button>
@@ -89,3 +89,7 @@
         @endif
     </div>
 @endsection
+
+@push('scripts')
+    <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(event){event.preventDefault();Swal.fire({title:'Yakin hapus?',text:"Anda tidak akan bisa mengembalikan data jadwal ini!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})})});</script>
+@endpush

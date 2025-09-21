@@ -15,6 +15,9 @@
 </head>
 
 <body>
+    <div id="linear-preloader" class="progress blue lighten-2" style="margin: 0; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999; display: none;">
+        <div class="indeterminate"></div>
+    </div>
     @php
         use App\Models\User;
 

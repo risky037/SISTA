@@ -53,12 +53,12 @@
                             <td class="px-2 md:px-4 py-2 border flex flex-col md:flex-row gap-1 md:gap-2 items-center">
                                 <a href="{{ route('admin.template.edit', $t) }}"
                                     class="px-3 py-1 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition-colors">Edit</a>
-                                <form action="{{ route('admin.template.destroy', $t) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.template.destroy', $t) }}" method="POST"
+                                    class="inline delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-all duration-300"
-                                        onclick="return confirm('Yakin hapus template ini?')">Hapus</button>
+                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-all duration-300">Hapus</button>
                                 </form>
                             </td>
                         </tr>
@@ -77,3 +77,7 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(event){event.preventDefault();Swal.fire({title:'Yakin hapus?',text:"Anda tidak akan bisa mengembalikan template ini!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})})});</script>
+@endpush

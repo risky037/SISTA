@@ -4,3 +4,6 @@ function validateLoginRole(){const role=document.getElementById("login-role").va
 return!0}
 function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1)}
 function handleForgotPassword(){event.preventDefault();Swal.fire({title:"Lupa Password?",text:"Silakan hubungi admin melalui WhatsApp untuk reset password.",icon:"info",showCancelButton:!0,confirmButtonText:"Hubungi Admin",cancelButtonText:"Batal",}).then((result)=>{if(result.isConfirmed){const waNumber="{{ $waNumber ?? '' }}";if(waNumber){const role=document.getElementById("login-role").value||"pengguna";const message=encodeURIComponent(`Halo Admin, saya seorang ${role}. Saya lupa password akun saya. Mohon bantuannya untuk reset.`);const waUrl=`https://wa.me/${waNumber}?text=${message}`;window.open(waUrl,"_blank")}else{Swal.fire("Nomor Tidak Ditemukan","Nomor WhatsApp admin belum tersedia.","error")}}})}
+function showPreloader(){document.getElementById('linear-preloader').style.display='block'}
+function hidePreloader(){document.getElementById('linear-preloader').style.display='none'}
+document.addEventListener('DOMContentLoaded',function(){showPreloader()});window.addEventListener('load',function(){hidePreloader()})

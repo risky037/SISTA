@@ -56,7 +56,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="text-center p-4 text-gray-500">Belum ada Jadwal Bimbingan.</td>
+                        <td colspan="5" class="text-center p-4 text-gray-500">Belum ada Jadwal Bimbingan.</td>
                     </tr>
                 @endforelse
             </tbody>

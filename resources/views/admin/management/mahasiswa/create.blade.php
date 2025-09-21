@@ -88,9 +88,15 @@
 
             <div>
                 <label class="block text-gray-700">Prodi</label>
-                <input type="text" name="prodi"
-                    class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500 @error('prodi') border-red-500 @enderror"
-                    value="{{ old('prodi') }}" required>
+                <div class="relative">
+                    <input type="text" name="prodi" id="prodi-input"
+                        class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500 @error('prodi') border-red-500 @enderror"
+                        value="{{ old('prodi', $mahasiswa->prodi ?? '') }}" required
+                        placeholder="Ketik untuk mencari Program Studi">
+                    <div id="prodi-suggestions"
+                        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto">
+                    </div>
+                </div>
                 @error('prodi')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -114,3 +120,11 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <script>const staticProdiList=['Informatika','Teknik Industri','Bisnis Digital','Sains Data','Digital Neuropsikologi','Komunikasi Digital','Teknologi Industri Pertanian',];const staticBidangKeahlianList=['Informatika','Teknik Industri','Bisnis Digital','Sains Data','Digital Neuropsikologi','Komunikasi Digital','Teknologi Industri Pertanian',];function renderSuggestions(data,suggestionsContainer,inputElement){suggestionsContainer.innerHTML='';if(data.length>0){data.forEach(item=>{const suggestionItem=document.createElement('div');suggestionItem.textContent=item;suggestionItem.classList.add('px-4','py-2','cursor-pointer','hover:bg-green-100');suggestionItem.addEventListener('mousedown',(e)=>{e.preventDefault();inputElement.value=item;suggestionsContainer.classList.add('hidden')});suggestionsContainer.appendChild(suggestionItem)});suggestionsContainer.classList.remove('hidden')}else{suggestionsContainer.classList.add('hidden')}}
+function setupStaticAutocomplete(inputId,suggestionsId,dataList){const input=document.getElementById(inputId);const suggestionsContainer=document.getElementById(suggestionsId);let debounceTimeout;if(!input||!suggestionsContainer){return}
+input.addEventListener('focus',function(){renderSuggestions(dataList,suggestionsContainer,input)});input.addEventListener('input',function(){clearTimeout(debounceTimeout);const keyword=this.value.trim().toLowerCase();debounceTimeout=setTimeout(()=>{const filteredData=dataList.filter(item=>item.toLowerCase().includes(keyword));renderSuggestions(filteredData,suggestionsContainer,input)},300)});document.addEventListener('click',function(e){if(!input.contains(e.target)&&!suggestionsContainer.contains(e.target)){suggestionsContainer.classList.add('hidden')}})}
+document.addEventListener('DOMContentLoaded',function(){if(document.getElementById('prodi-input')){setupStaticAutocomplete('prodi-input','prodi-suggestions',staticProdiList)}
+if(document.getElementById('bidang-keahlian-input')){setupStaticAutocomplete('bidang-keahlian-input','bidang-keahlian-suggestions',staticBidangKeahlianList)}});</script>
+@endpush

@@ -46,7 +46,7 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($proposals as $proposal)
-                    <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $proposal->created_at->format('d M Y') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $proposal->judul }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $proposal->deskripsi }}</td>
@@ -78,11 +78,11 @@
                                     <a href="{{ route('mahasiswa.proposals.edit', $proposal->id) }}"
                                         class="text-yellow-600 hover:text-yellow-900 underline mr-2">Edit</a>
                                     <form action="{{ route('mahasiswa.proposals.destroy', $proposal->id) }}" method="POST"
-                                        class="inline">
+                                        class="inline delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900 underline"
-                                            onclick="return confirm('Yakin hapus proposal ini?')">Hapus</button>
+                                        <button type="submit"
+                                            class="text-red-600 hover:text-red-900 underline">Hapus</button>
                                     </form>
                                 @endif
                             </td>
@@ -97,3 +97,7 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(event){event.preventDefault();Swal.fire({title:'Yakin hapus?',text:"Anda tidak akan bisa mengembalikan proposal ini!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})})});</script>
+@endpush

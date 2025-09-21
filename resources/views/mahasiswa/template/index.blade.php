@@ -31,14 +31,14 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse ($templates as $template)
                     <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-2">{{ $template->nama_template }}</td>
-                        <td class="px-4 py-2">{{ $template->prodi ?? '-' }}</td>
-                        <td class="px-4 py-2 text-center uppercase">{{ $template->tipe_file }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-500">{{ $template->aturan_format ?? '-' }}</td>
-                        <td class="px-4 py-2 text-center">
+                        <td class="px-4 py-4">{{ $template->nama_template }}</td>
+                        <td class="px-4 py-4">{{ $template->prodi ?? '-' }}</td>
+                        <td class="px-4 py-4 text-center uppercase">{{ $template->tipe_file }}</td>
+                        <td class="px-4 py-4 text-sm text-gray-500">{{ $template->aturan_format ?? '-' }}</td>
+                        <td class="px-4 py-4 text-center">
                             <a href="{{ asset('storage/' . $template->file_path) }}" target="_blank"
-                                class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm">
-                                📥 Download
+                                class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 text-sm">
+                                Download
                             </a>
                         </td>
                     </tr>

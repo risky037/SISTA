@@ -74,11 +74,11 @@
                                     <a href="{{ route('mahasiswa.dokumen-akhir.edit', $d->id) }}"
                                         class="text-yellow-600 hover:text-yellow-900 underline mr-2">Edit</a>
                                     <form action="{{ route('mahasiswa.dokumen-akhir.destroy', $d->id) }}" method="POST"
-                                        class="inline">
+                                        class="inline delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900 underline"
-                                            onclick="return confirm('Yakin hapus dokumen ini?')">Hapus</button>
+                                        <button type="submit"
+                                            class="text-red-600 hover:text-red-900 underline">Hapus</button>
                                     </form>
                                 @endif
                             </td>
@@ -86,7 +86,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center p-4 text-gray-500">Belum ada dokumen yang diupload.</td>
+                            <td colspan="7" class="text-center p-4 text-gray-500">Belum ada dokumen yang diupload.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -94,3 +94,7 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(event){event.preventDefault();Swal.fire({title:'Yakin hapus?',text:"Anda tidak akan bisa mengembalikan dokumen ini!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})})});</script>
+@endpush

@@ -156,27 +156,5 @@
 @endpush
 
 @push('scripts')
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        document.querySelectorAll('.delete-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                Swal.fire({
-                    title: 'Apakah kamu yakin?',
-                    text: "Data mahasiswa ini akan dihapus permanen!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script><script>document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(e){e.preventDefault();Swal.fire({title:'Apakah kamu yakin?',text:"Data mahasiswa ini akan dihapus permanen!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})});</script>
 @endpush

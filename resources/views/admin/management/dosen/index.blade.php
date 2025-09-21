@@ -115,7 +115,7 @@
                                 <a href="{{ route('admin.management.dosen.edit', $d->id) }}"
                                     class="px-3 py-1 bg-blue-500 text-white rounded text-center hover:bg-blue-600 transition-colors">Edit</a>
                                 <form action="{{ route('admin.management.dosen.destroy', $d->id) }}" method="POST"
-                                    onsubmit="return confirm('Yakin ingin menghapus data dosen ini?')">
+                                    class="delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -149,4 +149,5 @@
 
 @push('scripts')
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(event){event.preventDefault();Swal.fire({title:'Yakin hapus Akun ini?',text:"Anda tidak akan bisa mengembalikan data ini!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})});</script>
 @endpush
