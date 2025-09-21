@@ -21,7 +21,6 @@ return new class extends Migration {
             $table->text('catatan_dosen')->nullable();
             $table->timestamps();
 
-            // index untuk filter cepat
             $table->index(['status']);
         });
     }
