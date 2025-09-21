@@ -20,7 +20,7 @@ if (!function_exists('getCachedNotifications')) {
 
         $notifications = [];
 
-        $notifications = Cache::rememberForever('static_notifications_' . $user->id, function () use ($user) {
+        $notifications = Cache::remember('static_notifications_' . $user->id, 30, function () use ($user) {
             $static = [];
 
             if (Hash::check('UICImantap2025', $user->password)) {

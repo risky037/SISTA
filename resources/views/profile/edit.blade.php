@@ -244,5 +244,34 @@
                     staticBidangKeahlianList);
             @endif
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('status') === 'password-updated')
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Kata sandi Anda telah berhasil diubah.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            @endif
+
+            @if ($errors->updatePassword->any())
+                let errorMessages = '';
+                @foreach ($errors->updatePassword->all() as $error)
+                    errorMessages += '{{ addslashes($error) }}<br>';
+                @endforeach
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    html: errorMessages,
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Tutup',
+                    confirmButtonColor: '#10B981',
+                });
+            @endif
+        });
     </script>
 @endpush
