@@ -53,7 +53,7 @@
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $d->dosen->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm">
                                 <a href="{{ asset('storage/' . $d->file) }}" target="_blank"
-                                    class="text-blue-600 hover:underline">Lihat</a>
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lihat</a>
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 @if ($d->status == 'approved')
@@ -69,16 +69,16 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <a href="{{ route('mahasiswa.dokumen-akhir.show', $d->id) }}"
-                                    class="text-blue-600 hover:text-blue-900 underline mr-2">Detail</a>
+                                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2">Detail</a>
                                 @if ($d->status == 'pending' || $d->status == 'rejected')
                                     <a href="{{ route('mahasiswa.dokumen-akhir.edit', $d->id) }}"
-                                        class="text-yellow-600 hover:text-yellow-900 underline mr-2">Edit</a>
+                                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mr-2">Edit</a>
                                     <form action="{{ route('mahasiswa.dokumen-akhir.destroy', $d->id) }}" method="POST"
                                         class="inline delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="text-red-600 hover:text-red-900 underline">Hapus</button>
+                                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Hapus</button>
                                     </form>
                                 @endif
                             </td>

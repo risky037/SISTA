@@ -51,7 +51,7 @@
                             <td class="px-6 py-4">{{ $dok->judul }}</td>
                             <td class="px-6 py-4 text-center">
                                 <a href="{{ asset('storage/' . $dok->file) }}" target="_blank"
-                                    class="text-blue-600 hover:underline">Lihat Dokumen</a>
+                                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Lihat Dokumen</a>
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <span
@@ -85,8 +85,8 @@
                                         tabindex="-1">
                                         <div class="py-1" role="none">
                                             <a href="{{ route('dosen.dokumen-akhir.show', $dok->id) }}"
-                                                class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100">
-                                                <i class="fas fa-eye mr-2"></i> Lihat Detail
+                                                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lihat</a>
+                                               
                                             </a>
                                         </div>
                                         <form action="{{ route('dosen.dokumen-akhir.updateStatus', $dok->id) }}"

@@ -58,7 +58,7 @@
                             <td class="px-2 md:px-4 py-2 border">
                                 @if ($p->file_proposal)
                                     <a href="{{ asset('storage/proposals/' . $p->file_proposal) }}" target="_blank"
-                                        class="text-blue-600 hover:underline">Lihat</a>
+                                         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lihat</a>
                                 @else
                                     <span class="text-gray-500">Tidak ada</span>
                                 @endif
@@ -110,7 +110,7 @@
                             <td class="px-2 md:px-4 py-2 border">
                                 @if ($d->file)
                                     <a href="{{ asset('storage/' . $d->file) }}" target="_blank"
-                                        class="text-blue-600 hover:underline">Lihat</a>
+                                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lihat</a>
                                 @else
                                     <span class="text-gray-500">Tidak ada</span>
                                 @endif
