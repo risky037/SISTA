@@ -101,7 +101,7 @@ class DosenManagementController extends Controller
             Storage::disk('public')->delete($dosen->foto);
         }
         $dosen->delete();
-        return redirect()->route('admin.management.dosen.index')->with('success', "Data Dosen \"{$dosen->name}\" berhasil diperbarui.");
+        return redirect()->route('admin.management.dosen.index')->with('success', "Data Dosen \"{$dosen->name}\" berhasil dihapus.");
     }
     public function import(Request $request)
     {
