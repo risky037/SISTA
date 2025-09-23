@@ -14,7 +14,7 @@
                 <li><span class="mx-2">/</span></li>
                 <li><a href="{{ route('dosen.proposals.index') }}" class="hover:text-green-600">Proposal</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">Detail</li>
+                <li class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Detail</a>
             </ol>
         </nav>
     </div>

@@ -56,7 +56,7 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
-                                    class="text-blue-600 hover:underline">Lihat Proposal</a>
+                                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lihat Proposal</a>
                             </td>
                             <td class="px-6 py-4 text-center text-sm">
                                 <span

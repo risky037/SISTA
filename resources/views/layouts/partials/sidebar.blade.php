@@ -1,4 +1,5 @@
 <!-- original-sidebar -->
+ 
 <aside id="sidebar"
     class="fixed inset-y-0 left-0 transform bg-white border-r border-gray-200 w-64 transition-transform duration-300 z-40">
     <div class="flex flex-col h-full">

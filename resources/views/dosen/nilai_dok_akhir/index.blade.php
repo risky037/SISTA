@@ -62,7 +62,7 @@
                             <td class="px-4 py-3 text-sm text-gray-500">{{ $n->keterangan ?? '-' }}</td>
                             <td class="px-4 py-3 text-center text-sm font-medium">
                                 <a href="{{ route('dosen.nilai-dokumen-akhir.edit', $n->id) }}"
-                                    class="text-yellow-600 hover:text-yellow-900 underline mr-2">Edit</a>
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Edit</a>
                             </td>
                         </tr>
                     @empty
