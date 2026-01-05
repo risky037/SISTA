@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminManagementController;
 use App\Http\Controllers\Admin\JadwalSidangManagementController;
 use App\Http\Controllers\Admin\MahasiswaManagementController;
 use App\Http\Controllers\Admin\DosenManagementController;
+use App\Http\Controllers\Admin\PengumumanController;
 use App\Http\Controllers\Admin\ProposalManagementController;
 use App\Http\Controllers\Admin\TemplateManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -36,6 +37,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
 
     Route::post('mahasiswa/import', [MahasiswaManagementController::class, 'import'])->name('management.mahasiswa.import');
     Route::post('dosen/import', [DosenManagementController::class, 'import'])->name('management.dosen.import');
+    Route::resource('pengumuman', PengumumanController::class)->names('pengumuman');
 });
 
 Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasiswa.')->group(function () {

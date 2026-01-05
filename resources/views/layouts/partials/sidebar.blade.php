@@ -1,5 +1,3 @@
-<!-- original-sidebar -->
- 
 <aside id="sidebar"
     class="fixed inset-y-0 left-0 transform bg-white border-r border-gray-200 w-64 transition-transform duration-300 z-40">
     <div class="flex flex-col h-full">
@@ -13,19 +11,25 @@
                 <i class="fas fa-arrow-left"></i>
             </button>
         </div>
+
         <nav class="flex flex-col px-5 py-6 space-y-1 text-sm text-gray-600 overflow-y-auto">
             <span class="uppercase text-xs font-semibold mb-2 text-gray-400">Navigasi</span>
+
             <a href="{{ route(Auth::user()->role . '.dashboard') }}"
-                class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.dashboard') ||
-                request()->routeIs('mahasiswa.dashboard') ||
-                request()->routeIs('dosen.dashboard')
+                class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('*.dashboard')
                     ? 'bg-green-600 text-white font-semibold'
                     : 'hover:bg-gray-100 text-gray-600' }}">
                 <i class="fas fa-home"></i>
                 <span>Beranda</span>
             </a>
+
+            {{-- ================= ADMIN ================= --}}
             @if (auth()->user()->role == 'admin')
-                <div x-data="{ open: {{ request()->routeIs('admin.management.*') ? 'true' : 'false' }} }" class="space-y-1">
+                <div x-data="{
+                    open: localStorage.getItem('sidebar_admin_users') === 'true' ||
+                        (localStorage.getItem('sidebar_admin_users') === null && {{ request()->routeIs('admin.management.*') ? 'true' : 'false' }})
+                }" x-init="$watch('open', val => localStorage.setItem('sidebar_admin_users', val))" class="space-y-1">
+
                     <button type="button" @click="open = !open"
                         class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
                         <i class="fas fa-users"></i>
@@ -33,6 +37,7 @@
                         <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
                             :class="{ 'rotate-180': open }"></i>
                     </button>
+
                     <div x-show="open" x-collapse.duration.300ms class="space-y-1">
                         <a href="{{ route('admin.management.admin.index') }}"
                             class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.management.admin.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
@@ -51,6 +56,7 @@
                         </a>
                     </div>
                 </div>
+
                 <a href="{{ route('admin.jadwal.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.jadwal.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-calendar-alt"></i>
@@ -66,16 +72,28 @@
                     <i class="fas fa-file-word"></i>
                     <span>Template Skripsi</span>
                 </a>
+                <a href="{{ route('admin.pengumuman.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.pengumuman.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Pengumuman</span>
+                </a>
+
+                {{-- ================= DOSEN ================= --}}
             @elseif (auth()->user()->role == 'dosen')
-                <div x-data="{ openBimbingan: {{ request()->routeIs('dosen.bimbingan.*') || request()->routeIs('dosen.jadwalbimbingan.*') ? 'true' : 'false' }} }" class="space-y-1">
-                    <button type="button" @click="openBimbingan = !openBimbingan"
+                <div x-data="{
+                    open: localStorage.getItem('sidebar_dosen_bimbingan') === 'true' ||
+                        (localStorage.getItem('sidebar_dosen_bimbingan') === null && {{ request()->routeIs('dosen.bimbingan.*') || request()->routeIs('dosen.jadwalbimbingan.*') ? 'true' : 'false' }})
+                }" x-init="$watch('open', val => localStorage.setItem('sidebar_dosen_bimbingan', val))" class="space-y-1">
+
+                    <button type="button" @click="open = !open"
                         class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.bimbingan.*') || request()->routeIs('dosen.jadwalbimbingan.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
                         <i class="fas fa-chalkboard-teacher"></i>
                         <span>Bimbingan</span>
                         <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
-                            :class="{ 'rotate-180': openBimbingan }"></i>
+                            :class="{ 'rotate-180': open }"></i>
                     </button>
-                    <div x-show="openBimbingan" x-collapse.duration.300ms class="space-y-1">
+
+                    <div x-show="open" x-collapse.duration.300ms class="space-y-1">
                         <a href="{{ route('dosen.bimbingan.index') }}"
                             class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.bimbingan.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                             <i class="fas fa-user-graduate"></i>
@@ -88,15 +106,21 @@
                         </a>
                     </div>
                 </div>
-                <div x-data="{ openReview: {{ request()->routeIs('dosen.proposals.*') || request()->routeIs('dosen.dokumen-akhir.*') ? 'true' : 'false' }} }" class="space-y-1">
-                    <button type="button" @click="openReview = !openReview"
+
+                <div x-data="{
+                    open: localStorage.getItem('sidebar_dosen_review') === 'true' ||
+                        (localStorage.getItem('sidebar_dosen_review') === null && {{ request()->routeIs('dosen.proposals.*') || request()->routeIs('dosen.dokumen-akhir.*') ? 'true' : 'false' }})
+                }" x-init="$watch('open', val => localStorage.setItem('sidebar_dosen_review', val))" class="space-y-1">
+
+                    <button type="button" @click="open = !open"
                         class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.proposals.*') || request()->routeIs('dosen.dokumen-akhir.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
                         <i class="fas fa-file-signature"></i>
                         <span>Review</span>
                         <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
-                            :class="{ 'rotate-180': openReview }"></i>
+                            :class="{ 'rotate-180': open }"></i>
                     </button>
-                    <div x-show="openReview" x-collapse.duration.300ms class="space-y-1">
+
+                    <div x-show="open" x-collapse.duration.300ms class="space-y-1">
                         <a href="{{ route('dosen.proposals.index') }}"
                             class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.proposals.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                             <i class="fas fa-tasks"></i>
@@ -109,7 +133,12 @@
                         </a>
                     </div>
                 </div>
-                <div x-data="{ open: {{ request()->routeIs('dosen.nilai-proposal.*') || request()->routeIs('dosen.nilai-dokumen-akhir.*') ? 'true' : 'false' }} }" class="space-y-1">
+
+                <div x-data="{
+                    open: localStorage.getItem('sidebar_dosen_nilai') === 'true' ||
+                        (localStorage.getItem('sidebar_dosen_nilai') === null && {{ request()->routeIs('dosen.nilai-proposal.*') || request()->routeIs('dosen.nilai-dokumen-akhir.*') ? 'true' : 'false' }})
+                }" x-init="$watch('open', val => localStorage.setItem('sidebar_dosen_nilai', val))" class="space-y-1">
+
                     <button type="button" @click="open = !open"
                         class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.nilai-proposal.*') || request()->routeIs('dosen.nilai-dokumen-akhir.*') ? 'text-white bg-green-600' : 'hover:bg-gray-100 text-gray-600' }}">
                         <i class="fas fa-book"></i>
@@ -117,6 +146,7 @@
                         <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
                             :class="{ 'rotate-180': open }"></i>
                     </button>
+
                     <div x-show="open" x-collapse.duration.300ms class="space-y-1">
                         <a href="{{ route('dosen.nilai-proposal.index') }}"
                             class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.nilai-proposal.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
@@ -130,11 +160,14 @@
                         </a>
                     </div>
                 </div>
+
                 <a href="{{ route('dosen.laporan-progress.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('dosen.laporan-progress.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-chart-line"></i>
                     <span>Laporan Progres</span>
                 </a>
+
+                {{-- ================= MAHASISWA ================= --}}
             @elseif (auth()->user()->role == 'mahasiswa')
                 <a href="{{ route('mahasiswa.jadwal-seminar') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('mahasiswa.jadwal-seminar') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
@@ -162,6 +195,7 @@
                     <span>Download Template</span>
                 </a>
             @endif
+
             <div class="border-t border-gray-200 my-2"></div>
             <a href="{{ route('bantuan') }}"
                 class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('bantuan') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
@@ -186,7 +220,6 @@
     </div>
 </aside>
 
-<!-- notification-sidebar -->
 <aside id="notification-sidebar"
     class="fixed inset-y-0 right-0 transform translate-x-full bg-white border-l border-gray-200 w-80 transition-transform duration-300 z-40">
     <div class="flex flex-col h-full">
