@@ -77,15 +77,9 @@ class AuthenticatedSessionController extends Controller
             ->where('role', $role)
             ->first();
 
-        if (!$user) {
+        if (!$user || !Hash::check($password, $user->password)) {
             return back()->withErrors([
-                'email' => "Data $role dengan $field '$input' tidak ditemukan.",
-            ])->withInput();
-        }
-
-        if (!Hash::check($password, $user->password)) {
-            return back()->withErrors([
-                'password' => 'Password salah.',
+                'email' => 'Kredensial yang diberikan tidak cocok dengan data kami.',
             ])->withInput();
         }
 
