@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pengumuman;
 use App\Models\User;
 use App\Models\Proposal;
 use App\Models\DokumenAkhir;
@@ -28,6 +29,12 @@ class DashboardController extends Controller
         $dokumenApproved = DokumenAkhir::where('status', 'approved')->count();
         $dokumenRejected = DokumenAkhir::where('status', 'rejected')->count();
 
+        $sidangPending = DokumenAkhir::where('status', 'pending')->count();
+
+        $recentProposals = Proposal::with('mahasiswa')->latest()->limit(5)->get();
+
+        $recentPengumuman = Pengumuman::latest()->limit(3)->get();
+
         return view('dashboard.admin', compact(
             'totalMahasiswa',
             'totalDosen',
@@ -38,7 +45,10 @@ class DashboardController extends Controller
             'totalDokumen',
             'dokumenPending',
             'dokumenApproved',
-            'dokumenRejected'
+            'dokumenRejected',
+            'sidangPending',
+            'recentProposals',
+            'recentPengumuman'
         ));
     }
 
@@ -123,20 +133,23 @@ class DashboardController extends Controller
             ->where('status', 'pending')
             ->count();
 
+        $pengumumans = Pengumuman::latest()->limit(3)->get();
+
         return view('dashboard.mahasiswa', compact(
             'proposalStatus',
             'dokumenStatus',
             'nilaiProposal',
             'nilaiDokumen',
             'bimbinganDone',
-            'bimbinganPending'
+            'bimbinganPending',
+            'pengumumans'
         ));
     }
 
     public function markAsRead($notificationId)
     {
         $notification = Notification::findOrFail($notificationId);
-        
+
         if ($notification->user_id !== Auth::id()) {
             abort(403, 'Notifikasi ini bukan milik Anda.');
         }

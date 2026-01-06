@@ -100,7 +100,7 @@ class PengumumanController extends Controller
                     $mahasiswa->id,
                     'Pengumuman Baru: ' . $pengumuman->nomor_surat,
                     'Terdapat pengumuman baru: ' . Str::limit($pengumuman->informasi, 50),
-                    asset('storage/' . $pengumuman->file_path)
+                    route('pengumuman.show', $pengumuman->id)
                 );
             }
         });

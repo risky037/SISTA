@@ -194,6 +194,11 @@
                     <i class="fas fa-file-word"></i>
                     <span>Download Template</span>
                 </a>
+                <a href="{{ route('pengumuman.index') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('pengumuman.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Pengumuman</span>
+                </a>
             @endif
 
             <div class="border-t border-gray-200 my-2"></div>
@@ -252,7 +257,7 @@
                         <a href="{{ is_numeric($notif['id']) ? route('notifications.markAsRead', $notif['id']) : $notif['link'] }}"
                             class="block p-3 rounded-lg shadow-sm {{ $colorClasses }} {{ $readClass }}">
                             <p class="font-bold">{{ $notif['title'] }}</p>
-                            <p class="font-semibold text-sm">{{ $notif['message'] }}</p>
+                            <p class="font-semibold text-xs">{{ $notif['message'] }}</p>
                             <p class="text-xs text-gray-500 mt-1">Klik untuk detail</p>
                         </a>
                     @endforeach

@@ -21,6 +21,7 @@ use App\Http\Controllers\Mahasiswa\ProposalMahasiswaController;
 use App\Http\Controllers\Mahasiswa\NilaiMahasiswaController;
 use App\Http\Controllers\Mahasiswa\TemplateMahasiswaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserPengumumanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('welcome'))->name('home')->middleware('guest');
@@ -71,6 +72,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/pengumuman', [UserPengumumanController::class, 'index'])->name('pengumuman.index');
+    Route::get('/pengumuman/{pengumuman}', [UserPengumumanController::class, 'show'])->name('pengumuman.show');
     Route::view('/bantuan', 'static.general', ['page' => 'bantuan'])->name('bantuan');
     Route::view('/tentang', 'static.general', ['page' => 'tentang'])->name('tentang');
 
