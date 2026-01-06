@@ -1,5 +1,5 @@
 <aside id="sidebar"
-    class="fixed inset-y-0 left-0 transform bg-white border-r border-gray-200 w-64 transition-transform duration-300 z-40">
+    class="fixed inset-y-0 left-0 transform bg-white border-r border-gray-200 w-64 transition-transform duration-300 z-40 -translate-x-full lg:translate-x-0">
     <div class="flex flex-col h-full">
         <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-200">
             <a href="{{ route(Auth::user()->role . '.dashboard') }}" class="flex items-center gap-2">
