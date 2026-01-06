@@ -17,6 +17,8 @@ class CreateBimbingansTable extends Migration
             $table->time('waktu_selesai');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('catatan_dosen')->nullable();
+            $table->string('link_meet')->nullable();
+            $table->string('file_prosedur')->nullable();
             $table->timestamps();
 
             $table->index(['dosen_id', 'tanggal_bimbingan']);

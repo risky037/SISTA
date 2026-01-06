@@ -17,6 +17,8 @@ class Bimbingan extends Model
         'waktu_selesai',
         'status',
         'catatan_dosen',
+        'link_meet',
+        'file_prosedur',
     ];
 
     public function mahasiswa()

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bimbingan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BimbinganDosenController extends Controller
 {
@@ -74,5 +75,37 @@ class BimbinganDosenController extends Controller
 
         return view('dosen.jadwal.index', compact('bimbingans'));
     }
+    public function updateDetails(Request $request, $id)
+    {
+        $bimbingan = Bimbingan::where('dosen_id', auth()->id())->findOrFail($id);
 
+        $request->validate([
+            'link_meet' => 'nullable|url',
+            'file_prosedur' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $data = [
+            'link_meet' => $request->link_meet,
+        ];
+
+        if ($request->hasFile('file_prosedur')) {
+            if ($bimbingan->file_prosedur && Storage::disk('public')->exists($bimbingan->file_prosedur)) {
+                Storage::disk('public')->delete($bimbingan->file_prosedur);
+            }
+
+            $path = $request->file('file_prosedur')->store('prosedur_bimbingan', 'public');
+            $data['file_prosedur'] = $path;
+        }
+
+        $bimbingan->update($data);
+
+        NotifyHelper::send(
+            $bimbingan->mahasiswa_id,
+            'Update Jadwal Bimbingan',
+            'Dosen telah menambahkan Link Meeting atau Prosedur Bimbingan. Silakan cek detail jadwal Anda.',
+            route('mahasiswa.jadwal-seminar')
+        );
+
+        return redirect()->back()->with('success', 'Detail bimbingan berhasil diperbarui.');
+    }
 }

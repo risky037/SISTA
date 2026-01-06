@@ -55,6 +55,7 @@ Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->grou
     Route::get('/dashboard', [DashboardController::class, 'dosen'])->name('dashboard');
     Route::get('bimbingan', [BimbinganDosenController::class, 'index'])->name('bimbingan.index');
     Route::get('jadwal-bimbingan', [BimbinganDosenController::class, 'indexJadwal'])->name('jadwalbimbingan.index');
+    Route::post('bimbingan/{id}/update-details', [BimbinganDosenController::class, 'updateDetails'])->name('bimbingan.updateDetails');
     Route::post('bimbingan/{id}/status', [BimbinganDosenController::class, 'updateStatus'])->name('bimbingan.updateStatus');
     Route::post('bimbingan/{id}/catatan', [BimbinganDosenController::class, 'addCatatan'])->name('bimbingan.addCatatan');
     Route::resource('proposal', ProposalDosenController::class)->only(['index', 'show'])->names('proposals');
