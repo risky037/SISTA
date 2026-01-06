@@ -4,216 +4,116 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Faker\Factory as Faker;
 use App\Models\User;
 use App\Models\Bimbingan;
 use App\Models\Proposal;
 use App\Models\Template;
-use App\Models\DokumenAkhir;
 use App\Models\Nilai;
 use App\Models\Notification;
 
 class DummyDataSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $faker = Faker::create('id_ID');
+        $demoLink = "javascript:alert('Ini adalah link demo. Di sistem nyata, ini akan mengarahkan Anda ke detail halaman.')";
 
-        $prodiNames = ['Informatika', 'Sistem Informasi', 'Teknik Komputer'];
-        $bidangKeahlianNames = ['Kecerdasan Buatan', 'Jaringan Komputer', 'Basis Data', 'Pengembangan Web'];
-        $gradeNames = ['A', 'B', 'C', 'D', 'E'];
+        $dataDosen = [
+            ['name' => 'Dr. Ir. Budi Santoso, M.Kom', 'nidn' => '0012038501', 'bidang' => 'Kecerdasan Buatan', 'email' => 'budi.santoso@univ.ac.id'],
+            ['name' => 'Siti Aminah, S.T., M.T.', 'nidn' => '0025078802', 'bidang' => 'Jaringan Komputer', 'email' => 'siti.aminah@univ.ac.id'],
+            ['name' => 'Ahmad Hidayat, M.Cs', 'nidn' => '0015098203', 'bidang' => 'Pengembangan Web', 'email' => 'ahmad.h@univ.ac.id'],
+            ['name' => 'Dr. Rina Wijaya, M.IT', 'nidn' => '0004117904', 'bidang' => 'Basis Data', 'email' => 'rina.w@univ.ac.id'],
+        ];
 
-        $dosen = [];
-        for ($i = 0; $i < 5; $i++) {
-            $dosen[] = User::create([
-                'name' => $faker->name('male') . ' ' . $faker->lastName,
-                'email' => $faker->unique()->safeEmail,
-                'no_hp' => $faker->phoneNumber,
+        $dosenModels = [];
+        foreach ($dataDosen as $d) {
+            $dosenModels[] = User::create([
+                'name' => $d['name'],
+                'email' => $d['email'],
+                'no_hp' => '0812' . rand(10000000, 99999999),
                 'role' => 'dosen',
-                'NIDN' => $faker->unique()->numerify('##########'),
-                'bidang_keahlian' => $faker->randomElement($bidangKeahlianNames),
+                'NIDN' => $d['nidn'],
+                'bidang_keahlian' => $d['bidang'],
                 'password' => Hash::make('password'),
             ]);
         }
 
-        $mahasiswa = [];
-        for ($i = 0; $i < 20; $i++) {
-            $mahasiswa[] = User::create([
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
-                'no_hp' => $faker->phoneNumber,
+        $dataMahasiswa = [
+            ['name' => 'Rizky Pratama', 'nim' => '20210001', 'prodi' => 'Informatika', 'email' => 'rizky@student.ac.id'],
+            ['name' => 'Putri Indah', 'nim' => '20210002', 'prodi' => 'Sistem Informasi', 'email' => 'putri@student.ac.id'],
+            ['name' => 'Fajar Nugraha', 'nim' => '20210003', 'prodi' => 'Teknik Komputer', 'email' => 'fajar@student.ac.id'],
+            ['name' => 'Dewi Lestari', 'nim' => '20210004', 'prodi' => 'Informatika', 'email' => 'dewi@student.ac.id'],
+        ];
+
+        $mhsModels = [];
+        foreach ($dataMahasiswa as $m) {
+            $mhsModels[] = User::create([
+                'name' => $m['name'],
+                'email' => $m['email'],
+                'no_hp' => '0857' . rand(10000000, 99999999),
                 'role' => 'mahasiswa',
-                'NIM' => $faker->unique()->numerify('###########'),
-                'prodi' => $faker->randomElement($prodiNames),
+                'NIM' => $m['nim'],
+                'prodi' => $m['prodi'],
                 'password' => Hash::make('password'),
             ]);
         }
 
-        // Buat data bimbingan
-        foreach ($mahasiswa as $mhs) {
-            if (rand(0, 1)) {
-                $dosenPembimbing = $faker->randomElement($dosen);
-                $bimbinganStatus = $faker->randomElement(['pending', 'approved', 'rejected']);
-                Bimbingan::create([
-                    'mahasiswa_id' => $mhs->id,
-                    'dosen_id' => $dosenPembimbing->id,
-                    'tanggal_bimbingan' => $faker->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
-                    'waktu_mulai' => $faker->time('H:i:s'),
-                    'waktu_selesai' => $faker->time('H:i:s'),
-                    'status' => $bimbinganStatus,
-                    'catatan_dosen' => $bimbinganStatus === 'approved' ? $faker->sentence : null,
-                ]);
-            }
-        }
+        $judulSkripsi = [
+            'Implementasi Algoritma CNN untuk Deteksi Masker Medis',
+            'Analisis Perbandingan Framework Flutter dan React Native',
+            'Sistem Pendukung Keputusan Pemilihan Karyawan Terbaik Berbasis AHP',
+            'Optimasi Jaringan WiFi Menggunakan Metode Load Balancing',
+            'Pengembangan Aplikasi E-Commerce Berbasis Microservices'
+        ];
 
-        // Buat data proposal
-        $proposals = collect(); // Gunakan koleksi untuk menyimpan proposal yang dibuat
-        foreach ($mahasiswa as $mhs) {
-            $proposalStatus = $faker->randomElement(['pending', 'diterima', 'ditolak']);
-            $dosenPembimbing = $faker->randomElement($dosen);
+        foreach ($mhsModels as $key => $mhs) {
+            $dsn = $dosenModels[$key % count($dosenModels)]; // Bagi rata dosen
+            $judul = $judulSkripsi[$key % count($judulSkripsi)];
+
             $proposal = Proposal::create([
                 'mahasiswa_id' => $mhs->id,
-                'dosen_pembimbing_id' => $dosenPembimbing->id,
-                'judul' => 'Proposal ' . $faker->jobTitle,
-                'deskripsi' => $faker->paragraph,
-                'file_proposal' => 'proposal/' . Str::slug($mhs->name) . '_proposal.pdf',
-                'status' => $proposalStatus,
-                'catatan_dosen' => $proposalStatus !== 'pending' ? $faker->sentence : null,
+                'dosen_pembimbing_id' => $dsn->id,
+                'judul' => $judul,
+                'deskripsi' => 'Penelitian ini berfokus pada analisis efisiensi sistem dalam skala besar menggunakan teknologi terbaru.',
+                'file_proposal' => 'proposal/dummy_file.pdf',
+                'status' => 'diterima',
+                'catatan_dosen' => 'Judul menarik, lanjutkan ke bab berikutnya.',
             ]);
 
-            $proposals->push($proposal); // Simpan proposal yang dibuat ke koleksi
-
-            // Buat data nilai untuk proposal yang sudah diterima atau ditolak
-            if ($proposalStatus !== 'pending') {
-                Nilai::create([
-                    'proposal_id' => $proposal->id,
-                    'dosen_id' => $dosenPembimbing->id,
-                    'grade' => $faker->randomElement($gradeNames),
-                    'keterangan' => $faker->sentence,
-                ]);
-            }
-        }
-
-        // Buat data dokumen akhir
-        $dokumenAkhirCollection = collect();
-        foreach ($mahasiswa as $mhs) {
-            if (rand(0, 1)) {
-                $dosenPembimbing = $faker->randomElement($dosen);
-                $dokumenStatus = $faker->randomElement(['pending', 'approved', 'rejected']);
-                $dokumen = DokumenAkhir::create([
-                    'mahasiswa_id' => $mhs->id,
-                    'dosen_pembimbing_id' => $dosenPembimbing->id,
-                    'judul' => 'Skripsi ' . $faker->jobTitle,
-                    'deskripsi' => $faker->paragraph,
-                    'file' => 'skripsi/' . Str::slug($mhs->name) . '_skripsi.pdf',
-                    'status' => $dokumenStatus,
-                    'catatan_dosen' => $dokumenStatus !== 'pending' ? $faker->sentence : null,
-                ]);
-                $dokumenAkhirCollection->push($dokumen);
-
-                if ($dokumenStatus !== 'pending') {
-                    Nilai::create([
-                        'dokumen_akhir_id' => $dokumen->id,
-                        'dosen_id' => $dosenPembimbing->id,
-                        'grade' => $faker->randomElement($gradeNames),
-                        'keterangan' => $faker->sentence,
-                    ]);
-                }
-            }
-        }
-
-        // Buat data template
-        for ($i = 0; $i < 3; $i++) {
-            Template::create([
-                'nama_template' => 'Template Proposal ' . $prodiNames[$i],
-                'prodi' => $prodiNames[$i],
-                'tipe_file' => 'pdf',
-                'file_path' => 'template/template_' . Str::slug($prodiNames[$i]) . '.pdf',
-                'aturan_format' => $faker->paragraph,
-            ]);
-        }
-
-        // Buat data notifikasi
-        foreach ($proposals as $proposal) {
-            Notification::create([
-                'user_id' => $proposal->mahasiswa_id,
-                'title' => 'Proposal Anda telah disetujui',
-                'message' => 'Selamat, proposal Anda telah disetujui oleh dosen pembimbing.',
-                'link' => '/proposal/' . $proposal->id,
-                'is_read' => $faker->boolean(50),
-            ]);
-        }
-        // Tambahan dummy data untuk user dosen@email.com dan mahasiswa@email.com
-        $dosenFixed = User::where('email', 'dosen@email.com')->first();
-        $mahasiswaFixed = User::where('email', 'mahasiswa@email.com')->first();
-
-        if ($dosenFixed && $mahasiswaFixed && !Proposal::where('mahasiswa_id', $mahasiswaFixed->id)->exists()) {
-            // Buat proposal
-            $proposalStatus = $faker->randomElement(['pending', 'diterima', 'ditolak']);
-            $proposal = Proposal::create([
-                'mahasiswa_id' => $mahasiswaFixed->id,
-                'dosen_pembimbing_id' => $dosenFixed->id,
-                'judul' => 'Proposal ' . $faker->jobTitle,
-                'deskripsi' => $faker->paragraph,
-                'file_proposal' => 'proposal/' . Str::slug($mahasiswaFixed->name) . '_proposal.pdf',
-                'status' => $proposalStatus,
-                'catatan_dosen' => $proposalStatus !== 'pending' ? $faker->sentence : null,
+            Nilai::create([
+                'proposal_id' => $proposal->id,
+                'dosen_id' => $dsn->id,
+                'grade' => 'A',
+                'keterangan' => 'Presentasi sangat baik dan penguasaan materi mendalam.',
             ]);
 
-            if ($proposalStatus !== 'pending') {
-                Nilai::create([
-                    'proposal_id' => $proposal->id,
-                    'dosen_id' => $dosenFixed->id,
-                    'grade' => $faker->randomElement($gradeNames),
-                    'keterangan' => $faker->sentence,
-                ]);
-            }
-
-            // Bimbingan
             Bimbingan::create([
-                'mahasiswa_id' => $mahasiswaFixed->id,
-                'dosen_id' => $dosenFixed->id,
-                'tanggal_bimbingan' => $faker->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
-                'waktu_mulai' => $faker->time('H:i:s'),
-                'waktu_selesai' => $faker->time('H:i:s'),
+                'mahasiswa_id' => $mhs->id,
+                'dosen_id' => $dsn->id,
+                'tanggal_bimbingan' => now()->subDays(rand(1, 10))->format('Y-m-d'),
+                'waktu_mulai' => '10:00:00',
+                'waktu_selesai' => '11:00:00',
                 'status' => 'approved',
-                'catatan_dosen' => $faker->sentence,
+                'catatan_dosen' => 'Perbaiki metodologi pada poin 3.2.',
             ]);
 
-            // Dokumen akhir
-            $dokumenStatus = $faker->randomElement(['pending', 'approved', 'rejected']);
-            $dokumen = DokumenAkhir::create([
-                'mahasiswa_id' => $mahasiswaFixed->id,
-                'dosen_pembimbing_id' => $dosenFixed->id,
-                'judul' => 'Skripsi ' . $faker->jobTitle,
-                'deskripsi' => $faker->paragraph,
-                'file' => 'skripsi/' . Str::slug($mahasiswaFixed->name) . '_skripsi.pdf',
-                'status' => $dokumenStatus,
-                'catatan_dosen' => $dokumenStatus !== 'pending' ? $faker->sentence : null,
-            ]);
-
-            if ($dokumenStatus !== 'pending') {
-                Nilai::create([
-                    'dokumen_akhir_id' => $dokumen->id,
-                    'dosen_id' => $dosenFixed->id,
-                    'grade' => $faker->randomElement($gradeNames),
-                    'keterangan' => $faker->sentence,
-                ]);
-            }
-
-            // Notifikasi
             Notification::create([
-                'user_id' => $mahasiswaFixed->id,
-                'title' => 'Proposal Anda telah disetujui',
-                'message' => 'Proposal Anda telah ditinjau oleh dosen pembimbing.',
-                'link' => '/proposal/' . $proposal->id,
+                'user_id' => $mhs->id,
+                'title' => 'Proposal Disetujui',
+                'message' => 'Selamat, proposal "' . $judul . '" telah disetujui.',
+                'link' => $demoLink,
                 'is_read' => false,
             ]);
         }
 
+        $prodis = ['Informatika', 'Sistem Informasi', 'Teknik Komputer'];
+        foreach ($prodis as $p) {
+            Template::create([
+                'nama_template' => 'Panduan Penulisan Skripsi ' . $p,
+                'prodi' => $p,
+                'tipe_file' => 'pdf',
+                'file_path' => 'template/guide.pdf',
+                'aturan_format' => 'Margin: 4433, Font: Times New Roman, Spasi: 1.5.',
+            ]);
+        }
     }
 }

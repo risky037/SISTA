@@ -10,8 +10,8 @@
         </div>
         <nav class="text-sm font-medium text-gray-500 bg-gray-100 px-4 py-2 rounded-lg">
             <ol class="list-reset flex items-center gap-2">
-                <li><a href="{{ route('dashboard') }}" class="hover:text-green-600 transition">Dashboard</a></li>
-                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li><a href="{{ route('dashboard') }}" class="hover:text-green-600">Home</a></li>
+                <li><span class="mx-2">/</span></li>
                 <li class="text-green-600">Jadwal</li>
             </ol>
         </nav>
