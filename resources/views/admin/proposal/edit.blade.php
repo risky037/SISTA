@@ -15,7 +15,7 @@
                 <li><span class="mx-2">/</span></li>
                 <li><a href="{{ route('admin.proposal.index') }}" class="hover:text-green-600">Manajemen Proposal</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">Edit</li>
+                <li class="text-gray-700">@yield('title')</li>
             </ol>
         </nav>
     </div>
@@ -95,14 +95,14 @@
 
             <div>
                 <label class="block text-gray-700">Status</label>
-                <select name="status"
+                <select name="status" disabled
                     class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500 @error('status') border-red-500 @enderror"
                     required>
                     <option value="pending" {{ old('status', $proposal->status) == 'pending' ? 'selected' : '' }}>Pending
                     </option>
-                    <option value="approved" {{ old('status', $proposal->status) == 'approved' ? 'selected' : '' }}>
+                    <option value="diterima" {{ old('status', $proposal->status) == 'diterima' ? 'selected' : '' }}>
                         Approved</option>
-                    <option value="rejected" {{ old('status', $proposal->status) == 'rejected' ? 'selected' : '' }}>
+                    <option value="ditolak" {{ old('status', $proposal->status) == 'ditolak' ? 'selected' : '' }}>
                         Rejected</option>
                 </select>
                 @error('status')

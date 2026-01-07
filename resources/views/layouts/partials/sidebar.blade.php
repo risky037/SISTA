@@ -62,11 +62,35 @@
                     <i class="fas fa-calendar-alt"></i>
                     <span>Jadwal Sidang</span>
                 </a>
-                <a href="{{ route('admin.proposal.index') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.proposal.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Proposal & Dokumen Akhir</span>
-                </a>
+                <div x-data="{
+                    open: localStorage.getItem('sidebar_admin_documents') === 'true' ||
+                        (localStorage.getItem('sidebar_admin_documents') === null && {{ request()->routeIs('admin.proposal.*') || request()->routeIs('admin.dokumen-akhir.*') ? 'true' : 'false' }})
+                }" x-init="$watch('open', val => localStorage.setItem('sidebar_admin_documents', val))" class="space-y-1">
+
+                    <button type="button" @click="open = !open"
+                        class="flex items-center w-full gap-3 px-4 py-2 rounded-full transition-all duration-300
+{{ request()->routeIs('admin.proposal.*') || request()->routeIs('admin.dokumen-akhir.*')
+    ? 'text-white bg-green-600'
+    : 'hover:bg-gray-100 text-gray-600' }}">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Dokumen</span>
+                        <i class="fas fa-chevron-down ml-auto transition-transform duration-300"
+                            :class="{ 'rotate-180': open }"></i>
+                    </button>
+
+                    <div x-show="open" x-collapse.duration.300ms class="space-y-1">
+                        <a href="{{ route('admin.proposal.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.proposal.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-file-signature"></i>
+                            <span>Proposal</span>
+                        </a>
+                        <a href="{{ route('admin.dokumen-akhir.index') }}"
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('admin.dokumen-akhir.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Dokumen akhir</span>
+                        </a>
+                    </div>
+                </div>
                 <a href="{{ route('admin.template.index') }}"
                     class="flex items-center gap-3 px-4 py-2 rounded-full {{ request()->routeIs('admin.template.*') ? 'bg-green-600 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                     <i class="fas fa-file-word"></i>
@@ -122,12 +146,12 @@
 
                     <div x-show="open" x-collapse.duration.300ms class="space-y-1">
                         <a href="{{ route('dosen.proposals.index') }}"
-                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.proposals.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.proposals.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                             <i class="fas fa-tasks"></i>
                             <span>Proposal/Skripsi</span>
                         </a>
                         <a href="{{ route('dosen.dokumen-akhir.index') }}"
-                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.dokumen-akhir.index') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
+                            class="flex items-center gap-3 px-8 py-2 rounded-full transition-all duration-300 {{ request()->routeIs('dosen.dokumen-akhir.*') ? 'bg-green-500 text-white font-semibold' : 'hover:bg-gray-100 text-gray-600' }}">
                             <i class="fas fa-file-alt"></i>
                             <span>Dokumen Akhir</span>
                         </a>

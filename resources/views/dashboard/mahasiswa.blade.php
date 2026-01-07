@@ -8,7 +8,7 @@
         <div class="relative z-10">
             <h1 class="text-2xl font-bold mb-2 inline-flex items-center">Selamat Datang, {{ Auth::user()->name }}! <img
                     src="https://raw.githubusercontent.com/Ridhsuki/Ridhsuki/refs/heads/main/img/Hi.gif" alt="hi"
-                    class="ml-2 w-8 h-8"></h1>
+                    class="ml-2 w-8 h-8" loading="lazy"></h1>
             <p class="text-green-50 text-sm opacity-90 max-w-2xl">
                 Pantau terus progres tugas akhirmu. Jangan lupa cek jadwal bimbingan dan pengumuman terbaru dari program
                 studi.

@@ -11,7 +11,7 @@
 
         <nav class="text-sm text-gray-500">
             <ol class="list-reset flex">
-                <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Dashboard</a></li>
+                <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-gray-700">Dokumen Akhir</li>
             </ol>
@@ -36,9 +36,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($mahasiswas as $m)
                         @php
-                            // Menghitung berapa bab yang sudah diupload
                             $uploadedCount = $m->dokumenAkhir->count();
-                            // Mengambil update terakhir
                             $lastUpdate = $m->dokumenAkhir->sortByDesc('updated_at')->first();
                         @endphp
                         <tr class="hover:bg-gray-50 transition-colors duration-150">

@@ -85,14 +85,6 @@ class User extends Authenticatable
         return $this->hasMany(Bimbingan::class, 'dosen_id');
     }
 
-    /**
-     * Relationship - Mahasiswa mengirim banyak laporan progress
-     */
-    public function laporanProgress()
-    {
-        return $this->hasMany(LaporanProgress::class, 'mahasiswa_id');
-    }
-
     public function mahasiswaBimbinganProposal()
     {
         return $this->hasMany(Proposal::class, 'dosen_pembimbing_id')->with('mahasiswa');

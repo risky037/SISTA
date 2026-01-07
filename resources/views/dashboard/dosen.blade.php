@@ -10,7 +10,7 @@
                 <h1 class="text-2xl font-bold mb-2 inline-flex items-center">Selamat Datang, Bapak/Ibu
                     {{ Auth::user()->name }}! <img
                         src="https://raw.githubusercontent.com/Ridhsuki/Ridhsuki/refs/heads/main/img/Hi.gif" alt="hi"
-                        class="ml-2 w-8 h-8"></h1>
+                        class="ml-2 w-8 h-8" loading="lazy"></h1>
                 <p class="text-indigo-100 text-sm opacity-90">
                     Berikut adalah ringkasan aktivitas bimbingan dan tugas akhir mahasiswa Anda.
                 </p>

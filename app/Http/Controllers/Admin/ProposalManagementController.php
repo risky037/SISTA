@@ -11,11 +11,30 @@ use Illuminate\Support\Facades\Storage;
 
 class ProposalManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $proposals = Proposal::with(['mahasiswa', 'dosen'])->latest()->get();
-        $dokumens = DokumenAkhir::with(['mahasiswa', 'dosen'])->latest()->get();
-        return view('admin.proposal.index', compact('proposals', 'dokumens'));
+        $stats = [
+            'total' => Proposal::count(),
+            'pending' => Proposal::where('status', 'pending')->count(),
+            'approved' => Proposal::where('status', 'approved')->count(),
+            'rejected' => Proposal::where('status', 'rejected')->count(),
+        ];
+
+        $query = Proposal::with(['mahasiswa', 'dosen']);
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                    ->orWhereHas('mahasiswa', function ($subQ) use ($search) {
+                        $subQ->where('name', 'like', "%{$search}%")
+                            ->orWhere('nim', 'like', "%{$search}%");
+                    });
+            });
+        }
+        $proposals = $query->latest()->paginate(10);
+
+        return view('admin.proposal.index', compact('proposals', 'stats'));
     }
 
     public function create()
@@ -67,7 +86,7 @@ class ProposalManagementController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'file_proposal' => 'nullable|mimes:pdf,doc,docx|max:2048',
-            'status' => 'required|in:pending,approved,rejected',
+            'status' => 'required|in:pending,diterima,ditolak',
         ]);
 
         if ($request->hasFile('file_proposal')) {

@@ -33,8 +33,11 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('mahasiswa', MahasiswaManagementController::class)->except(['show'])->names('management.mahasiswa');
     Route::resource('dosen', DosenManagementController::class)->names('management.dosen');
     Route::resource('jadwal-sidang', JadwalSidangManagementController::class)->names('jadwal')->parameters(['jadwal-sidang' => 'jadwal']);
-    Route::get('proposal', [ProposalManagementController::class, ('index')])->name('proposal.index');
+    Route::resource('proposal', ProposalManagementController::class, )->names('proposal')->except('create','store');
     Route::resource('template', TemplateManagementController::class)->names('template');
+
+    Route::get('/dokumen-akhir', [App\Http\Controllers\Admin\AdminDokumenAkhirController::class, 'index'])->name('dokumen-akhir.index');
+    Route::get('/dokumen-akhir/{id}', [App\Http\Controllers\Admin\AdminDokumenAkhirController::class, 'show'])->name('dokumen-akhir.show');
 
     Route::post('mahasiswa/import', [MahasiswaManagementController::class, 'import'])->name('management.mahasiswa.import');
     Route::post('dosen/import', [DosenManagementController::class, 'import'])->name('management.dosen.import');

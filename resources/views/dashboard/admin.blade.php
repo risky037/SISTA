@@ -8,7 +8,7 @@
         <div class="relative z-10">
             <h1 class="text-2xl font-bold mb-2 inline-flex items-center">Selamat Datang, {{ Auth::user()->name }}! <img
                     src="https://raw.githubusercontent.com/Ridhsuki/Ridhsuki/refs/heads/main/img/Hi.gif" alt="hi"
-                    class="ml-2 w-8 h-8"></h1>
+                    class="ml-2 w-8 h-8" loading="lazy"></h1>
             <p class="text-blue-100 text-sm opacity-90">
                 Panel kontrol utama sistem. Pantau data mahasiswa, dosen, dan validasi pengajuan akademik di sini.
             </p>
@@ -96,8 +96,22 @@
                                     <p class="text-xs text-gray-500">Oleh: {{ $proposal->mahasiswa->name }}</p>
                                 </div>
                             </div>
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">
-                                {{ $proposal->status }}
+                            @php
+                                $statusClasses = match ($proposal->status) {
+                                    'disetujui' => 'bg-green-100 text-green-800 border border-green-200',
+                                    'ditolak' => 'bg-red-100 text-red-800 border border-red-200',
+                                    default => 'bg-yellow-100 text-yellow-800 border border-yellow-200',
+                                };
+
+                                $statusLabel = match ($proposal->status) {
+                                    'disetujui' => 'Approved',
+                                    'ditolak' => 'Rejected',
+                                    default => 'Pending',
+                                };
+                            @endphp
+
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full {{ $statusClasses }}">
+                                {{ $statusLabel }}
                             </span>
                         </div>
                     @empty
