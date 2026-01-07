@@ -25,9 +25,12 @@ class DokumenAkhirMahasiswaController extends Controller
             6 => 'Daftar Pustaka & Lampiran'
         ];
 
-        $dosens = User::where('role', 'dosen')->get();
+        $bab1 = $uploads->get(1);
+        $defaultDosenId = $bab1 ? $bab1->dosen_pembimbing_id : null;
 
-        return view('mahasiswa.dokumen.index', compact('uploads', 'chapters', 'dosens'));
+        $dosens = User::where('role', 'dosen')->orderBy('name')->get();
+
+        return view('mahasiswa.dokumen.index', compact('uploads', 'chapters', 'dosens', 'defaultDosenId'));
     }
 
     public function store(Request $request)
@@ -39,6 +42,19 @@ class DokumenAkhirMahasiswaController extends Controller
             'dosen_pembimbing_id' => 'required|exists:users,id',
             'deskripsi' => 'nullable|string',
         ]);
+
+        if ($request->bab > 1) {
+            $prevBab = $request->bab - 1;
+            $prevDoc = DokumenAkhir::where('mahasiswa_id', Auth::id())
+                ->where('bab', $prevBab)
+                ->first();
+
+            if (!$prevDoc || $prevDoc->status !== 'approved') {
+                return redirect()->back()
+                    ->with('error', "Anda tidak dapat mengunggah Bab {$request->bab} sebelum Bab {$prevBab} disetujui (Approved).")
+                    ->withInput();
+            }
+        }
 
         $path = $request->file('file')->store('dokumen_akhir', 'public');
 

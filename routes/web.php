@@ -33,7 +33,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('mahasiswa', MahasiswaManagementController::class)->except(['show'])->names('management.mahasiswa');
     Route::resource('dosen', DosenManagementController::class)->names('management.dosen');
     Route::resource('jadwal-sidang', JadwalSidangManagementController::class)->names('jadwal')->parameters(['jadwal-sidang' => 'jadwal']);
-    Route::resource('proposal', ProposalManagementController::class, )->names('proposal')->except('create','store');
+    Route::resource('proposal', ProposalManagementController::class, )->names('proposal')->except('create', 'store');
     Route::resource('template', TemplateManagementController::class)->names('template');
 
     Route::get('/dokumen-akhir', [App\Http\Controllers\Admin\AdminDokumenAkhirController::class, 'index'])->name('dokumen-akhir.index');
@@ -49,7 +49,7 @@ Route::prefix('mahasiswa')->middleware(['auth', 'role:mahasiswa'])->name('mahasi
     Route::get('jadwal-seminar', [JadwalSeminarMahasiswaController::class, 'index'])->name('jadwal-seminar');
     Route::resource('proposal', ProposalMahasiswaController::class)->names('proposals');
     Route::post('proposal/{id}/status', [ProposalMahasiswaController::class, 'updateStatus'])->name('proposals.updateStatus');
-    Route::resource('dokumen-akhir', DokumenAkhirMahasiswaController::class)->names('dokumen-akhir');
+    Route::resource('dokumen-akhir', DokumenAkhirMahasiswaController::class)->names('dokumen-akhir')->only(['index', 'store']);
     Route::resource('nilai', NilaiMahasiswaController::class)->only(['index', 'show'])->names('nilai');
     Route::get('template', [TemplateMahasiswaController::class, 'index'])->name('template.index');
 });
