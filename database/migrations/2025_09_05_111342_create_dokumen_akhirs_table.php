@@ -14,14 +14,12 @@ class CreateDokumenAkhirsTable extends Migration
             $table->foreignId('dosen_pembimbing_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('judul');
             $table->text('deskripsi')->nullable();
+            $table->integer('bab');
             $table->string('file');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('catatan_dosen')->nullable();
             $table->timestamps();
-            $table->foreign('mahasiswa_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+            $table->foreign('mahasiswa_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

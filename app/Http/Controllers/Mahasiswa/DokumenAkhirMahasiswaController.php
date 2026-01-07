@@ -17,8 +17,20 @@ class DokumenAkhirMahasiswaController extends Controller
      */
     public function index()
     {
-        $dokumen = DokumenAkhir::own()->latest()->get();
-        return view('mahasiswa.dokumen.index', compact('dokumen'));
+        $uploads = DokumenAkhir::own()->get()->keyBy('bab');
+
+        $chapters = [
+            1 => 'Bab 1 - Pendahuluan',
+            2 => 'Bab 2 - Tinjauan Pustaka',
+            3 => 'Bab 3 - Metodologi Penelitian',
+            4 => 'Bab 4 - Hasil dan Pembahasan',
+            5 => 'Bab 5 - Penutup',
+            6 => 'Daftar Pustaka & Lampiran'
+        ];
+
+        $dosens = User::where('role', 'dosen')->get();
+
+        return view('mahasiswa.dokumen.index', compact('uploads', 'chapters', 'dosens'));
     }
 
     /**
@@ -27,7 +39,7 @@ class DokumenAkhirMahasiswaController extends Controller
     public function create()
     {
         $dokumen = DokumenAkhir::own()->latest()->get();
-        $dosens = \App\Models\User::where('role', 'dosen')->get();
+        $dosens = User::where('role', 'dosen')->get();
 
         return view('mahasiswa.dokumen.create', compact('dokumen', 'dosens'));
     }
@@ -39,6 +51,7 @@ class DokumenAkhirMahasiswaController extends Controller
     {
         $request->validate([
             'judul' => 'required|string|max:255',
+            'bab' => 'required|integer|min:1|max:6',
             'file' => 'required|mimes:pdf,doc,docx|max:5120',
             'dosen_pembimbing_id' => 'required|exists:users,id',
             'deskripsi' => 'nullable|string',
@@ -46,13 +59,19 @@ class DokumenAkhirMahasiswaController extends Controller
 
         $path = $request->file('file')->store('dokumen_akhir', 'public');
 
-        $dokumen = DokumenAkhir::create([
-            'mahasiswa_id' => Auth::id(),
-            'dosen_pembimbing_id' => $request->dosen_pembimbing_id,
-            'judul' => $request->judul,
-            'file' => $path,
-            'deskripsi' => $request->deskripsi,
-        ]);
+        $dokumen = DokumenAkhir::updateOrCreate(
+            [
+                'mahasiswa_id' => Auth::id(),
+                'bab' => $request->bab,
+            ],
+            [
+                'dosen_pembimbing_id' => $request->dosen_pembimbing_id,
+                'judul' => 'File Bab ' . $request->bab,
+                'file' => $path,
+                'status' => 'pending',
+                'deskripsi' => $request->deskripsi,
+            ]
+        );
 
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
@@ -73,8 +92,7 @@ class DokumenAkhirMahasiswaController extends Controller
             );
         }
 
-        return redirect()->route('mahasiswa.dokumen-akhir.index')
-            ->with('success', 'Dokumen berhasil diupload.');
+        return redirect()->back()->with('success', 'Bab ' . $request->bab . ' berhasil diupload.');
     }
 
     /**

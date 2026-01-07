@@ -64,6 +64,10 @@ Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->grou
     Route::get('dokumen-akhir', [DokumenAkhirDosenController::class, 'index'])->name('dokumen-akhir.index');
     Route::get('dokumen-akhir/{id}', [DokumenAkhirDosenController::class, 'show'])->name('dokumen-akhir.show');
     Route::post('dokumen-akhir/{id}/status', [DokumenAkhirDosenController::class, 'updateStatus'])->name('dokumen-akhir.updateStatus');
+    Route::get('/dokumen-akhir/mahasiswa/{mahasiswaId}', [DokumenAkhirDosenController::class, 'showByMahasiswa'])
+        ->name('dokumen-akhir.show-mahasiswa');
+    Route::put('/dokumen-akhir/{id}/update-status', [DokumenAkhirDosenController::class, 'updateStatus'])
+        ->name('dokumen-akhir.update-status');
     Route::resource('nilai-proposal', NilaiProposalController::class)->names('nilai-proposal');
     Route::resource('nilai-dokumen-akhir', NilaiDokumenAkhirController::class)->names('nilai-dokumen-akhir');
 });

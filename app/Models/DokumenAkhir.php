@@ -16,6 +16,7 @@ class DokumenAkhir extends Model
         'mahasiswa_id',
         'dosen_pembimbing_id',
         'judul',
+        'bab',
         'file',
         'status',
         'deskripsi',
@@ -78,5 +79,18 @@ class DokumenAkhir extends Model
     public function getFormattedJudulAttribute()
     {
         return ucwords(strtolower($this->judul));
+    }
+
+    public function getNamaBabAttribute()
+    {
+        $list = [
+            1 => 'Bab 1 - Pendahuluan',
+            2 => 'Bab 2 - Tinjauan Pustaka',
+            3 => 'Bab 3 - Metodologi Penelitian',
+            4 => 'Bab 4 - Hasil dan Pembahasan',
+            5 => 'Bab 5 - Penutup',
+            6 => 'Daftar Pustaka & Lampiran'
+        ];
+        return $list[$this->bab] ?? 'Dokumen Lainnya';
     }
 }

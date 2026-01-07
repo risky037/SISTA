@@ -126,4 +126,14 @@ class User extends Authenticatable
         return $this->hasMany(DokumenAkhir::class, 'dosen_pembimbing_id');
     }
 
+    /**
+     * Relasi ke Dokumen Akhir (Skripsi Per Bab)
+     * Satu mahasiswa bisa memiliki banyak dokumen (Bab 1, Bab 2, dst)
+     */
+    public function dokumenAkhir()
+    {
+        // Parameter kedua 'mahasiswa_id' adalah foreign key di tabel dokumen_akhirs
+        return $this->hasMany(DokumenAkhir::class, 'mahasiswa_id');
+    }
+
 }

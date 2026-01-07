@@ -1,126 +1,95 @@
 @extends('layouts.app')
 
-@section('title', 'Review Dokumen Akhir Mahasiswa')
+@section('title', 'Review Dokumen Akhir')
 
 @section('content')
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
-            <p class="text-gray-500 text-sm">Halaman untuk meninjau dokumen akhir mahasiswa bimbingan Anda.</p>
+            <h1 class="text-2xl font-bold text-gray-800">Review Dokumen Akhir</h1>
+            <p class="text-gray-500 text-sm mt-1">Daftar mahasiswa bimbingan yang telah mengunggah dokumen.</p>
         </div>
+
         <nav class="text-sm text-gray-500">
             <ol class="list-reset flex">
-                <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
+                <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Dashboard</a></li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-gray-700">Dokumen Akhir</li>
             </ol>
         </nav>
     </div>
 
-    <div class="p-6 bg-white rounded-lg shadow-md">
-        @if (session('success'))
-            <div class="bg-green-100 text-green-800 p-3 rounded-md border border-green-400 mb-4">
-                {!! session('success') !!}
-            </div>
-        @endif
-
-        <div class="relative overflow-visible">
-            <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[600px]">
-                <thead class="bg-green-100 text-gray-700">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-2 md:px-4 py-2 border text-left">Mahasiswa</th>
-                        <th class="px-2 md:px-4 py-2 border text-left">Judul</th>
-                        <th class="px-2 md:px-4 py-2 border text-center">File</th>
-                        <th class="px-2 md:px-4 py-2 border text-center">Status</th>
-                        <th class="px-2 md:px-4 py-2 border text-left">Catatan Dosen</th>
-                        <th class="px-2 md:px-4 py-2 border text-center">Aksi</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            Mahasiswa</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            Progress Upload</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status
+                            Terakhir</th>
+                        <th class="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Aksi
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse ($dokumen as $dok)
+                    @forelse($mahasiswas as $m)
                         @php
-                            $statusClass = match ($dok->status) {
-                                'pending' => 'bg-yellow-100 text-yellow-800',
-                                'approved' => 'bg-green-100 text-green-800',
-                                'rejected' => 'bg-red-100 text-red-800',
-                                default => 'bg-gray-100 text-gray-800',
-                            };
+                            // Menghitung berapa bab yang sudah diupload
+                            $uploadedCount = $m->dokumenAkhir->count();
+                            // Mengambil update terakhir
+                            $lastUpdate = $m->dokumenAkhir->sortByDesc('updated_at')->first();
                         @endphp
-                        <tr>
-                            <td class="px-6 py-4">{{ $dok->mahasiswa->name }}</td>
-                            <td class="px-6 py-4">{{ $dok->judul }}</td>
-                            <td class="px-6 py-4 text-center">
-                                <a href="{{ asset('storage/' . $dok->file) }}" target="_blank"
-                                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Lihat Dokumen</a>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                                    {{ ucfirst($dok->status) }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $dok->catatan_dosen ?? '-' }}</td>
-                            <td class="px-6 py-4 text-center text-sm font-medium">
-                                <div x-data="{ open: false }" class="relative inline-block text-left">
-                                    <button type="button" @click="open = !open"
-                                        class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-green-500">
-                                        Aksi
-                                        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-
-                                    <div x-show="open" @click.away="open = false"
-                                        x-transition:enter="transition ease-out duration-100"
-                                        x-transition:enter-start="transform opacity-0 scale-95"
-                                        x-transition:enter-end="transform opacity-100 scale-100"
-                                        x-transition:leave="transition ease-in duration-75"
-                                        x-transition:leave-start="transform opacity-100 scale-100"
-                                        x-transition:leave-end="transform opacity-0 scale-95"
-                                        class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50"
-                                        role="menu" aria-orientation="vertical" aria-labelledby="menu-button"
-                                        tabindex="-1">
-                                        <div class="py-1" role="none">
-                                            <a href="{{ route('dosen.dokumen-akhir.show', $dok->id) }}"
-                                                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lihat</a>
-                                               
-                                            </a>
+                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <div
+                                            class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
+                                            {{ substr($m->name, 0, 1) }}
                                         </div>
-                                        <form action="{{ route('dosen.dokumen-akhir.updateStatus', $dok->id) }}"
-                                            method="POST" class="py-1 px-4 space-y-2" role="none">
-                                            @csrf
-                                            <div class="block">
-                                                <label for="status-{{ $dok->id }}"
-                                                    class="text-xs font-semibold text-gray-700">Ubah Status:</label>
-                                                <select name="status" id="status-{{ $dok->id }}"
-                                                    class="mt-1 block w-full border rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                                                    <option value="pending" @selected($dok->status == 'pending')>Pending</option>
-                                                    <option value="approved" @selected($dok->status == 'approved')>Approved</option>
-                                                    <option value="rejected" @selected($dok->status == 'rejected')>Rejected</option>
-                                                </select>
-                                            </div>
-                                            <div class="block">
-                                                <label for="catatan_dosen-{{ $dok->id }}"
-                                                    class="text-xs font-semibold text-gray-700">Catatan:</label>
-                                                <textarea name="catatan_dosen" id="catatan_dosen-{{ $dok->id }}" rows="2"
-                                                    class="mt-1 block w-full border rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                                                    placeholder="Tambahkan catatan">{{ $dok->catatan_dosen }}</textarea>
-                                            </div>
-                                            <div class="block">
-                                                <button type="submit"
-                                                    class="w-full bg-green-600 text-white font-medium py-1 rounded-md hover:bg-green-700 transition-colors">Update</button>
-                                            </div>
-                                        </form>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">{{ $m->name }}</div>
+                                        <div class="text-xs text-gray-500">{{ $m->email }}</div>
                                     </div>
                                 </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-200 max-w-[150px]">
+                                    <div class="bg-green-600 h-2.5 rounded-full"
+                                        style="width: {{ ($uploadedCount / 6) * 100 }}%"></div>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">{{ $uploadedCount }} dari 6 Bab</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if ($lastUpdate)
+                                    <span class="text-sm text-gray-700">Bab {{ $lastUpdate->bab }}</span>
+                                    <br>
+                                    <span
+                                        class="text-xs text-gray-400">{{ $lastUpdate->updated_at->diffForHumans() }}</span>
+                                @else
+                                    <span class="text-xs text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{{ route('dosen.dokumen-akhir.show-mahasiswa', $m->id) }}"
+                                    class="inline-flex items-center px-4 py-2 bg-white border border-green-600 rounded-lg font-semibold text-green-600 text-xs uppercase tracking-widest shadow-sm hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    Lihat Detail
+                                </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center p-4 text-gray-500">Belum ada dokumen akhir mahasiswa.</td>
+                            <td colspan="4" class="px-6 py-10 text-center text-gray-500">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <p class="mt-2 text-sm">Belum ada mahasiswa bimbingan yang mengupload dokumen.</p>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
