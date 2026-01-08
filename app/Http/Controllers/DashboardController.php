@@ -111,38 +111,31 @@ class DashboardController extends Controller
     public function mahasiswa()
     {
         $mahasiswaId = Auth::id();
+
         $proposal = Proposal::where('mahasiswa_id', $mahasiswaId)->first();
-        $proposalStatus = $proposal ? $proposal->status : null;
+        $proposalStatus = $proposal ? $proposal->status : 'belum_mengajukan';
 
         $dokumenAkhir = DokumenAkhir::where('mahasiswa_id', $mahasiswaId)->first();
-        $dokumenStatus = $dokumenAkhir ? $dokumenAkhir->status : null;
+        $dokumenStatus = $dokumenAkhir ? $dokumenAkhir->status : 'belum_mengajukan';
 
-        $nilaiProposal = Nilai::where('dosen_id', '!=', null)
-            ->where('proposal_id', $proposal?->id)
-            ->first();
+        $bimbinganDone = Bimbingan::where('mahasiswa_id', $mahasiswaId)->where('status', 'approved')->count();
+        $bimbinganPending = Bimbingan::where('mahasiswa_id', $mahasiswaId)->where('status', 'pending')->count();
 
-        $nilaiDokumen = Nilai::where('dosen_id', '!=', null)
-            ->where('dokumen_akhir_id', $dokumenAkhir?->id)
-            ->first();
+        $progress = 0;
+        if ($proposalStatus == 'diterima')
+            $progress += 50;
+        if ($dokumenStatus == 'approved')
+            $progress += 50;
 
-        $bimbinganDone = Bimbingan::where('mahasiswa_id', $mahasiswaId)
-            ->where('status', 'approved')
-            ->count();
-
-        $bimbinganPending = Bimbingan::where('mahasiswa_id', $mahasiswaId)
-            ->where('status', 'pending')
-            ->count();
-
-        $pengumumans = Pengumuman::latest()->limit(3)->get();
+        $pengumumans = Pengumuman::latest()->limit(8)->get();
 
         return view('dashboard.mahasiswa', compact(
             'proposalStatus',
             'dokumenStatus',
-            'nilaiProposal',
-            'nilaiDokumen',
             'bimbinganDone',
             'bimbinganPending',
-            'pengumumans'
+            'pengumumans',
+            'progress'
         ));
     }
 

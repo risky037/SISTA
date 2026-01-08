@@ -3,17 +3,16 @@
 @section('title', 'Daftar Pengumuman')
 
 @section('content')
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-            <h1 class="text-gray-800 text-2xl font-bold">@yield('title')</h1>
+            <h1 class="text-2xl font-bold text-gray-800">@yield('title')</h1>
             <p class="text-gray-500 text-sm mt-1">Informasi dan berita terbaru terkait akademik.</p>
         </div>
-
-        <nav class="text-sm text-gray-500">
-            <ol class="flex items-center space-x-2">
-                <li><a href="{{ route('dashboard') }}" class="hover:text-green-600">Home</a></li>
-                <li><span class="text-gray-300">/</span></li>
-                <li class="text-gray-700 font-medium">Pengumuman</li>
+        <nav class="text-sm font-medium text-gray-500 bg-gray-100 px-4 py-2 rounded-lg">
+            <ol class="list-reset flex items-center gap-2">
+                <li><a href="{{ route('mahasiswa.dashboard') }}" class="hover:text-green-600">Home</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li class="text-green-600">Pengumuman</li>
             </ol>
         </nav>
     </div>

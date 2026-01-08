@@ -30,7 +30,7 @@ class ProposalMahasiswaController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'file_proposal' => 'required|mimes:pdf|max:2048',
+            'file_proposal' => 'required|mimes:pdf|max:10240',
             'dosen_pembimbing_id' => 'required|exists:users,id',
         ]);
 
@@ -88,7 +88,7 @@ class ProposalMahasiswaController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'file_proposal' => 'nullable|mimes:pdf|max:2048',
+            'file_proposal' => 'nullable|mimes:pdf|max:10240',
             'dosen_pembimbing_id' => 'required|exists:users,id',
         ]);
 
