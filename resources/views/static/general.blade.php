@@ -3,7 +3,6 @@
 @section('title', ucfirst($page))
 
 @section('content')
-    {{-- Header Sederhana --}}
     <div class="mb-8">
         <h1 class="text-2xl font-bold text-gray-800">{{ $page === 'bantuan' ? 'Pusat Bantuan' : 'Tentang Aplikasi' }}</h1>
         <p class="text-gray-500 text-sm italic">
@@ -14,10 +13,8 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
         @if ($page === 'bantuan')
-            {{-- Bantuan - Mode FAQ Simple --}}
             <div class="divide-y divide-gray-100" x-data="{ active: null }">
 
-                {{-- Item 1 --}}
                 <div class="group">
                     <button @click="active = (active === 1 ? null : 1)"
                         class="w-full p-6 text-left flex justify-between items-center hover:bg-gray-50 transition">
@@ -31,7 +28,6 @@
                     </div>
                 </div>
 
-                {{-- Item 2 --}}
                 <div class="group">
                     <button @click="active = (active === 2 ? null : 2)"
                         class="w-full p-6 text-left flex justify-between items-center hover:bg-gray-50 transition">
@@ -46,7 +42,6 @@
                     </div>
                 </div>
 
-                {{-- Item 3 --}}
                 <div class="group">
                     <button @click="active = (active === 3 ? null : 3)"
                         class="w-full p-6 text-left flex justify-between items-center hover:bg-gray-50 transition">
@@ -54,14 +49,44 @@
                         <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform"
                             :class="active === 3 ? 'rotate-180' : ''"></i>
                     </button>
+                    @php
+                        $adminPhone = \App\Models\User::where('role', 'admin')->value('no_hp');
+
+                        if ($adminPhone) {
+                            $adminPhone = preg_replace('/[^0-9]/', '', $adminPhone); // hapus spasi & simbol
+                            if (str_starts_with($adminPhone, '0')) {
+                                $adminPhone = '62' . substr($adminPhone, 1);
+                            }
+                        }
+
+                        $waMessage =
+                            'Halo Admin, saya mengalami kendala teknis pada web ' .
+                            config('app.name') .
+                            ' (' .
+                            url('/') .
+                            ').';
+                    @endphp
+
                     <div x-show="active === 3" x-collapse x-cloak class="px-6 pb-6 text-sm text-gray-600 leading-relaxed">
-                        Jika terjadi kendala teknis (bug/error), silakan hubungi admin melalui email <a
-                            href="mailto:support@uici.ac.id" class="text-green-600 underline">support@uici.ac.id</a>.
+                        Jika terjadi kendala teknis (bug/error),
+                        silakan hubungi admin melalui WhatsApp
+
+                        @if ($adminPhone)
+                            <a href="https://wa.me/{{ $adminPhone }}?text={{ urlencode($waMessage) }}" target="_blank"
+                                class="text-green-600 underline">
+                                Hubungi Admin
+                            </a>
+                        @else
+                            <span class="text-gray-400 italic">
+                                (nomor admin belum tersedia)
+                            </span>
+                        @endif
+                        .
                     </div>
+
                 </div>
             </div>
         @else
-            {{-- Tentang - Mode Minimalis --}}
             <div class="p-8 md:p-12">
                 <div class="flex flex-col md:flex-row gap-10 items-center md:items-start">
                     <div
