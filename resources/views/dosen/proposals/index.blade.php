@@ -2,137 +2,216 @@
 
 @section('title', 'Review Proposal Mahasiswa')
 
+@push('styles')
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+@endpush
+
 @section('content')
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-            <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
-            <p class="text-gray-500 text-sm">Halaman untuk meninjau proposal yang diajukan oleh mahasiswa bimbingan.</p>
+            <h1 class="text-2xl font-bold text-gray-800">@yield('title')</h1>
+            <p class="text-gray-500 text-sm mt-1">Halaman untuk meninjau proposal mahasiswa bimbingan.</p>
         </div>
-        <nav class="text-sm text-gray-500">
-            <ol class="list-reset flex">
+        <nav class="text-sm font-medium text-gray-500 bg-gray-100 px-4 py-2 rounded-lg">
+            <ol class="list-reset flex items-center gap-2">
                 <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">Proposal</li>
+                <li class="text-green-600">@yield('title')</li>
             </ol>
         </nav>
     </div>
 
-    <div class="p-6 bg-white rounded-lg shadow-md">
-        @if (session('success'))
-            <div class="bg-green-100 text-green-800 p-3 rounded-md border border-green-400 mb-4">
-                {!! session('success') !!}
+    <div class="grid grid-cols-2 md:flex md:justify-between items-center gap-3 mb-6">
+        <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3 md:flex-1">
+            <div class="p-2 bg-blue-50 rounded-lg text-blue-600 hidden sm:block">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                    </path>
+                </svg>
             </div>
-        @endif
+            <div>
+                <p class="text-[10px] uppercase text-gray-400 font-bold leading-none mb-1">Total</p>
+                <p class="text-lg font-bold text-gray-800">{{ $proposals->count() }}</p>
+            </div>
+        </div>
+        <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3 md:flex-1">
+            <div class="p-2 bg-yellow-50 rounded-lg text-yellow-600 hidden sm:block">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-[10px] uppercase text-gray-400 font-bold leading-none mb-1">Pending</p>
+                <p class="text-lg font-bold text-yellow-600">{{ $proposals->where('status', 'pending')->count() }}</p>
+            </div>
+        </div>
+    </div>
 
-        <div class="relative overflow-visible">
-            <table class="table-auto w-full mt-4 border border-gray-200 rounded-lg min-w-[600px]">
-                <thead class="bg-green-100 text-gray-700">
+    <div x-data="{
+        open: false,
+        mhsName: '',
+        judul: '',
+        status: '',
+        catatan: '',
+        actionUrl: '',
+        openModal(name, title, stat, note, url) {
+            this.mhsName = name;
+            this.judul = title;
+            this.status = stat;
+            this.catatan = note;
+            this.actionUrl = url;
+            this.open = true;
+        }
+    }">
+
+        <div class="hidden md:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-50 border-b border-gray-100 text-gray-600 uppercase text-[11px] font-bold">
                     <tr>
-                        <th class="px-2 md:px-4 py-2 border text-left">Mahasiswa</th>
-                        <th class="px-2 md:px-4 py-2 border text-left">Judul</th>
-                        <th class="px-2 md:px-4 py-2 border text-center">File Proposal</th>
-                        <th class="px-2 md:px-4 py-2 border text-center">Status</th>
-                        <th class="px-2 md:px-4 py-2 border text-left">Catatan Dosen</th>
-                        <th class="px-2 md:px-4 py-2 border text-center">Aksi</th>
+                        <th class="px-6 py-4">Mahasiswa</th>
+                        <th class="px-6 py-4">Judul Proposal</th>
+                        <th class="px-6 py-4 text-center">Status</th>
+                        <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-100">
                     @forelse ($proposals as $proposal)
-                        @php
-                            $statusClass = match ($proposal->status) {
-                                'pending' => 'bg-yellow-100 text-yellow-800',
-                                'revisi' => 'bg-orange-100 text-orange-800',
-                                'diterima' => 'bg-green-100 text-green-800',
-                                'ditolak' => 'bg-red-100 text-red-800',
-                                default => 'bg-gray-100 text-gray-800',
-                            };
-                        @endphp
-                        <tr>
+                        <tr class="hover:bg-gray-50 transition">
                             <td class="px-6 py-4">
-                                {{ $proposal->mahasiswa->name }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $proposal->judul }}
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
-                                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lihat Proposal</a>
-                            </td>
-                            <td class="px-6 py-4 text-center text-sm">
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                                    {{ ucfirst($proposal->status) }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">
-                                {{ $proposal->catatan_dosen ?? '-' }}
-                            </td>
-                            <td class="px-6 py-4 text-center text-sm font-medium">
-                                <div x-data="{ open: false }" class="relative inline-block text-left">
-                                    <button type="button" @click="open = !open"
-                                        class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-green-500">
-                                        Aksi
-                                        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-
-                                    <div x-show="open" @click.away="open = false"
-                                        x-transition:enter="transition ease-out duration-100"
-                                        x-transition:enter-start="transform opacity-0 scale-95"
-                                        x-transition:enter-end="transform opacity-100 scale-100"
-                                        x-transition:leave="transition ease-in duration-75"
-                                        x-transition:leave-start="transform opacity-100 scale-100"
-                                        x-transition:leave-end="transform opacity-0 scale-95"
-                                        class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50"
-                                        role="menu" aria-orientation="vertical" aria-labelledby="menu-button"
-                                        tabindex="-1">
-                                        <div class="py-1" role="none">
-                                            <a href="{{ route('dosen.proposals.show', $proposal->id) }}"
-                                                class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100">
-                                                <i class="fas fa-eye mr-2"></i> Lihat Detail
-                                            </a>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="h-8 w-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center font-bold text-xs">
+                                        {{ substr($proposal->mahasiswa->name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-gray-800">{{ $proposal->mahasiswa->name }}</div>
+                                        <div class="text-[10px] text-gray-500 uppercase">{{ $proposal->mahasiswa->nim }}
                                         </div>
-                                        <form action="{{ route('dosen.proposals.updateStatus', $proposal->id) }}"
-                                            method="POST" class="py-1 px-4 space-y-2" role="none">
-                                            @csrf
-                                            <div class="block">
-                                                <label for="status-{{ $proposal->id }}"
-                                                    class="text-xs font-semibold text-gray-700">Ubah Status:</label>
-                                                <select name="status" id="status-{{ $proposal->id }}"
-                                                    class="mt-1 block w-full border rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                                                    <option value="pending" @selected($proposal->status == 'pending')>Pending</option>
-                                                    
-                                                    <option value="diterima" @selected($proposal->status == 'diterima')>Diterima</option>
-                                                    <option value="ditolak" @selected($proposal->status == 'ditolak')>Ditolak</option>
-                                                </select>
-                                            </div>
-                                            <div class="block">
-                                                <label for="catatan-{{ $proposal->id }}"
-                                                    class="text-xs font-semibold text-gray-700">Catatan:</label>
-                                                <textarea name="catatan_dosen" id="catatan-{{ $proposal->id }}" rows="2"
-                                                    class="mt-1 block w-full border rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                                                    placeholder="Tambahkan catatan">{{ $proposal->catatan_dosen }}</textarea>
-                                            </div>
-                                            <div class="block">
-                                                <button type="submit"
-                                                    class="w-full bg-green-600 text-white font-medium py-1 rounded-md hover:bg-green-700 transition-colors">Update</button>
-                                            </div>
-                                        </form>
                                     </div>
                                 </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="text-gray-700 font-medium line-clamp-1 mb-1" title="{{ $proposal->judul }}">
+                                    {{ $proposal->judul }}</p>
+                                @if ($proposal->file_proposal)
+                                    <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
+                                        class="text-red-500 text-[10px] font-bold hover:underline flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z">
+                                            </path>
+                                        </svg>
+                                        LIHAT PDF
+                                    </a>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                @php
+                                    $color = match ($proposal->status) {
+                                        'diterima' => 'bg-green-100 text-green-700 border-green-200',
+                                        'ditolak' => 'bg-red-100 text-red-700 border-red-200',
+                                        default => 'bg-yellow-100 text-yellow-700 border-yellow-200',
+                                    };
+                                @endphp
+                                <span
+                                    class="{{ $color }} px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border">
+                                    {{ $proposal->status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button
+                                    @click="openModal('{{ $proposal->mahasiswa->name }}', '{{ addslashes($proposal->judul) }}', '{{ $proposal->status }}', '{{ addslashes($proposal->catatan_dosen ?? '') }}', '{{ route('dosen.proposals.updateStatus', $proposal->id) }}')"
+                                    class="bg-green-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">
+                                    REVIEW
+                                </button>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center p-4 text-gray-500">Belum ada data proposal.</td>
+                            <td colspan="4" class="p-10 text-center text-gray-400">Belum ada proposal masuk.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:hidden">
+            @foreach ($proposals as $proposal)
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <h4 class="font-bold text-gray-800 text-sm">{{ $proposal->mahasiswa->name }}</h4>
+                        @php
+                            $color = match ($proposal->status) {
+                                'diterima' => 'bg-green-100 text-green-700',
+                                'ditolak' => 'bg-red-100 text-red-700',
+                                default => 'bg-yellow-100 text-yellow-700',
+                            };
+                        @endphp
+                        <span
+                            class="{{ $color }} px-2 py-0.5 rounded text-[9px] font-bold uppercase">{{ $proposal->status }}</span>
+                    </div>
+                    <p class="text-xs text-gray-600 line-clamp-2 mb-4 italic">"{{ $proposal->judul }}"</p>
+                    <button
+                        @click="openModal('{{ $proposal->mahasiswa->name }}', '{{ addslashes($proposal->judul) }}', '{{ $proposal->status }}', '{{ addslashes($proposal->catatan_dosen ?? '') }}', '{{ route('dosen.proposals.updateStatus', $proposal->id) }}')"
+                        class="w-full bg-gray-100 text-gray-700 text-xs font-bold py-2 rounded-lg border border-gray-200">
+                        Review Detail
+                    </button>
+                </div>
+            @endforeach
+        </div>
+
+        <div x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm" x-cloak>
+
+            <div @click.away="open = false"
+                class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden border-t-4 border-green-600">
+
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Review Proposal</h3>
+
+                    <div class="mb-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase">Mahasiswa</p>
+                        <p class="text-sm font-bold text-gray-800" x-text="mhsName"></p>
+                    </div>
+
+                    <form :action="actionUrl" method="POST">
+                        @csrf
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Status Keputusan</label>
+                                <select name="status" x-model="status"
+                                    class="w-full border-gray-200 rounded-lg text-sm focus:ring-green-500 focus:border-green-500">
+                                    <option value="pending">Pending</option>
+                                    <option value="diterima">Diterima</option>
+                                    <option value="ditolak">Ditolak</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Catatan Dosen</label>
+                                <textarea name="catatan_dosen" x-model="catatan" rows="4"
+                                    class="w-full border-gray-200 rounded-lg text-sm focus:ring-green-500 focus:border-green-500"
+                                    placeholder="Tulis alasan atau revisi..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 mt-6">
+                            <button type="button" @click="open = false"
+                                class="flex-1 px-4 py-2 bg-gray-100 text-gray-600 text-sm font-bold rounded-lg uppercase tracking-wide">Batal</button>
+                            <button type="submit"
+                                class="flex-1 px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg shadow-md shadow-green-200 uppercase tracking-wide">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

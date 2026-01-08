@@ -2,306 +2,313 @@
 
 @section('title', 'Penilaian Dokumen Akhir')
 
-@section('content')
+@push('styles')
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
 
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .animate-slide-up {
+                animation: slideUp 0.3s ease-out;
+            }
+
+            @keyframes slideUp {
+                from {
+                    transform: translateY(100%);
+                }
+
+                to {
+                    transform: translateY(0);
+                }
+            }
+        }
+    </style>
+@endpush
+
+@section('content')
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Penilaian Dokumen Akhir</h1>
-            <p class="text-gray-500 text-sm mt-1">Kelola nilai Skripsi/Tesis mahasiswa bimbingan Anda.</p>
+            <h1 class="text-2xl font-bold text-gray-800">@yield('title')</h1>
+            <p class="text-gray-500 text-sm mt-1">Kelola nilai Dokumen Akhir mahasiswa bimbingan Anda.</p>
         </div>
-        <nav class="text-sm text-gray-500">
-            <ol class="list-reset flex">
+        <nav class="text-sm font-medium text-gray-500 bg-gray-100 px-4 py-2 rounded-lg">
+            <ol class="list-reset flex items-center gap-2">
                 <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">Nilai Dokumen Akhir</li>
+                <li class="text-green-600">@yield('title')</li>
             </ol>
         </nav>
     </div>
 
-    @if (session('success'))
-        <div
-            class="mb-4 bg-green-50 text-green-700 p-4 rounded-lg border-l-4 border-green-500 shadow-sm flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span>{{ session('success') }}</span>
+    @if (session('success') || session('error'))
+        <div x-data="{ show: true }" x-show="show" x-transition
+            class="mb-6 p-4 rounded-xl border-l-4 shadow-sm flex items-center justify-between {{ session('success') ? 'bg-green-50 border-green-500 text-green-700' : 'bg-red-50 border-red-500 text-red-700' }}">
+            <div class="flex items-center gap-3 font-medium text-sm">
+                <i class="fas {{ session('success') ? 'fa-check-circle' : 'fa-exclamation-circle' }}"></i>
+                <span>{{ session('success') ?? session('error') }}</span>
             </div>
-            <button onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900">&times;</button>
+            <button @click="show = false" class="text-current opacity-50 hover:opacity-100">&times;</button>
         </div>
     @endif
 
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 text-red-700 p-4 rounded-lg border-l-4 border-red-500 shadow-sm flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>{{ session('error') }}</span>
-        </div>
-    @endif
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" x-data="{
+        open: false,
+        editMode: false,
+        studentName: '',
+        docTitle: '',
+        babInfo: '',
+        grade: '',
+        keterangan: '',
+        docId: '',
+        actionUrl: '',
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        openGrade(id, name, title, bab) {
+            this.editMode = false;
+            this.studentName = name;
+            this.docTitle = title;
+            this.babInfo = bab;
+            this.docId = id;
+            this.grade = '';
+            this.keterangan = '';
+            this.actionUrl = '{{ route('dosen.nilai-dokumen-akhir.store') }}';
+            this.open = true;
+        },
 
+        openEdit(id, name, grade, note, bab) {
+            this.editMode = true;
+            this.studentName = name;
+            this.docTitle = 'Update Penilaian Terdaftar';
+            this.babInfo = bab;
+            this.grade = grade;
+            this.keterangan = note;
+            this.actionUrl = `/dosen/nilai-dokumen-akhir/${id}`;
+            this.open = true;
+        }
+    }">
 
-        <div class="lg:col-span-1">
-            <div class="bg-white rounded-xl shadow-sm border border-green-100 h-full overflow-hidden">
-                <div class="p-4 border-b border-green-100 bg-green-50">
-                    <h2 class="font-semibold text-green-800 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                            <path fill-rule="evenodd"
-                                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        Menunggu Penilaian
-                    </h2>
-                </div>
+        <div class="lg:col-span-1 space-y-4">
+            <div class="flex items-center justify-between px-1">
+                <h2 class="font-bold text-gray-800 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-green-500 rounded-full"></span>
+                    Menunggu Nilai
+                </h2>
+                <span
+                    class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">
+                    {{ count($belumDinilai) }} Mahasiswa
+                </span>
+            </div>
 
-                <div class="p-0">
-                    @forelse ($belumDinilai as $dokumen)
-                        <div
-                            class="p-4 border-b border-gray-100 last:border-0 hover:bg-green-50/50 transition duration-150 group">
-                            <div class="flex justify-between items-start mb-2">
-                                <span
-                                    class="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-full border border-green-200">
-                                    {{ $dokumen->mahasiswa->NIM ?? 'NIM' }}
-                                </span>
-                                <span
-                                    class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded border border-gray-200 group-hover:bg-white transition">
-                                    {{ $dokumen->nama_bab ?? 'Bab ' . $dokumen->bab }}
-                                </span>
-                            </div>
-                            <h3 class="font-bold text-gray-800">{{ $dokumen->mahasiswa->name }}</h3>
-                            <p class="text-sm text-gray-600 line-clamp-2 mt-1 mb-3" title="{{ $dokumen->judul }}">
-                                {{ $dokumen->judul }}
-                            </p>
-
-                            <div class="flex gap-2 mt-3">
-                                @if ($dokumen->file)
-                                    <a href="{{ $dokumen->file_url }}" target="_blank"
-                                        class="flex-1 text-center px-3 py-2 text-xs border border-green-200 text-green-700 rounded-lg hover:bg-green-100 transition font-medium">
-                                        Lihat File
-                                    </a>
-                                @endif
-                                <button
-                                    onclick="openGradeModal('{{ $dokumen->id }}', '{{ $dokumen->mahasiswa->name }}', '{{ addslashes($dokumen->judul) }}', '{{ $dokumen->nama_bab ?? 'Bab ' . $dokumen->bab }}')"
-                                    class="flex-1 text-center px-3 py-2 text-xs bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-sm transition hover:shadow-md font-medium">
-                                    Beri Nilai
-                                </button>
-                            </div>
+            <div class="space-y-4 max-h-[70vh] lg:max-h-none overflow-y-auto pr-1 custom-scrollbar">
+                @forelse ($belumDinilai as $document)
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-3">
+                            <span
+                                class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $document->mahasiswa->nim }}</span>
+                            <span
+                                class="text-[10px] text-gray-400 font-medium">{{ $document->updated_at->format('d/m/Y') }}</span>
                         </div>
-                    @empty
-                        <div class="p-8 text-center text-gray-400">
-                            <div class="bg-green-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-300" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                            </div>
-                            <p class="text-sm">Semua dokumen telah dinilai!</p>
+                        <h3 class="font-bold text-gray-800 leading-tight mb-1">{{ $document->mahasiswa->name }}</h3>
+                        <p class="text-xs text-gray-500 line-clamp-2 italic mb-5">"{{ $document->judul }}"</p>
+
+                        <div class="flex gap-2">
+                            @if ($document->file_document)
+                                <a href="{{ asset('storage/documents/' . $document->file_document) }}" target="_blank"
+                                    class="flex-1 bg-gray-50 text-gray-600 text-[10px] font-bold py-2.5 rounded-xl border border-gray-200 text-center hover:bg-gray-100 transition uppercase tracking-wider">File</a>
+                            @endif
+                            <button
+                                @click="openGrade('{{ $document->id }}', '{{ $document->mahasiswa->name }}', '{{ addslashes($document->judul) }}')"
+                                class="flex-[2] bg-green-600 text-white text-[10px] font-bold py-2.5 rounded-xl shadow-lg shadow-green-100 hover:bg-green-700 transition uppercase tracking-widest">
+                                Beri Nilai
+                            </button>
                         </div>
-                    @endforelse
-                </div>
+                    </div>
+                @empty
+                    <div class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center">
+                        <i class="fas fa-clipboard-check text-gray-300 text-3xl mb-3"></i>
+                        <p class="text-sm text-gray-400 font-medium">Belum ada document baru untuk dinilai.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
 
+        <div class="lg:col-span-2 space-y-4">
+            <h2 class="font-bold text-gray-800 flex items-center gap-2 px-1">
+                <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
+                Riwayat Penilaian
+            </h2>
 
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl shadow-sm border border-green-100 overflow-hidden">
-                <div class="p-4 border-b border-green-100 flex justify-between items-center bg-green-50">
-                    <h2 class="font-semibold text-green-800">Riwayat Penilaian</h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
-                            <tr>
-                                <th class="px-6 py-3">Mahasiswa</th>
-                                <th class="px-6 py-3">Dokumen</th>
-                                <th class="px-6 py-3 text-center">Nilai</th>
-                                <th class="px-6 py-3">Keterangan</th>
-                                <th class="px-6 py-3 text-center">Aksi</th>
+            <div class="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b">
+                        <tr>
+                            <th class="px-6 py-4">Mahasiswa</th>
+                            <th class="px-6 py-4">Dokumen</th>
+                            <th class="px-6 py-4 text-center">Grade</th>
+                            <th class="px-6 py-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        @forelse ($sudahDinilai as $nilai)
+                            <tr class="hover:bg-gray-50/50 transition">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-gray-800 text-sm">{{ $nilai->dokumenAkhir->mahasiswa->name }}
+                                    </p>
+                                    <p class="text-[10px] text-gray-400 uppercase font-medium">
+                                        {{ $nilai->dokumenAkhir->mahasiswa->NIM }}</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="text-[10px] font-bold text-blue-500 uppercase block mb-0.5">{{ $nilai->dokumenAkhir->nama_bab ?? 'Bab ' . $nilai->dokumenAkhir->bab }}</span>
+                                    <p class="text-xs text-gray-600 truncate max-w-[200px]">
+                                        {{ $nilai->dokumenAkhir->judul }}</p>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    @php
+                                        $gradeColor = match (true) {
+                                            str_contains($nilai->grade, 'A')
+                                                => 'bg-green-100 text-green-700 border-green-200',
+                                            str_contains($nilai->grade, 'B')
+                                                => 'bg-blue-100 text-blue-700 border-blue-200',
+                                            str_contains($nilai->grade, 'C')
+                                                => 'bg-yellow-100 text-yellow-700 border-yellow-200',
+                                            default => 'bg-red-100 text-red-700 border-red-200',
+                                        };
+                                    @endphp
+                                    <span
+                                        class="px-3 py-1 rounded-lg text-xs font-black border {{ $gradeColor }}">{{ $nilai->grade }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <button
+                                        @click="openEdit('{{ $nilai->id }}', '{{ $nilai->dokumenAkhir->mahasiswa->name }}', '{{ $nilai->grade }}', '{{ addslashes($nilai->keterangan) }}', '{{ $nilai->dokumenAkhir->nama_bab ?? 'Bab ' . $nilai->dokumenAkhir->bab }}')"
+                                        class="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition" title="Edit Nilai">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            @forelse ($sudahDinilai as $nilai)
-                                <tr class="bg-white hover:bg-green-50/30 transition">
-                                    <td class="px-6 py-4 font-medium text-gray-900">
-                                        {{ $nilai->dokumenAkhir->mahasiswa->name ?? '-' }}
-                                        <div class="text-xs text-green-600 font-normal mt-0.5">
-                                            {{ $nilai->dokumenAkhir->mahasiswa->NIM ?? '' }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex flex-col">
-                                            <span class="text-xs font-semibold text-green-700 mb-1">
-                                                {{ $nilai->dokumenAkhir->nama_bab ?? 'Bab ' . ($nilai->dokumenAkhir->bab ?? '-') }}
-                                            </span>
-                                            <span class="max-w-xs truncate text-gray-600"
-                                                title="{{ $nilai->dokumenAkhir->judul ?? '-' }}">
-                                                {{ $nilai->dokumenAkhir->judul ?? '-' }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
+                        @empty
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-                                        <span
-                                            class="px-3 py-1 rounded-full text-xs font-bold border
-                                            {{ in_array($nilai->grade, ['A', 'A+'])
-                                                ? 'bg-green-100 text-green-700 border-green-200'
-                                                : (in_array($nilai->grade, ['B+', 'B', 'B-'])
-                                                    ? 'bg-blue-100 text-blue-700 border-blue-200'
-                                                    : (in_array($nilai->grade, ['C+', 'C', 'C-'])
-                                                        ? 'bg-yellow-100 text-yellow-700 border-yellow-200'
-                                                        : 'bg-red-100 text-red-700 border-red-200')) }}">
-                                            {{ $nilai->grade }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-500 max-w-xs truncate">
-                                        {{ $nilai->keterangan ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button
-                                            onclick="openEditModal('{{ $nilai->id }}', '{{ $nilai->dokumenAkhir->mahasiswa->name }}', '{{ $nilai->grade }}', '{{ addslashes($nilai->keterangan) }}')"
-                                            class="text-green-600 hover:text-green-800 font-medium text-xs hover:underline transition">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-                                        Belum ada riwayat penilaian dokumen.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+            <div class="md:hidden space-y-3">
+                @foreach ($sudahDinilai as $nilai)
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex justify-between items-center">
+                        <div class="min-w-0 flex-1">
+                            <p class="font-bold text-gray-800 text-xs truncate">{{ $nilai->dokumenAkhir->mahasiswa->name }}
+                            </p>
+                            <p class="text-[9px] text-blue-500 font-bold uppercase">
+                                {{ $nilai->dokumenAkhir->nama_bab ?? 'Bab ' . $nilai->dokumenAkhir->bab }}</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-black text-gray-800">{{ $nilai->grade }}</span>
+                            <button
+                                @click="openEdit('{{ $nilai->id }}', '{{ $nilai->dokumenAkhir->mahasiswa->name }}', '{{ $nilai->grade }}', '{{ addslashes($nilai->keterangan) }}', '{{ $nilai->dokumenAkhir->nama_bab ?? 'Bab ' . $nilai->dokumenAkhir->bab }}')"
+                                class="w-8 h-8 flex items-center justify-center bg-gray-50 text-gray-400 rounded-full">
+                                <i class="fas fa-pencil-alt text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
-    </div>
 
+        <template x-teleport="body">
+            <div x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                class="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-gray-900/60 backdrop-blur-sm p-0 md:p-4"
+                x-cloak>
 
-    <div id="gradeModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
-        aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"
-                onclick="closeGradeModal()"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div @click.away="open = false"
+                    class="bg-white w-full max-w-lg rounded-t-3xl md:rounded-2xl shadow-2xl overflow-hidden animate-slide-up md:animate-none">
 
-            <div
-                class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border-t-4 border-green-600">
-                <form action="{{ route('dosen.nilai-dokumen-akhir.store') }}" method="POST" id="gradeForm">
-                    @csrf
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                <h3 class="text-xl leading-6 font-bold text-gray-900" id="modal-title">
-                                    Input Nilai Dokumen
-                                </h3>
+                    <form :action="actionUrl" method="POST">
+                        @csrf
+                        <template x-if="editMode">
+                            <input type="hidden" name="_method" value="PUT">
+                        </template>
+                        <input type="hidden" name="dokumen_akhir_id" :value="docId">
 
+                        <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50/50">
+                            <h3 class="font-bold text-gray-800" x-text="editMode ? 'Edit Nilai' : 'Input Nilai Dokumen'">
+                            </h3>
+                            <button type="button" @click="open = false"
+                                class="text-gray-400 hover:text-gray-600 font-bold text-2xl">&times;</button>
+                        </div>
 
-                                <div class="mt-4 p-4 bg-green-50 rounded-lg border border-green-100">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="text-xs text-green-600 font-semibold uppercase tracking-wide">
-                                                Mahasiswa</p>
-                                            <p class="text-md font-bold text-gray-800" id="modalStudentName">-</p>
-                                        </div>
-                                        <span
-                                            class="text-xs font-bold text-green-700 bg-white px-2 py-1 rounded border border-green-200 shadow-sm"
-                                            id="modalBabInfo">-</span>
+                        <div class="p-6 space-y-5">
+                            <div class="bg-green-50 p-4 rounded-2xl border border-green-100 relative overflow-hidden">
+                                <div class="relative z-10 flex justify-between items-start">
+                                    <div class="min-w-0">
+                                        <p class="text-[9px] font-bold text-green-500 uppercase tracking-widest mb-1">
+                                            Mahasiswa</p>
+                                        <p class="font-bold text-gray-800 text-sm truncate" x-text="studentName"></p>
                                     </div>
-                                    <div class="mt-3 pt-3 border-t border-green-200">
-                                        <p class="text-xs text-green-600 font-semibold uppercase tracking-wide">Judul</p>
-                                        <p class="text-sm text-gray-700 mt-1 italic" id="modalDocTitle">-</p>
-                                    </div>
+                                    <span
+                                        class="bg-white px-2 py-1 rounded-lg text-[10px] font-black text-green-600 shadow-sm whitespace-nowrap"
+                                        x-text="babInfo"></span>
                                 </div>
+                                <div class="mt-3 opacity-60">
+                                    <p class="text-[9px] font-bold text-green-500 uppercase tracking-widest">Keterangan
+                                        Dokumen</p>
+                                    <p class="text-[11px] text-gray-600 italic truncate" x-text="docTitle"></p>
+                                </div>
+                                <i
+                                    class="fas fa-graduation-cap absolute -bottom-2 -right-2 text-4xl text-green-200/50"></i>
+                            </div>
 
-                                <input type="hidden" name="dokumen_akhir_id" id="modalDocId">
-
-                                <div class="mt-5">
-                                    <label for="grade" class="block text-sm font-medium text-gray-700">Grade / Nilai
-                                        Huruf</label>
-                                    <select name="grade" id="modalGradeSelect" required
-                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-lg border transition">
-                                        <option value="">-- Pilih Nilai --</option>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Grade /
+                                        Nilai</label>
+                                    <select name="grade" x-model="grade" required
+                                        class="w-full border-gray-200 rounded-xl text-sm font-bold focus:ring-green-500 focus:border-green-500">
+                                        <option value="">-- Pilih --</option>
                                         @foreach (['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E'] as $g)
                                             <option value="{{ $g }}">{{ $g }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-
-                                <div class="mt-4">
-                                    <label for="keterangan" class="block text-sm font-medium text-gray-700">Catatan /
-                                        Keterangan</label>
-                                    <textarea name="keterangan" id="modalKeterangan" rows="3"
-                                        class="mt-1 shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border border-gray-300 rounded-lg p-2 transition"
-                                        placeholder="Tambahkan catatan revisi atau komentar nilai..."></textarea>
+                                <div class="md:col-span-1 flex flex-col justify-end">
+                                    <p class="text-[10px] text-gray-400 italic mb-1 ml-1 leading-tight">Pastikan nilai
+                                        sesuai dengan rubrik penilaian prodi.</p>
                                 </div>
                             </div>
+
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Keterangan /
+                                    Feedback</label>
+                                <textarea name="keterangan" x-model="keterangan" rows="3"
+                                    class="w-full border-gray-200 rounded-xl text-sm focus:ring-green-500 focus:border-green-500 font-medium"
+                                    placeholder="Opsional: tambahkan catatan untuk mahasiswa..."></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-100">
-                        <button type="submit"
-                            class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm transition">
-                            Simpan Nilai
-                        </button>
-                        <button type="button" onclick="closeGradeModal()"
-                            class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition">
-                            Batal
-                        </button>
-                    </div>
-                </form>
+
+                        <div class="p-4 bg-gray-50 flex flex-col md:flex-row gap-2">
+                            <button type="submit"
+                                class="w-full md:order-2 px-6 py-3 bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-100 hover:bg-green-700 transition uppercase tracking-widest">Simpan
+                                Penilaian</button>
+                            <button type="button" @click="open = false"
+                                class="w-full md:order-1 px-6 py-3 bg-white text-gray-500 border border-gray-200 rounded-xl font-bold text-sm hover:bg-gray-100 transition uppercase tracking-widest">Batal</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+        </template>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        function openGradeModal(docId, studentName, docTitle, babInfo) {
-            const form = document.getElementById('gradeForm');
-            form.action = "{{ route('dosen.nilai-dokumen-akhir.store') }}";
-            const existingMethod = form.querySelector('input[name="_method"]');
-            if (existingMethod) existingMethod.remove();
-            document.getElementById('modalDocId').value = docId;
-            document.getElementById('modalStudentName').textContent = studentName;
-            document.getElementById('modalDocTitle').textContent = docTitle;
-            document.getElementById('modalBabInfo').textContent = babInfo;
-            document.getElementById('modalGradeSelect').value = "";
-            document.getElementById('modalKeterangan').value = "";
-            document.getElementById('modal-title').textContent = "Input Nilai Dokumen";
-            document.getElementById('gradeModal').classList.remove('hidden');
-        }
-
-        function openEditModal(nilaiId, studentName, currentGrade, currentKeterangan) {
-            const form = document.getElementById('gradeForm');
-            let url = "{{ route('dosen.nilai-dokumen-akhir.update', ':id') }}";
-            url = url.replace(':id', nilaiId);
-            form.action = url;
-            let methodInput = form.querySelector('input[name="_method"]');
-            if (!methodInput) {
-                methodInput = document.createElement('input');
-                methodInput.type = 'hidden';
-                methodInput.name = '_method';
-                methodInput.value = 'PUT';
-                form.appendChild(methodInput);
-            }
-            document.getElementById('modalStudentName').textContent = studentName;
-            document.getElementById('modalDocTitle').textContent = "Edit Data Nilai";
-            document.getElementById('modalBabInfo').textContent = "-";
-            document.getElementById('modalGradeSelect').value = currentGrade;
-            document.getElementById('modalKeterangan').value = currentKeterangan;
-            document.getElementById('modal-title').textContent = "Edit Nilai";
-            document.getElementById('gradeModal').classList.remove('hidden');
-        }
-
-        function closeGradeModal() {
-            document.getElementById('gradeModal').classList.add('hidden');
-        }
-    </script>
-@endpush

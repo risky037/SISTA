@@ -2,281 +2,312 @@
 
 @section('title', 'Penilaian Proposal')
 
+@push('styles')
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .animate-slide-up {
+                animation: slideUp 0.3s ease-out forwards;
+            }
+
+            @keyframes slideUp {
+                from {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+        }
+    </style>
+@endpush
+
 @section('content')
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Penilaian Proposal</h1>
-            <p class="text-gray-500 text-sm mt-1">Kelola nilai proposal mahasiswa bimbingan Anda di sini.</p>
+            <h1 class="text-2xl font-bold text-gray-800">@yield('title')</h1>
+            <p class="text-gray-500 text-sm mt-1">Kelola nilai Proposal mahasiswa bimbingan Anda.</p>
         </div>
-        <nav class="text-sm text-gray-500">
-            <ol class="list-reset flex">
+        <nav class="text-sm font-medium text-gray-500 bg-gray-100 px-4 py-2 rounded-lg">
+            <ol class="list-reset flex items-center gap-2">
                 <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">Nilai Proposal</li>
+                <li class="text-green-600">@yield('title')</li>
             </ol>
         </nav>
     </div>
 
-    @if (session('success'))
-        <div
-            class="mb-4 bg-green-50 text-green-700 p-4 rounded-lg border-l-4 border-green-500 shadow-sm flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span>{{ session('success') }}</span>
+    @if (session('success') || session('error'))
+        <div x-data="{ show: true }" x-show="show" x-transition
+            class="mb-6 p-4 rounded-xl border-l-4 shadow-sm flex items-center justify-between {{ session('success') ? 'bg-green-50 border-green-500 text-green-700' : 'bg-red-50 border-red-500 text-red-700' }}">
+            <div class="flex items-center gap-3 font-medium text-sm">
+                <i class="fas {{ session('success') ? 'fa-check-circle' : 'fa-exclamation-circle' }}"></i>
+                <span>{{ session('success') ?? session('error') }}</span>
             </div>
-            <button onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900">&times;</button>
+            <button @click="show = false" class="text-current opacity-50 hover:opacity-100">&times;</button>
         </div>
     @endif
 
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 text-red-700 p-4 rounded-lg border-l-4 border-red-500 shadow-sm flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>{{ session('error') }}</span>
-        </div>
-    @endif
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" x-data="{
+        open: false,
+        editMode: false,
+        studentName: '',
+        proposalTitle: '',
+        grade: '',
+        keterangan: '',
+        proposalId: '',
+        actionUrl: '',
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-1">
-            <div class="bg-white rounded-xl shadow-sm border border-green-100 h-full overflow-hidden">
-                <div class="p-4 border-b border-green-100 bg-green-50">
-                    <h2 class="font-semibold text-green-800 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        Menunggu Penilaian
-                    </h2>
-                </div>
+        openGrade(id, name, title) {
+            this.editMode = false;
+            this.studentName = name;
+            this.proposalTitle = title;
+            this.proposalId = id;
+            this.grade = '';
+            this.keterangan = '';
+            this.actionUrl = '{{ route('dosen.nilai-proposal.store') }}';
+            this.open = true;
+        },
 
-                <div class="p-0">
-                    @forelse ($belumDinilai as $proposal)
-                        <div
-                            class="p-4 border-b border-gray-100 last:border-0 hover:bg-green-50/50 transition duration-150">
-                            <div class="flex justify-between items-start mb-2">
-                                <span
-                                    class="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-full border border-green-200">
-                                    {{ $proposal->mahasiswa->nim ?? 'NIM' }}
-                                </span>
-                                <span
-                                    class="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded">{{ $proposal->updated_at->format('d M Y') }}</span>
-                            </div>
-                            <h3 class="font-bold text-gray-800">{{ $proposal->mahasiswa->name }}</h3>
-                            <p class="text-sm text-gray-600 line-clamp-2 mt-1 mb-3" title="{{ $proposal->judul }}">
-                                {{ $proposal->judul }}
-                            </p>
+        openEdit(id, name, currentGrade, currentNote, title) {
+            this.editMode = true;
+            this.studentName = name;
+            this.proposalTitle = title || 'Edit Penilaian Terdaftar';
+            this.grade = currentGrade;
+            this.keterangan = currentNote;
+            this.actionUrl = `/dosen/nilai-proposal/${id}`;
+            this.open = true;
+        }
+    }">
 
-                            <div class="flex gap-2 mt-3">
-                                @if ($proposal->file_proposal)
-                                    <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
-                                        class="flex-1 text-center px-3 py-2 text-xs border border-green-200 text-green-700 rounded-lg hover:bg-green-100 transition font-medium">
-                                        Lihat File
-                                    </a>
-                                @endif
-                                <button
-                                    onclick="openGradeModal('{{ $proposal->id }}', '{{ $proposal->mahasiswa->name }}', '{{ addslashes($proposal->judul) }}')"
-                                    class="flex-1 text-center px-3 py-2 text-xs bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-sm transition hover:shadow-md font-medium">
-                                    Beri Nilai
-                                </button>
-                            </div>
+        {{-- LEFT COLUMN: QUEUE --}}
+        <div class="lg:col-span-1 space-y-4">
+            <div class="flex items-center justify-between px-1">
+                <h2 class="font-bold text-gray-800 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-green-500 rounded-full"></span>
+                    Menunggu Nilai
+                </h2>
+                <span
+                    class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">
+                    {{ count($belumDinilai) }} Mahasiswa
+                </span>
+            </div>
+
+            <div class="space-y-4 max-h-[70vh] lg:max-h-none overflow-y-auto pr-1 custom-scrollbar">
+                @forelse ($belumDinilai as $proposal)
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-3">
+                            <span
+                                class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $proposal->mahasiswa->nim }}</span>
+                            <span
+                                class="text-[10px] text-gray-400 font-medium">{{ $proposal->updated_at->format('d/m/Y') }}</span>
                         </div>
-                    @empty
-                        <div class="p-8 text-center text-gray-400">
-                            <div class="bg-green-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-300" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <p class="text-sm">Semua proposal telah dinilai!</p>
+                        <h3 class="font-bold text-gray-800 leading-tight mb-1">{{ $proposal->mahasiswa->name }}</h3>
+                        <p class="text-xs text-gray-500 line-clamp-2 italic mb-5">"{{ $proposal->judul }}"</p>
+
+                        <div class="flex gap-2">
+                            @if ($proposal->file_proposal)
+                                <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
+                                    class="flex-1 bg-gray-50 text-gray-600 text-[10px] font-bold py-2.5 rounded-xl border border-gray-200 text-center hover:bg-gray-100 transition uppercase tracking-wider">File</a>
+                            @endif
+                            <button
+                                @click="openGrade('{{ $proposal->id }}', '{{ $proposal->mahasiswa->name }}', '{{ addslashes($proposal->judul) }}')"
+                                class="flex-[2] bg-green-600 text-white text-[10px] font-bold py-2.5 rounded-xl shadow-lg shadow-green-100 hover:bg-green-700 transition uppercase tracking-widest">
+                                Beri Nilai
+                            </button>
                         </div>
-                    @endforelse
-                </div>
+                    </div>
+                @empty
+                    <div class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center">
+                        <i class="fas fa-clipboard-check text-gray-300 text-3xl mb-3"></i>
+                        <p class="text-sm text-gray-400 font-medium">Belum ada proposal baru untuk dinilai.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl shadow-sm border border-green-100 overflow-hidden">
-                <div class="p-4 border-b border-green-100 flex justify-between items-center bg-green-50">
-                    <h2 class="font-semibold text-green-800">Riwayat Penilaian</h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
-                            <tr>
-                                <th class="px-6 py-3">Mahasiswa</th>
-                                <th class="px-6 py-3">Proposal</th>
-                                <th class="px-6 py-3 text-center">Nilai</th>
-                                <th class="px-6 py-3">Keterangan</th>
-                                <th class="px-6 py-3 text-center">Aksi</th>
+
+        <div class="lg:col-span-2 space-y-4">
+            <h2 class="font-bold text-gray-800 flex items-center gap-2 px-1">
+                <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
+                Riwayat Penilaian
+            </h2>
+
+            <div class="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b">
+                        <tr>
+                            <th class="px-6 py-4">Mahasiswa</th>
+                            <th class="px-6 py-4">Judul Proposal</th>
+                            <th class="px-6 py-4 text-center">Grade</th>
+                            <th class="px-6 py-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        @forelse ($sudahDinilai as $nilai)
+                            <tr class="hover:bg-gray-50/50 transition">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <p class="font-bold text-gray-800 text-sm">{{ $nilai->proposal->mahasiswa->name }}</p>
+                                    <p class="text-[10px] text-gray-400 uppercase font-medium">
+                                        {{ $nilai->proposal->mahasiswa->nim }}</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <p class="text-xs text-gray-600 truncate max-w-[250px]"
+                                        title="{{ $nilai->proposal->judul }}">{{ $nilai->proposal->judul }}</p>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    @php
+                                        $gradeColor = match (true) {
+                                            str_contains($nilai->grade, 'A')
+                                                => 'bg-green-100 text-green-700 border-green-200',
+                                            str_contains($nilai->grade, 'B')
+                                                => 'bg-blue-100 text-blue-700 border-blue-200',
+                                            str_contains($nilai->grade, 'C')
+                                                => 'bg-yellow-100 text-yellow-700 border-yellow-200',
+                                            default => 'bg-red-100 text-red-700 border-red-200',
+                                        };
+                                    @endphp
+                                    <span
+                                        class="px-3 py-1 rounded-lg text-xs font-black border {{ $gradeColor }}">{{ $nilai->grade }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <button
+                                        @click="openEdit('{{ $nilai->id }}', '{{ $nilai->proposal->mahasiswa->name }}', '{{ $nilai->grade }}', '{{ addslashes($nilai->keterangan ?? '') }}', '{{ addslashes($nilai->proposal->judul) }}')"
+                                        class="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition">
+                                        <i class="fas fa-pencil-alt text-xs"></i>
+                                    </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            @forelse ($sudahDinilai as $nilai)
-                                <tr class="bg-white hover:bg-green-50/30 transition">
-                                    <td class="px-6 py-4 font-medium text-gray-900">
-                                        {{ $nilai->proposal->mahasiswa->name ?? '-' }}
-                                        <div class="text-xs text-green-600 font-normal mt-0.5">
-                                            {{ $nilai->proposal->mahasiswa->nim ?? '' }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="max-w-xs truncate text-gray-600"
-                                            title="{{ $nilai->proposal->judul ?? '-' }}">
-                                            {{ $nilai->proposal->judul ?? '-' }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
-                                        <span
-                                            class="px-3 py-1 rounded-full text-xs font-bold border
-                                            {{ in_array($nilai->grade, ['A', 'A+'])
-                                                ? 'bg-green-100 text-green-700 border-green-200'
-                                                : (in_array($nilai->grade, ['B+', 'B', 'B-'])
-                                                    ? 'bg-blue-100 text-blue-700 border-blue-200'
-                                                    : (in_array($nilai->grade, ['C+', 'C', 'C-'])
-                                                        ? 'bg-yellow-100 text-yellow-700 border-yellow-200'
-                                                        : 'bg-red-100 text-red-700 border-red-200')) }}">
-                                            {{ $nilai->grade }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-500 max-w-xs truncate">
-                                        {{ $nilai->keterangan ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
-                                        <button
-                                            onclick="openEditModal('{{ $nilai->id }}', '{{ $nilai->proposal->mahasiswa->name }}', '{{ $nilai->grade }}', '{{ addslashes($nilai->keterangan) }}')"
-                                            class="text-green-600 hover:text-green-800 font-medium text-xs hover:underline transition">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-                                        Belum ada riwayat penilaian.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-6 py-12 text-center text-gray-400">Belum ada riwayat penilaian.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="md:hidden space-y-3">
+                @foreach ($sudahDinilai as $nilai)
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex justify-between items-center">
+                        <div class="min-w-0 flex-1 pr-4">
+                            <p class="font-bold text-gray-800 text-xs truncate">{{ $nilai->proposal->mahasiswa->name }}</p>
+                            <p class="text-[10px] text-gray-400 truncate">{{ $nilai->proposal->judul }}</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-black text-gray-800">{{ $nilai->grade }}</span>
+                            <button
+                                @click="openEdit('{{ $nilai->id }}', '{{ $nilai->proposal->mahasiswa->name }}', '{{ $nilai->grade }}', '{{ addslashes($nilai->keterangan ?? '') }}', '{{ addslashes($nilai->proposal->judul) }}')"
+                                class="w-8 h-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-full">
+                                <i class="fas fa-edit text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
-    </div>
 
-    <div id="gradeModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
-        aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"
-                onclick="closeGradeModal()"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <template x-teleport="body">
+            <div x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                class="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-gray-900/60 backdrop-blur-sm p-0 md:p-4"
+                x-cloak>
 
-            <div
-                class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border-t-4 border-green-600">
-                <form action="{{ route('dosen.nilai-proposal.store') }}" method="POST" id="gradeForm">
-                    @csrf
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                <h3 class="text-xl leading-6 font-bold text-gray-900" id="modal-title">
-                                    Penilaian Proposal
-                                </h3>
+                <div @click.away="open = false"
+                    class="bg-white w-full max-w-lg rounded-t-3xl md:rounded-2xl shadow-2xl overflow-hidden animate-slide-up md:animate-none">
 
-                                <div class="mt-4 p-4 bg-green-50 rounded-lg border border-green-100">
-                                    <p class="text-xs text-green-600 font-semibold uppercase tracking-wide">Mahasiswa</p>
-                                    <p class="text-md font-bold text-gray-800 mb-2" id="modalStudentName">-</p>
+                    <form :action="actionUrl" method="POST">
+                        @csrf
+                        <template x-if="editMode">
+                            <input type="hidden" name="_method" value="PUT">
+                        </template>
+                        <input type="hidden" name="proposal_id" :value="proposalId">
 
-                                    <p
-                                        class="text-xs text-green-600 font-semibold uppercase tracking-wide border-t border-green-200 pt-2">
-                                        Judul Proposal</p>
-                                    <p class="text-sm text-gray-700 italic mt-1" id="modalProposalTitle">-</p>
+                        <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50/50">
+                            <h3 class="font-bold text-gray-800"
+                                x-text="editMode ? 'Edit Nilai Proposal' : 'Input Nilai Proposal'"></h3>
+                            <button type="button" @click="open = false"
+                                class="text-gray-400 hover:text-gray-600 font-bold text-2xl">&times;</button>
+                        </div>
+
+                        <div class="p-6 space-y-5">
+                            <div class="bg-green-50 p-4 rounded-2xl border border-green-100 relative overflow-hidden">
+                                <div class="relative z-10 flex justify-between items-start">
+                                    <div class="min-w-0">
+                                        <p class="text-[9px] font-bold text-green-500 uppercase tracking-widest mb-1">
+                                            Mahasiswa</p>
+                                        <p class="font-bold text-gray-800 text-sm truncate" x-text="studentName"></p>
+                                    </div>
+                                    <div class="h-8 w-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                                        <i class="fas fa-file-alt text-green-500 text-xs"></i>
+                                    </div>
                                 </div>
+                                <div class="mt-3">
+                                    <p
+                                        class="text-[9px] font-bold text-green-500 uppercase tracking-widest mb-1 opacity-60">
+                                        Judul Proposal</p>
+                                    <p class="text-[11px] text-gray-600 italic leading-relaxed line-clamp-2"
+                                        x-text="proposalTitle"></p>
+                                </div>
+                            </div>
 
-                                <input type="hidden" name="proposal_id" id="modalProposalId">
-
-                                <div class="mt-5">
-                                    <label for="grade" class="block text-sm font-medium text-gray-700">Grade / Nilai
-                                        Huruf</label>
-                                    <select name="grade" id="modalGradeSelect" required
-                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-lg border transition">
-                                        <option value="">-- Pilih Nilai --</option>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Grade
+                                        Nilai</label>
+                                    <select name="grade" x-model="grade" required
+                                        class="w-full border-gray-200 rounded-xl text-sm font-bold focus:ring-green-500 focus:border-green-500 transition">
+                                        <option value="">-- Pilih --</option>
                                         @foreach (['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'E'] as $g)
                                             <option value="{{ $g }}">{{ $g }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-
-                                <div class="mt-4">
-                                    <label for="keterangan" class="block text-sm font-medium text-gray-700">Catatan /
-                                        Keterangan</label>
-                                    <textarea name="keterangan" id="modalKeterangan" rows="3"
-                                        class="mt-1 shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border border-gray-300 rounded-lg p-2 transition"
-                                        placeholder="Tambahkan catatan untuk mahasiswa (opsional)..."></textarea>
+                                <div class="hidden md:flex flex-col justify-end pb-1">
+                                    <p class="text-[10px] text-gray-400 leading-tight">Nilai ini akan menjadi bagian dari
+                                        hasil akhir ujian proposal mahasiswa.</p>
                                 </div>
                             </div>
+
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Catatan
+                                    Tambahan</label>
+                                <textarea name="keterangan" x-model="keterangan" rows="3"
+                                    class="w-full border-gray-200 rounded-xl text-sm focus:ring-green-500 focus:border-green-500 font-medium"
+                                    placeholder="Tuliskan catatan atau masukan perbaikan..."></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-100">
-                        <button type="submit"
-                            class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm transition">
-                            Simpan Nilai
-                        </button>
-                        <button type="button" onclick="closeGradeModal()"
-                            class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition">
-                            Batal
-                        </button>
-                    </div>
-                </form>
+
+                        <div class="p-4 bg-gray-50 flex flex-col md:flex-row gap-2">
+                            <button type="submit"
+                                class="w-full md:order-2 px-6 py-3 bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-100 hover:bg-green-700 transition uppercase tracking-widest">Simpan
+                                Nilai</button>
+                            <button type="button" @click="open = false"
+                                class="w-full md:order-1 px-6 py-3 bg-white text-gray-500 border border-gray-200 rounded-xl font-bold text-sm hover:bg-gray-100 transition uppercase tracking-widest">Batal</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+        </template>
     </div>
 @endsection
-@push('scripts')
-    <script>
-        function openGradeModal(proposalId, studentName, proposalTitle) {
-            const form = document.getElementById('gradeForm');
-            form.action = "{{ route('dosen.nilai-proposal.store') }}";
-            const existingMethodInput = form.querySelector('input[name="_method"]');
-            if (existingMethodInput) existingMethodInput.remove();
-            document.getElementById('modalProposalId').value = proposalId;
-            document.getElementById('modalStudentName').textContent = studentName;
-            document.getElementById('modalProposalTitle').textContent = proposalTitle;
-            document.getElementById('modalGradeSelect').value = "";
-            document.getElementById('modalKeterangan').value = "";
-            document.getElementById('modal-title').textContent = "Input Nilai Baru";
-            document.getElementById('gradeModal').classList.remove('hidden');
-        }
-
-        function openEditModal(nilaiId, studentName, currentGrade, currentKeterangan) {
-            const form = document.getElementById('gradeForm');
-            let url = "{{ route('dosen.nilai-proposal.update', ':id') }}";
-            url = url.replace(':id', nilaiId);
-            form.action = url;
-            let methodInput = form.querySelector('input[name="_method"]');
-            if (!methodInput) {
-                methodInput = document.createElement('input');
-                methodInput.type = 'hidden';
-                methodInput.name = '_method';
-                methodInput.value = 'PUT';
-                form.appendChild(methodInput);
-            }
-            document.getElementById('modalStudentName').textContent = studentName;
-            document.getElementById('modalProposalTitle').textContent = "Edit Penilaian";
-            document.getElementById('modalGradeSelect').value = currentGrade;
-            document.getElementById('modalKeterangan').value = currentKeterangan;
-            document.getElementById('modal-title').textContent = "Edit Nilai";
-            document.getElementById('gradeModal').classList.remove('hidden');
-        }
-
-        function closeGradeModal() {
-            document.getElementById('gradeModal').classList.add('hidden');
-        }
-    </script>
-@endpush

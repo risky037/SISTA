@@ -3,255 +3,239 @@
 @section('title', 'Review Dokumen Akhir')
 
 @section('content')
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-            <h1 class="text-gray-800 text-xl font-semibold">@yield('title')</h1>
-            <p class="text-gray-500 text-sm">Halaman untuk melihat detail Dokumen Akhir Mahasiswa.</p>
+            <h1 class="text-2xl font-bold text-gray-800">@yield('title')</h1>
+
+            <p class="text-gray-500 text-sm mt-1">Daftar mahasiswa bimbingan yang telah mengunggah dokumen.
+            </p>
         </div>
-        <nav class="text-sm text-gray-500">
-            <ol class="list-reset flex">
+
+        <nav class="text-sm font-medium text-gray-500 bg-gray-100 px-4 py-2 rounded-lg">
+            <ol class="list-reset flex items-center gap-2">
                 <li><a href="{{ route('dosen.dashboard') }}" class="hover:text-green-600">Home</a></li>
                 <li><span class="mx-2">/</span></li>
                 <li><a href="{{ route('dosen.dokumen-akhir.index') }}" class="hover:text-green-600">Dokumen
                         Akhir</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-gray-700">@yield('title')</li>
+                <li class="text-green-600">Detail</li>
             </ol>
         </nav>
     </div>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">{{ $mahasiswa->name }}</h1>
-                <p class="text-gray-500 mt-1">NIM: {{ $mahasiswa->NIM ?? '-' }} | Program Studi:
-                    {{ $mahasiswa->prodi ?? '-' }}</p>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
+        <div class="flex flex-col md:flex-row gap-4 items-center">
+            <div
+                class="h-16 w-16 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center text-2xl font-bold border border-green-100">
+                {{ substr($mahasiswa->name, 0, 1) }}
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-xl font-bold text-gray-800">{{ $mahasiswa->name }}</h2>
+                <div
+                    class="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1 text-sm text-gray-500 mt-1 font-medium">
+                    <span class="flex items-center"><i class="far fa-id-badge mr-2"></i>{{ $mahasiswa->NIM ?? '-' }}</span>
+                    <span class="hidden md:inline text-gray-300">|</span>
+                    <span class="flex items-center"><i
+                            class="fas fa-graduation-cap mr-2"></i>{{ $mahasiswa->prodi ?? '-' }}</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="space-y-6">
+    <div class="space-y-4" x-data="{
+        open: false,
+        modalTitle: '',
+        status: '',
+        catatan: '',
+        actionUrl: '',
+        openReview(id, title, currentStatus, currentNote) {
+            this.modalTitle = title;
+            this.status = currentStatus;
+            this.catatan = currentNote || '';
+            this.actionUrl = `/dosen/dokumen-akhir/${id}/update-status`;
+            this.open = true;
+        }
+    }">
         @foreach ($chapters as $key => $chapterName)
             @php
                 $dokumen = $uploads[$key] ?? null;
                 $status = $dokumen ? $dokumen->status : 'none';
 
-                $borderClass = match ($status) {
-                    'approved' => 'border-l-4 border-green-500',
-                    'rejected' => 'border-l-4 border-red-500',
-                    'pending' => 'border-l-4 border-amber-500',
-                    default => 'border-l-4 border-gray-200',
+                $statusConfig = match ($status) {
+                    'approved' => [
+                        'bg' => 'bg-green-100',
+                        'text' => 'text-green-700',
+                        'label' => 'DISETUJUI',
+                        'border' => 'border-green-500',
+                    ],
+                    'rejected' => [
+                        'bg' => 'bg-red-100',
+                        'text' => 'text-red-700',
+                        'label' => 'REVISI',
+                        'border' => 'border-red-500',
+                    ],
+                    'pending' => [
+                        'bg' => 'bg-amber-100',
+                        'text' => 'text-amber-700',
+                        'label' => 'PENDING',
+                        'border' => 'border-amber-500',
+                    ],
+                    default => [
+                        'bg' => 'bg-gray-100',
+                        'text' => 'text-gray-500',
+                        'label' => 'BELUM UPLOAD',
+                        'border' => 'border-gray-200',
+                    ],
                 };
             @endphp
 
-            <div class="bg-white rounded-xl shadow-sm {{ $borderClass }} p-6">
-                <div class="flex flex-col lg:flex-row justify-between gap-6">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-bold text-gray-800">{{ $chapterName }}</h3>
-                            @if ($status == 'approved')
+            <div class="bg-white rounded-2xl shadow-sm border-l-4 {{ $statusConfig['border'] }} overflow-hidden">
+                <div class="p-5 md:p-6">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-3">
+                                <h3 class="text-base font-bold text-gray-800">{{ $chapterName }}</h3>
                                 <span
-                                    class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">DISETUJUI</span>
-                            @elseif($status == 'rejected')
-                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">REVISI</span>
-                            @elseif($status == 'pending')
-                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">MENUNGGU
-                                    REVIEW</span>
+                                    class="px-2.5 py-0.5 rounded-full text-[10px] font-bold {{ $statusConfig['bg'] }} {{ $statusConfig['text'] }} uppercase border border-current opacity-70">
+                                    {{ $statusConfig['label'] }}
+                                </span>
+                            </div>
+
+                            @if ($dokumen)
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Judul
+                                            Dokumen</p>
+                                        <p class="text-sm font-bold text-gray-700 truncate" title="{{ $dokumen->judul }}">
+                                            {{ $dokumen->judul }}</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Waktu
+                                            Upload</p>
+                                        <p class="text-sm font-bold text-gray-700">
+                                            {{ $dokumen->created_at->translatedFormat('d M Y, H:i') }}</p>
+                                    </div>
+                                </div>
+
+                                @if ($dokumen->deskripsi)
+                                    <div
+                                        class="mb-4 text-sm bg-blue-50/50 p-3 rounded-xl italic text-gray-600 border-l-2 border-blue-200">
+                                        <span
+                                            class="font-bold not-italic text-[10px] text-blue-400 uppercase block mb-1">Pesan
+                                            Mahasiswa:</span>
+                                        "{{ $dokumen->deskripsi }}"
+                                    </div>
+                                @endif
+
+                                @if ($dokumen->catatan_dosen)
+                                    <div
+                                        class="p-3 rounded-xl border border-dashed border-amber-200 bg-amber-50/30 text-sm">
+                                        <span class="font-bold text-[10px] text-amber-600 uppercase block mb-1">Review Anda
+                                            Sebelumnya:</span>
+                                        <p class="text-gray-700">{{ $dokumen->catatan_dosen }}</p>
+                                    </div>
+                                @endif
                             @else
-                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-500">BELUM
-                                    UPLOAD</span>
+                                <p class="text-sm text-gray-400 italic">Menunggu mahasiswa mengunggah dokumen...</p>
                             @endif
                         </div>
 
                         @if ($dokumen)
-                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-100 mb-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <p class="text-xs text-gray-500 uppercase font-semibold">Judul Dokumen</p>
-                                        <p class="text-gray-900 font-medium">{{ $dokumen->judul }}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-gray-500 uppercase font-semibold">Waktu Upload</p>
-                                        <p class="text-gray-900">{{ $dokumen->created_at->format('d M Y, H:i') }}</p>
-                                    </div>
-                                </div>
-                                @if ($dokumen->deskripsi)
-                                    <div class="mt-3 pt-3 border-t border-gray-200">
-                                        <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Catatan Mahasiswa</p>
-                                        <p class="text-gray-700 italic text-sm">"{{ $dokumen->deskripsi }}"</p>
-                                    </div>
-                                @endif
-                            </div>
+                            <div class="flex flex-row lg:flex-col gap-2 mt-2 lg:mt-0">
+                                <a href="{{ asset('storage/' . $dokumen->file) }}" target="_blank"
+                                    class="flex-1 lg:w-40 flex items-center justify-center px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs uppercase hover:bg-gray-200 transition">
+                                    <i class="fas fa-external-link-alt mr-2"></i> File
+                                </a>
 
-                            @if ($dokumen->catatan_dosen)
-                                <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
-                                    <p class="text-xs text-blue-600 uppercase font-semibold mb-1">Catatan Anda (Review
-                                        Terakhir)</p>
-                                    <p class="text-gray-800 text-sm">{{ $dokumen->catatan_dosen }}</p>
-                                </div>
-                            @endif
-                        @else
-                            <div class="text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                                <p class="text-gray-400 text-sm">Mahasiswa belum mengunggah dokumen untuk bab ini.</p>
+                                <button
+                                    @click="openReview({{ $dokumen->id }}, '{{ $chapterName }}', '{{ $dokumen->status }}', '{{ addslashes($dokumen->catatan_dosen ?? '') }}')"
+                                    class="flex-1 lg:w-40 flex items-center justify-center px-4 py-2.5 bg-green-600 text-white rounded-xl font-bold text-xs uppercase hover:bg-green-700 shadow-md shadow-green-100 transition">
+                                    <i class="fas fa-check-circle mr-2"></i> Review
+                                </button>
                             </div>
                         @endif
                     </div>
-
-                    @if ($dokumen)
-                        <div class="flex lg:flex-col gap-3 justify-center lg:justify-start lg:w-48">
-                            <a href="{{ asset('storage/' . $dokumen->file) }}" target="_blank"
-                                class="w-full flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium text-sm transition shadow-sm">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                    </path>
-                                </svg>
-                                Lihat File
-                            </a>
-
-                            <button
-                                onclick="openReviewModal({{ $dokumen->id }}, '{{ $chapterName }}', '{{ $dokumen->status }}', '{{ $dokumen->catatan_dosen ?? '' }}')"
-                                class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm transition shadow-sm">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                    </path>
-                                </svg>
-                                Beri Review
-                            </button>
-                        </div>
-                    @endif
                 </div>
             </div>
         @endforeach
-    </div>
 
-    <!-- Modal -->
-    <div id="reviewModal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+            class="fixed inset-0 z-[60] flex items-end md:items-center justify-center p-0 md:p-4 bg-gray-900/60 backdrop-blur-sm"
+            x-cloak>
 
-        <div id="modalBackdrop"
-            class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300"
-            onclick="closeReviewModal()"></div>
+            <div @click.away="open = false" x-show="open" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-8 md:scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 md:scale-100"
+                class="bg-white w-full max-w-lg rounded-t-3xl md:rounded-2xl shadow-2xl overflow-hidden">
 
-        <div id="modalBox"
-            class="relative w-full max-w-lg mx-auto bg-white rounded-2xl shadow-xl
-               transform opacity-0 scale-95 translate-y-4
-               transition-all duration-300 ease-out">
+                <form :action="actionUrl" method="POST">
+                    @csrf
+                    @method('PUT')
 
-            <form id="reviewForm" method="POST">
-                @csrf
-                @method('PUT')
+                    <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50/50">
+                        <h3 class="font-bold text-gray-800" x-text="'Review ' + modalTitle"></h3>
+                        <button type="button" @click="open = false"
+                            class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                    </div>
 
-                <div class="flex items-center justify-between px-6 py-4 border-b">
-                    <h3 class="text-lg font-semibold text-gray-800" id="modalTitle">
-                        Review Dokumen
-                    </h3>
-                    <button type="button" onclick="closeReviewModal()"
-                        class="text-gray-400 hover:text-gray-600 transition">
-                        ✕
-                    </button>
-                </div>
+                    <div class="p-6 space-y-5">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-3">Keputusan Review</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="relative cursor-pointer">
+                                    <input type="radio" name="status" value="approved" x-model="status"
+                                        class="peer sr-only">
+                                    <div
+                                        class="p-3 border-2 rounded-xl text-center transition peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-50">
+                                        <i class="fas fa-check-circle text-lg mb-1 block peer-checked:text-green-600"></i>
+                                        <span class="text-xs font-bold text-gray-700">Setujui</span>
+                                    </div>
+                                </label>
 
-                <div class="px-6 py-5 space-y-5">
-                    <div>
-                        <p class="text-sm font-medium text-gray-700 mb-2">Keputusan</p>
-                        <div class="grid grid-cols-2 gap-4">
-                            <label class="cursor-pointer">
-                                <input type="radio" name="status" value="approved" class="peer sr-only">
-                                <div
-                                    class="rounded-xl border p-4 text-center transition
-                                       peer-checked:border-green-500 peer-checked:bg-green-50
-                                       hover:bg-green-50">
-                                    <p class="font-semibold text-gray-800">Setujui</p>
-                                    <p class="text-xs text-gray-500 mt-1">Lanjut ke bab berikutnya</p>
-                                </div>
-                            </label>
+                                <label class="relative cursor-pointer">
+                                    <input type="radio" name="status" value="rejected" x-model="status"
+                                        class="peer sr-only">
+                                    <div
+                                        class="p-3 border-2 rounded-xl text-center transition peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-50">
+                                        <i
+                                            class="fas fa-exclamation-circle text-lg mb-1 block peer-checked:text-red-600"></i>
+                                        <span class="text-xs font-bold text-gray-700">Revisi</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
 
-                            <label class="cursor-pointer">
-                                <input type="radio" name="status" value="rejected" class="peer sr-only">
-                                <div
-                                    class="rounded-xl border p-4 text-center transition
-                                       peer-checked:border-red-500 peer-checked:bg-red-50
-                                       hover:bg-red-50">
-                                    <p class="font-semibold text-gray-800">Revisi</p>
-                                    <p class="text-xs text-gray-500 mt-1">Minta perbaikan</p>
-                                </div>
-                            </label>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Catatan
+                                Pembimbing</label>
+                            <textarea name="catatan_dosen" x-model="catatan" rows="4"
+                                class="w-full rounded-xl border-gray-200 focus:ring-green-500 focus:border-green-500 text-sm font-medium"
+                                placeholder="Berikan alasan persetujuan atau detail revisi..."></textarea>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 mb-2 block">
-                            Catatan Pembimbing
-                        </label>
-                        <textarea id="modalCatatan" name="catatan_dosen" rows="4"
-                            class="w-full rounded-xl border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                            placeholder="Tuliskan catatan atau revisi..."></textarea>
+                    <div class="p-4 bg-gray-50 flex flex-col md:flex-row gap-2">
+                        <button type="submit"
+                            class="w-full md:order-2 px-6 py-3 bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-100 hover:bg-green-700 transition">
+                            Simpan Review
+                        </button>
+                        <button type="button" @click="open = false"
+                            class="w-full md:order-1 px-6 py-3 bg-white text-gray-500 border border-gray-200 rounded-xl font-bold text-sm hover:bg-gray-100 transition">
+                            Batal
+                        </button>
                     </div>
-                </div>
-
-                <div class="flex justify-end gap-3 px-6 py-4 bg-gray-50 rounded-b-2xl">
-                    <button type="button" onclick="closeReviewModal()"
-                        class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100 transition">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow">
-                        Simpan Review
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script>
-        const modal = document.getElementById('reviewModal');
-        const backdrop = document.getElementById('modalBackdrop');
-        const box = document.getElementById('modalBox');
 
-        function openReviewModal(id, title, status, note) {
-            const form = document.getElementById('reviewForm');
-            form.action = `/dosen/dokumen-akhir/${id}/update-status`;
-
-            document.getElementById('modalTitle').innerText = 'Review: ' + title;
-            document.getElementById('modalCatatan').value = note ?? '';
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-
-            // Trigger animation
-            requestAnimationFrame(() => {
-                backdrop.classList.remove('opacity-0');
-                box.classList.remove('opacity-0', 'scale-95', 'translate-y-4');
-                box.classList.add('opacity-100', 'scale-100', 'translate-y-0');
-            });
-
-            // Set radio
-            document.getElementsByName('status').forEach(radio => {
-                radio.checked = radio.value === status;
-            });
+@push('styles')
+    <style>
+        [x-cloak] {
+            display: none !important;
         }
-
-        function closeReviewModal() {
-            backdrop.classList.add('opacity-0');
-            box.classList.add('opacity-0', 'scale-95', 'translate-y-4');
-
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-        }
-
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: '{{ session('success') }}',
-                timer: 3000,
-                showConfirmButton: false
-            });
-        @endif
-    </script>
+    </style>
 @endpush
