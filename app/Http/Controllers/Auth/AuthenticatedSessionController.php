@@ -85,7 +85,7 @@ class AuthenticatedSessionController extends Controller
 
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
-
+        $request->session()->flash('show_mobile_warning', true);
         logger('Login berhasil', ['user' => $user]);
 
         return match ($user->role) {
