@@ -60,24 +60,32 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function openLogoutModal() {
-    const modal = document.getElementById("logoutModal");
-    if (modal) {
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-        setTimeout(() => {
-            modal.querySelector('.bg-white').classList.add('fade-in');
-        }, 10);
-    }
+    const modal = document.getElementById('logoutModal');
+    const card = document.getElementById('logoutCard');
+
+    modal.classList.remove('pointer-events-none', 'opacity-0');
+    modal.classList.add('opacity-100');
+
+    setTimeout(() => {
+        card.classList.remove('scale-95', 'opacity-0');
+        card.classList.add('scale-100', 'opacity-100');
+    }, 10);
 }
 
-function closeModal() {
-    const modal = document.getElementById("logoutModal");
-    if (modal) {
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-        modal.querySelector('.bg-white').classList.remove('fade-in');
-    }
+function closeLogoutModal() {
+    const modal = document.getElementById('logoutModal');
+    const card = document.getElementById('logoutCard');
+
+    card.classList.remove('scale-100', 'opacity-100');
+    card.classList.add('scale-95', 'opacity-0');
+
+    setTimeout(() => {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.classList.remove('opacity-100');
+    }, 200);
 }
+
+document.getElementById('logoutBackdrop').addEventListener('click', closeLogoutModal);
 
 function toggleNotificationSidebar() {
     const notifSidebar = document.getElementById('notification-sidebar');
