@@ -71,8 +71,8 @@ Route::prefix('dosen')->middleware(['auth', 'role:dosen'])->name('dosen.')->grou
         ->name('dokumen-akhir.show-mahasiswa');
     Route::put('/dokumen-akhir/{id}/update-status', [DokumenAkhirDosenController::class, 'updateStatus'])
         ->name('dokumen-akhir.update-status');
-    Route::resource('nilai-proposal', NilaiProposalController::class)->names('nilai-proposal');
-    Route::resource('nilai-dokumen-akhir', NilaiDokumenAkhirController::class)->names('nilai-dokumen-akhir');
+    Route::resource('nilai-proposal', NilaiProposalController::class)->names('nilai-proposal')->only(['index', 'store', 'update']);
+    Route::resource('nilai-dokumen-akhir', NilaiDokumenAkhirController::class)->names('nilai-dokumen-akhir')->only(['index', 'store', 'update']);
 });
 
 Route::middleware('auth')->group(function () {

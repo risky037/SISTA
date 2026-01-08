@@ -5,12 +5,17 @@
 @section('content')
     <div
         class="bg-gradient-to-r from-green-600 to-teal-500 rounded-2xl p-6 mb-8 text-white shadow-lg relative overflow-hidden">
-        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center">
+
+        <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 bg-blue-400 opacity-20 rounded-full blur-2xl"></div>
+
+        <div class="relative flex flex-col md:flex-row justify-between items-center">
             <div>
-                <h1 class="text-2xl font-bold mb-2 inline-flex items-center">Selamat Datang, Bapak/Ibu
-                    {{ Auth::user()->name }}! <img
-                        src="https://raw.githubusercontent.com/Ridhsuki/Ridhsuki/refs/heads/main/img/Hi.gif" alt="hi"
-                        class="ml-2 w-8 h-8" loading="lazy"></h1>
+                <h1 class="text-2xl font-bold mb-2 inline-flex items-center">
+                    Selamat Datang, Bapak/Ibu {{ Auth::user()->name }}!
+                    <img src="https://raw.githubusercontent.com/Ridhsuki/Ridhsuki/refs/heads/main/img/Hi.gif" alt="hi"
+                        class="ml-2 w-8 h-8" loading="lazy">
+                </h1>
                 <p class="text-indigo-100 text-sm opacity-90">
                     Berikut adalah ringkasan aktivitas bimbingan dan tugas akhir mahasiswa Anda.
                 </p>
@@ -21,8 +26,6 @@
                 <span class="block text-3xl font-bold text-white text-center">{{ $mahasiswaBimbingan }}</span>
             </div>
         </div>
-        <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 bg-blue-400 opacity-20 rounded-full blur-2xl"></div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

@@ -13,23 +13,21 @@ class NilaiProposalController extends Controller
 {
     public function index()
     {
-        $nilai = Nilai::with('proposal.mahasiswa')->whereNotNull('proposal_id')->get();
-        $proposalsBelumDinilai = Auth::user()->mahasiswaBimbinganProposal()
+        $dosenId = Auth::id();
+
+        $belumDinilai = Proposal::with('mahasiswa')
+            ->where('dosen_pembimbing_id', $dosenId)
             ->where('status', '!=', 'pending')
             ->whereDoesntHave('nilai')
             ->get();
 
-        $jumlahProposalYangBelumDireview = Proposal::where('dosen_pembimbing_id', auth()->id())
-            ->where('status', 'pending')
-            ->count();
+        $sudahDinilai = Nilai::with(['proposal.mahasiswa'])
+            ->where('dosen_id', $dosenId)
+            ->whereNotNull('proposal_id')
+            ->latest()
+            ->get();
 
-        return view('dosen.nilai_proposal.index', compact('nilai', 'proposalsBelumDinilai', 'jumlahProposalYangBelumDireview'));
-    }
-
-    public function create()
-    {
-        $proposals = Auth::user()->mahasiswaBimbinganProposal()->get();
-        return view('dosen.nilai_proposal.create', compact('proposals'));
+        return view('dosen.nilai_proposal.index', compact('belumDinilai', 'sudahDinilai'));
     }
 
     public function store(Request $request)
@@ -42,13 +40,8 @@ class NilaiProposalController extends Controller
 
         $proposal = Proposal::findOrFail($request->proposal_id);
 
-        if ($proposal->status == 'pending') {
-            return redirect()->back()->withErrors(['proposal_id' => 'Proposal ini masih pending, harap review terlebih dahulu.'])->withInput();
-        }
-
-        $exists = Nilai::where('proposal_id', $request->proposal_id)->exists();
-        if ($exists) {
-            return redirect()->back()->withErrors(['proposal_id' => 'Proposal ini sudah memiliki nilai.'])->withInput();
+        if ($proposal->dosen_pembimbing_id != Auth::id()) {
+            return back()->with('error', 'Anda tidak berhak menilai proposal ini.');
         }
 
         Nilai::create([
@@ -60,41 +53,32 @@ class NilaiProposalController extends Controller
 
         NotifyHelper::send(
             $proposal->mahasiswa_id,
-            'Nilai Proposal',
-            'Dosen telah memberikan nilai untuk proposal Anda.',
+            'Nilai Proposal Keluar',
+            'Dosen pembimbing telah memberikan nilai untuk proposal Anda.',
             route('mahasiswa.nilai.index')
         );
-        
-        return redirect()->route('dosen.nilai-proposal.index')->with('success', 'Nilai berhasil ditambahkan.');
-    }
-    public function edit($id)
-    {
-        $nilai = Nilai::findOrFail($id);
-        $proposals = Auth::user()->mahasiswaBimbinganProposal()->get();
 
-        return view('dosen.nilai_proposal.edit', compact('nilai', 'proposals'));
+        return redirect()->back()->with('success', 'Nilai berhasil disimpan.');
     }
 
     public function update(Request $request, $id)
     {
         $nilai = Nilai::findOrFail($id);
+
+        if ($nilai->dosen_id != Auth::id()) {
+            abort(403);
+        }
+
         $request->validate([
-            'proposal_id' => [
-                'required',
-                'exists:proposals,id',
-                Rule::unique('nilais')->ignore($nilai->id),
-            ],
             'grade' => 'required|string',
             'keterangan' => 'nullable|string',
         ]);
 
-        $nilai = Nilai::findOrFail($id);
         $nilai->update([
-            'proposal_id' => $request->proposal_id,
             'grade' => $request->grade,
             'keterangan' => $request->keterangan,
         ]);
 
-        return redirect()->route('dosen.nilai-proposal.index')->with('success', 'Nilai berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Nilai berhasil diperbarui.');
     }
 }

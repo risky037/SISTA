@@ -42,7 +42,7 @@ class ProposalDosenController extends Controller
         $pesan = 'Status proposal diperbarui. ';
 
         if ($request->status === 'diterima') {
-            $pesan .= '<a href="' . route('dosen.nilai-proposal.create') . '" class="underline text-green-700 hover:text-green-900 font-semibold">Beri nilai sekarang!</a>';
+            $pesan .= '<a href="' . route('dosen.nilai-proposal.index') . '" class="underline text-green-700 hover:text-green-900 font-semibold">Beri nilai sekarang!</a>';
         }
         NotifyHelper::send(
             $proposal->mahasiswa_id,
