@@ -29,10 +29,10 @@
     </div>
     <x-logout-modal></x-logout-modal>
     @include('layouts.partials.warning-modal')
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/script.js') }}"></script>
     @stack('scripts')
+    @include('layouts.partials.swal')
 </body>
 
 </html>

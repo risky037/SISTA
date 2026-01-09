@@ -16,16 +16,12 @@ class DokumenAkhirDosenController extends Controller
      */
     public function index()
     {
-        // Ambil ID Dosen yang login
         $dosenId = Auth::id();
 
-        // Ambil mahasiswa yang memiliki setidaknya satu dokumen akhir dengan dosen pembimbing ini
-        // Menggunakan distinct agar nama mahasiswa tidak muncul berulang kali
         $mahasiswas = User::whereHas('dokumenAkhir', function ($q) use ($dosenId) {
             $q->where('dosen_pembimbing_id', $dosenId);
         })->with([
                     'dokumenAkhir' => function ($q) use ($dosenId) {
-                        // Eager load dokumen hanya milik dosen ini
                         $q->where('dosen_pembimbing_id', $dosenId);
                     }
                 ])->get();
@@ -41,13 +37,11 @@ class DokumenAkhirDosenController extends Controller
         $dosenId = Auth::id();
         $mahasiswa = User::findOrFail($mahasiswaId);
 
-        // Ambil semua dokumen mahasiswa ini, key by 'bab'
         $uploads = DokumenAkhir::where('mahasiswa_id', $mahasiswaId)
             ->where('dosen_pembimbing_id', $dosenId)
             ->get()
             ->keyBy('bab');
 
-        // Definisi Bab
         $chapters = [
             1 => 'Bab 1 - Pendahuluan',
             2 => 'Bab 2 - Tinjauan Pustaka',
@@ -76,7 +70,6 @@ class DokumenAkhirDosenController extends Controller
         $dokumen->catatan_dosen = $request->catatan_dosen;
         $dokumen->save();
 
-        // Kirim Notifikasi ke Mahasiswa
         NotifyHelper::send(
             $dokumen->mahasiswa_id,
             'Review Bab ' . $dokumen->bab,
@@ -84,6 +77,11 @@ class DokumenAkhirDosenController extends Controller
             route('mahasiswa.dokumen-akhir.index')
         );
 
-        return back()->with('success', 'Status Bab ' . $dokumen->bab . ' berhasil diperbarui.');
+        $statusLabel = $request->status === 'approved' ? 'Disetujui' : 'Ditolak';
+        $pesan = 'Status Bab ' . $dokumen->bab . ' berhasil diperbarui menjadi ' . $statusLabel . '.';
+
+        return back()
+            ->with('success', $pesan)
+            ->with('show_grade_button', $request->status === 'approved');
     }
 }

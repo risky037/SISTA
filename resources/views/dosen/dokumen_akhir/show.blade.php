@@ -22,7 +22,25 @@
             </ol>
         </nav>
     </div>
+    @if (session('success'))
+        <div class="mb-6 p-4 rounded-lg bg-green-50 border-l-4 border-green-500 text-green-700 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <p>{{ session('success') }}</p>
+                </div>
 
+                @if (session('show_grade_button'))
+                    <a href="{{ route('dosen.nilai-dokumen-akhir.index') }}"
+                        class="ml-4 px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded hover:bg-green-700 transition shadow-md">
+                        Beri Nilai Akhir Sekarang &rarr;
+                    </a>
+                @endif
+            </div>
+        </div>
+    @endif
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
         <div class="flex flex-col md:flex-row gap-4 items-center">
             <div

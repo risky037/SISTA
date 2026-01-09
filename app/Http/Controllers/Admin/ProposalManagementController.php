@@ -16,9 +16,10 @@ class ProposalManagementController extends Controller
         $stats = [
             'total' => Proposal::count(),
             'pending' => Proposal::where('status', 'pending')->count(),
-            'approved' => Proposal::where('status', 'approved')->count(),
-            'rejected' => Proposal::where('status', 'rejected')->count(),
+            'approved' => Proposal::where('status', 'diterima')->count(),
+            'rejected' => Proposal::where('status', 'ditolak')->count(),
         ];
+
 
         $query = Proposal::with(['mahasiswa', 'dosen']);
 

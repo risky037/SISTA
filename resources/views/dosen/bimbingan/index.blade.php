@@ -176,7 +176,7 @@
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Catatan
-                                                Dosen</label>
+                                                Dosen (setelah bimbingan)</label>
                                             <textarea name="catatan_dosen" rows="3"
                                                 class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                                 placeholder="Berikan catatan untuk mahasiswa...">{{ $bimbingan->catatan_dosen }}</textarea>

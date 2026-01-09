@@ -99,7 +99,6 @@
         }
     }">
 
-        {{-- LEFT COLUMN: QUEUE --}}
         <div class="lg:col-span-1 space-y-4">
             <div class="flex items-center justify-between px-1">
                 <h2 class="font-bold text-gray-800 flex items-center gap-2">

@@ -149,16 +149,15 @@
                                         <span class="text-xs text-red-500 italic">Belum ditentukan</span>
                                     @endif
                                 </td>
-
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @php
                                         $statusClasses = match ($proposal->status) {
-                                            'disetujui' => 'bg-green-100 text-green-800 border-green-200',
+                                            'diterima' => 'bg-green-100 text-green-800 border-green-200',
                                             'ditolak' => 'bg-red-100 text-red-800 border-red-200',
                                             default => 'bg-yellow-100 text-yellow-800 border-yellow-200',
                                         };
                                         $statusLabel = match ($proposal->status) {
-                                            'disetujui' => 'Approved',
+                                            'diterima' => 'Approved',
                                             'ditolak' => 'Rejected',
                                             default => 'Pending',
                                         };
@@ -171,9 +170,9 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end items-center gap-2">
-                                        @if ($proposal->file)
-                                            <a href="{{ asset('storage/' . $proposal->file) }}" target="_blank"
-                                                class="text-gray-400 hover:text-blue-600 transition"
+                                        @if ($proposal->file_proposal)
+                                            <a href="{{ asset('storage/' . $proposal->file_proposal) }}" target="_blank"
+                                                class="text-gray-400 hover:text-blue-600 g-blue-50 p-2 rounded-lg transition"
                                                 title="Download File">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -260,15 +259,5 @@
                 }
             })
         }
-
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: '{{ session('success') }}',
-                timer: 3000,
-                showConfirmButton: false
-            });
-        @endif
     </script>
 @endpush

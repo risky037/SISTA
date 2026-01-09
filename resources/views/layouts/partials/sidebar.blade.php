@@ -259,8 +259,8 @@
 
             <div class="flex items-center gap-3">
                 @if (auth()->user()->notifications->count() > 0)
-                    <form action="{{ route('notifications.clearAll') }}" method="POST"
-                        onsubmit="return confirm('Yakin ingin menghapus semua riwayat notifikasi?');">
+                    <form action="{{ route('notifications.clearAll') }}" method="POST" class="delete-form"
+                        data-message="Semua riwayat notifikasi akan dihapus permanen.">
                         @csrf
                         @method('DELETE')
                         <button type="submit"

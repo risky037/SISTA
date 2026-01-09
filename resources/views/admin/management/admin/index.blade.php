@@ -23,7 +23,6 @@
             class="px-4 py-2 bg-green-600 text-white rounded-md mb-4 inline-block hover:bg-green-700 transition-colors">
             <i class="fas fa-plus mr-2"></i>Tambah
             Admin</a>
-
         @if (session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded my-4">
                 {{ session('success') }}
@@ -84,7 +83,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(event){event.preventDefault();Swal.fire({title:'Yakin hapus Akun ini?',text:"Anda tidak akan bisa mengembalikan ini!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})})});</script>
-@endpush

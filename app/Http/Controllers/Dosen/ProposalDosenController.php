@@ -30,7 +30,7 @@ class ProposalDosenController extends Controller
         $proposal = Proposal::where('dosen_pembimbing_id', auth()->id())->findOrFail($id);
 
         $request->validate([
-            'status' => 'required|in:pending,revisi,diterima,ditolak',
+            'status' => 'required|in:pending,diterima,ditolak',
             'catatan_dosen' => 'nullable|string'
         ]);
 
@@ -39,18 +39,18 @@ class ProposalDosenController extends Controller
             'catatan_dosen' => $request->catatan_dosen,
         ]);
 
-        $pesan = 'Status proposal diperbarui. ';
+        $pesan = 'Status proposal diperbarui menjadi ' . ucfirst($request->status);
 
-        if ($request->status === 'diterima') {
-            $pesan .= '<a href="' . route('dosen.nilai-proposal.index') . '" class="underline text-green-700 hover:text-green-900 font-semibold">Beri nilai sekarang!</a>';
-        }
         NotifyHelper::send(
             $proposal->mahasiswa_id,
             'Catatan Proposal dari Dosen',
             'Dosen telah memberikan catatan atau perubahan status pada proposal Anda.',
             route('mahasiswa.proposals.show', $proposal->id)
         );
-        return redirect()->route('dosen.proposals.index')->with('success', $pesan);
-    }
 
+        return redirect()
+            ->route('dosen.proposals.index')
+            ->with('success', $pesan)
+            ->with('show_grade_button', $request->status === 'diterima');
+    }
 }

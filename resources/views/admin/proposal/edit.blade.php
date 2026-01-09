@@ -39,7 +39,6 @@
             @csrf
             @method('PUT')
 
-
             <div>
                 <label class="block text-gray-700">Mahasiswa</label>
                 <select name="mahasiswa_id"
@@ -95,15 +94,20 @@
 
             <div>
                 <label class="block text-gray-700">Status</label>
-                <select name="status" disabled
+                <select name="status"
                     class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500 @error('status') border-red-500 @enderror"
                     required>
-                    <option value="pending" {{ old('status', $proposal->status) == 'pending' ? 'selected' : '' }}>Pending
+                    <option value="pending" {{ old('status', $proposal->status) == 'pending' ? 'selected' : '' }}>
+                        Pending
                     </option>
+
                     <option value="diterima" {{ old('status', $proposal->status) == 'diterima' ? 'selected' : '' }}>
-                        Approved</option>
+                        Approved (Diterima)
+                    </option>
+
                     <option value="ditolak" {{ old('status', $proposal->status) == 'ditolak' ? 'selected' : '' }}>
-                        Rejected</option>
+                        Rejected (Ditolak)
+                    </option>
                 </select>
                 @error('status')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

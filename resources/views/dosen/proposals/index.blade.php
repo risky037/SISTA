@@ -52,7 +52,20 @@
             </div>
         </div>
     </div>
+    @if (session('success'))
+        <div class="mb-4 p-4 bg-green-50 border-l-4 border-green-500 text-green-700">
+            <p>
+                {{ session('success') }}
 
+                @if (session('show_grade_button'))
+                    <a href="{{ route('dosen.nilai-proposal.index') }}"
+                        class="font-bold underline ml-2 hover:text-green-900">
+                        Beri nilai sekarang!
+                    </a>
+                @endif
+            </p>
+        </div>
+    @endif
     <div x-data="{
         open: false,
         mhsName: '',

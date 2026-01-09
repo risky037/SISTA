@@ -177,8 +177,8 @@
                                         <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}"
                                             target="_blank"
                                             class="text-[11px] font-bold text-blue-600 hover:text-blue-800 flex items-center">
-                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2">
                                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                                 <path d="M14 2v6h6" />
                                                 <path d="M8 13h2m-2 3h4m2-3h2" />
@@ -211,7 +211,8 @@
                             <td class="px-6 py-4">
                                 <div class="flex justify-center items-center gap-1">
                                     <a href="{{ route('mahasiswa.proposals.show', $proposal->id) }}"
-                                        class="p-2 text-gray-400 hover:text-green-600 transition-colors" title="Detail">
+                                        class="text-green-600 hover:text-green-900 bg-green-50 p-2 rounded-lg transition"
+                                        title="Detail">
                                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2">
                                             <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
@@ -221,12 +222,13 @@
 
                                     @if ($proposal->status === 'pending' || $proposal->status === 'rejected' || $proposal->status === 'ditolak')
                                         <a href="{{ route('mahasiswa.proposals.edit', $proposal->id) }}"
-                                            class="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                                            title="Edit">
-                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2">
-                                                <path d="M12 20h9" />
-                                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+                                            class="text-blue-600 hover:text-blue-900 bg-blue-50 p-2 rounded-lg transition"
+                                            title="Edit Data">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
                                             </svg>
                                         </a>
 
@@ -235,13 +237,13 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                                                class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-lg transition"
                                                 title="Hapus">
-                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <path d="M3 6h18" />
-                                                    <path d="M8 6V4h8v2" />
-                                                    <path d="M6 6l1 14h10l1-14" />
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
                                                 </svg>
                                             </button>
                                         </form>
@@ -277,5 +279,27 @@
 @endsection
 
 @push('scripts')
-    <script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.delete-form').forEach(form=>{form.addEventListener('submit',function(event){event.preventDefault();Swal.fire({title:'Yakin hapus?',text:"Anda tidak akan bisa mengembalikan proposal ini!",icon:'warning',showCancelButton:!0,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Ya, hapus!',cancelButtonText:'Batal'}).then((result)=>{if(result.isConfirmed){form.submit()}})})})});</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-form').forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: 'Yakin hapus?',
+                        text: "Anda tidak akan bisa mengembalikan proposal ini!",
+                        icon: 'warning',
+                        showCancelButton: !0,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit()
+                        }
+                    })
+                })
+            })
+        });
+    </script>
 @endpush
