@@ -22,7 +22,7 @@
             </p>
 
             <div class="flex flex-col gap-3">
-                <button onclick="document.getElementById('logout-form').submit();"
+                <button onclick="localStorage.clear();document.getElementById('logout-form').submit();"
                     class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-bold text-xs uppercase tracking-widest transition-all duration-200 shadow-lg shadow-red-200">
                     Ya, Logout Sekarang
                 </button>
