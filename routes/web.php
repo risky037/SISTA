@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDokumenAkhirController;
 use App\Http\Controllers\Admin\AdminManagementController;
 use App\Http\Controllers\Admin\JadwalSidangManagementController;
 use App\Http\Controllers\Admin\MahasiswaManagementController;
@@ -36,8 +37,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('proposal', ProposalManagementController::class, )->names('proposal')->except('create', 'store');
     Route::resource('template', TemplateManagementController::class)->names('template');
 
-    Route::get('/dokumen-akhir', [App\Http\Controllers\Admin\AdminDokumenAkhirController::class, 'index'])->name('dokumen-akhir.index');
-    Route::get('/dokumen-akhir/{id}', [App\Http\Controllers\Admin\AdminDokumenAkhirController::class, 'show'])->name('dokumen-akhir.show');
+    Route::get('/dokumen-akhir', [AdminDokumenAkhirController::class, 'index'])->name('dokumen-akhir.index');
+    Route::get('/dokumen-akhir/{id}', [AdminDokumenAkhirController::class, 'show'])->name('dokumen-akhir.show');
 
     Route::post('mahasiswa/import', [MahasiswaManagementController::class, 'import'])->name('management.mahasiswa.import');
     Route::post('dosen/import', [DosenManagementController::class, 'import'])->name('management.dosen.import');
@@ -86,7 +87,7 @@ Route::middleware('auth')->group(function () {
     Route::view('/tentang', 'static.general', ['page' => 'tentang'])->name('tentang');
 
     Route::get('/notifications/{notification}', [DashboardController::class, 'markAsRead'])->name('notifications.markAsRead');
-
+    Route::delete('/notifications/clear-all', [DashboardController::class, 'clearAllNotifications'])->name('notifications.clearAll');
     Route::get('/dashboard', function () {
         $user = Auth::user();
 

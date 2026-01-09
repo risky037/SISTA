@@ -85,7 +85,7 @@
             </div>
         @else
             @include('layouts.partials.empty-state', [
-                'icon' => 'fa-inbox',
+                'icon' => 'proposal',
                 'text' => 'Belum ada nilai proposal.',
             ])
         @endif
@@ -183,7 +183,7 @@
             </div>
         @else
             @include('layouts.partials.empty-state', [
-                'icon' => 'fa-folder-open',
+                'icon' => 'dokumen',
                 'text' => 'Belum ada nilai dokumen.',
             ])
         @endif

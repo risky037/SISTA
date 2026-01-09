@@ -156,4 +156,10 @@ class DashboardController extends Controller
         return redirect($notification->link ?? '/');
     }
 
+    public function clearAllNotifications()
+    {
+        auth()->user()->notifications()->delete();
+
+        return back()->with('success', 'Semua notifikasi berhasil dihapus.');
+    }
 }

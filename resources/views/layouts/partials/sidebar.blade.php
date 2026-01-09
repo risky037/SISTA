@@ -252,12 +252,34 @@
 <aside id="notification-sidebar"
     class="fixed inset-y-0 right-0 transform translate-x-full bg-white border-l border-gray-200 w-80 transition-transform duration-300 z-40">
     <div class="flex flex-col h-full">
-        <div class="flex items-center justify-between gap-2 px-5 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-900">Notifikasi</h2>
-            <button onclick="toggleNotificationSidebar()"
-                class="p-2 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500">
-                <i class="fas fa-arrow-right"></i>
-            </button>
+        <div class="px-6 py-4 border-b border-gray-100 bg-white flex items-center justify-between sticky top-0 z-10">
+            <div class="flex items-center gap-2">
+                <h2 class="text-lg font-bold text-gray-800 tracking-tight">Notifikasi</h2>
+            </div>
+
+            <div class="flex items-center gap-3">
+                @if (auth()->user()->notifications->count() > 0)
+                    <form action="{{ route('notifications.clearAll') }}" method="POST"
+                        onsubmit="return confirm('Yakin ingin menghapus semua riwayat notifikasi?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="group flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-all duration-200"
+                            title="Hapus Semua Notifikasi">
+                            <i class="fas fa-trash-alt text-[10px] group-hover:scale-110 transition-transform"></i>
+                            <span>Bersihkan</span>
+                        </button>
+                    </form>
+
+                    <div class="h-4 w-px bg-gray-200"></div>
+                @endif
+
+                <button onclick="toggleNotificationSidebar()"
+                    class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                    title="Tutup Panel">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
         </div>
         <div class="p-4 overflow-y-auto">
             <div class="space-y-4 text-sm text-gray-600">

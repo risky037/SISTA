@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Notification;
 
 class User extends Authenticatable
 {
@@ -127,5 +128,14 @@ class User extends Authenticatable
         // Parameter kedua 'mahasiswa_id' adalah foreign key di tabel dokumen_akhirs
         return $this->hasMany(DokumenAkhir::class, 'mahasiswa_id');
     }
-
+    /**
+     * [FIX] OVERRIDE RELASI NOTIFICATIONS
+     * Mengubah standar Laravel (Polymorphic) menjadi Custom (HasMany user_id)
+     * agar sesuai dengan tabel 'notifications' yang Anda buat.
+     */
+    public function notifications()
+    {
+        // Menggunakan 'user_id' sesuai tabel database Anda
+        return $this->hasMany(Notification::class, 'user_id')->latest();
+    }
 }
