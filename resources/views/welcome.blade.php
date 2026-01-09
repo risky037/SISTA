@@ -2,9 +2,8 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Informasi Tugas Akhir</title>
+    @include('layouts.partials.seo')
+    <title>Sistem Informasi Tugas Akhir | {{ config('app.name', 'SISTA') }}</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="apple-touch-icon" href="https://sia.uici.ac.id/images/uici/logo-uici-baru.png">
@@ -15,7 +14,8 @@
 </head>
 
 <body>
-    <div id="linear-preloader" class="progress blue lighten-2" style="margin: 0; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999; display: none;">
+    <div id="linear-preloader" class="progress blue lighten-2"
+        style="margin: 0; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999; display: none;">
         <div class="indeterminate"></div>
     </div>
     @php
@@ -89,13 +89,85 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script defer src="{{ asset('js/welcome.js') }}"></script>
     <script>
-        document.addEventListener("DOMContentLoaded",function(){const modals=document.querySelectorAll(".modal");M.Modal.init(modals);@if($errors->any())
-const modal=document.getElementById("login-modal");const modalInstance=M.Modal.getInstance(modal);if(modalInstance){modalInstance.open()}
-const oldRole="{{ old('role') }}";if(oldRole){const loginRoleInput=document.getElementById("login-role");if(loginRoleInput){loginRoleInput.value=oldRole}
-document.getElementById("login-title").textContent="Login "+capitalize(oldRole);const identityLabel=document.getElementById("identity-label");switch(oldRole){case "admin":identityLabel.textContent="Email";break;case "mahasiswa":identityLabel.textContent="NIM";break;case "dosen":identityLabel.textContent="Email atau NIDN";break;default:identityLabel.textContent="Email"}}
-@endif
-const identityInput=document.getElementById("email");identityInput.addEventListener("focus",function(){const role=document.getElementById("login-role").value;switch(role){case "admin":this.placeholder="Masukkan Email";break;case "mahasiswa":this.placeholder="Masukkan NIM";break;case "dosen":this.placeholder="Masukkan Email atau NIDN";break;default:this.placeholder="Masukkan Email"}});identityInput.addEventListener("blur",function(){this.placeholder=""})})
-function handleForgotPassword(){event.preventDefault();Swal.fire({title:"Lupa Password?",text:"Silakan hubungi admin melalui WhatsApp untuk reset password.",icon:"info",showCancelButton:!0,confirmButtonText:"Hubungi Admin",cancelButtonText:"Batal",}).then((result)=>{if(result.isConfirmed){const waNumber="{{ $waNumber ?? '' }}";if(waNumber){const role=document.getElementById("login-role").value||"pengguna";const message=encodeURIComponent(`Halo Admin, saya seorang ${role}. Saya lupa password akun saya. Mohon bantuannya untuk reset.`);const waUrl=`https://wa.me/${waNumber}?text=${message}`;window.open(waUrl,"_blank")}else{Swal.fire("Nomor Tidak Ditemukan","Nomor WhatsApp admin belum tersedia.","error")}}})}
+        document.addEventListener("DOMContentLoaded", function() {
+            const modals = document.querySelectorAll(".modal");
+            M.Modal.init(modals);
+            @if ($errors->any())
+                const modal = document.getElementById("login-modal");
+                const modalInstance = M.Modal.getInstance(modal);
+                if (modalInstance) {
+                    modalInstance.open()
+                }
+                const oldRole = "{{ old('role') }}";
+                if (oldRole) {
+                    const loginRoleInput = document.getElementById("login-role");
+                    if (loginRoleInput) {
+                        loginRoleInput.value = oldRole
+                    }
+                    document.getElementById("login-title").textContent = "Login " + capitalize(oldRole);
+                    const identityLabel = document.getElementById("identity-label");
+                    switch (oldRole) {
+                        case "admin":
+                            identityLabel.textContent = "Email";
+                            break;
+                        case "mahasiswa":
+                            identityLabel.textContent = "NIM";
+                            break;
+                        case "dosen":
+                            identityLabel.textContent = "Email atau NIDN";
+                            break;
+                        default:
+                            identityLabel.textContent = "Email"
+                    }
+                }
+            @endif
+            const identityInput = document.getElementById("email");
+            identityInput.addEventListener("focus", function() {
+                const role = document.getElementById("login-role").value;
+                switch (role) {
+                    case "admin":
+                        this.placeholder = "Masukkan Email";
+                        break;
+                    case "mahasiswa":
+                        this.placeholder = "Masukkan NIM";
+                        break;
+                    case "dosen":
+                        this.placeholder = "Masukkan Email atau NIDN";
+                        break;
+                    default:
+                        this.placeholder = "Masukkan Email"
+                }
+            });
+            identityInput.addEventListener("blur", function() {
+                this.placeholder = ""
+            })
+        })
+
+        function handleForgotPassword() {
+            event.preventDefault();
+            Swal.fire({
+                title: "Lupa Password?",
+                text: "Silakan hubungi admin melalui WhatsApp untuk reset password.",
+                icon: "info",
+                showCancelButton: !0,
+                confirmButtonText: "Hubungi Admin",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const waNumber = "{{ $waNumber ?? '' }}";
+                    if (waNumber) {
+                        const role = document.getElementById("login-role").value || "pengguna";
+                        const message = encodeURIComponent(
+                            `Halo Admin, saya seorang ${role}. Saya lupa password akun saya. Mohon bantuannya untuk reset.`
+                            );
+                        const waUrl = `https://wa.me/${waNumber}?text=${message}`;
+                        window.open(waUrl, "_blank")
+                    } else {
+                        Swal.fire("Nomor Tidak Ditemukan", "Nomor WhatsApp admin belum tersedia.", "error")
+                    }
+                }
+            })
+        }
     </script>
 
 </body>
