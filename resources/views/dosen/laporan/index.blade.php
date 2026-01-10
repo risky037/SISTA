@@ -75,8 +75,8 @@
                         ($proposalStatus['diterima'] ?? 0) == 0 &&
                         ($proposalStatus['ditolak'] ?? 0) == 0)
                     <div class="text-center">
-                        <img src="https://illustrations.popsy.co/gray/no-messages.svg" class="h-40 mx-auto mb-4"
-                            alt="No data">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG_Zo7X-mdu1-Qm_O97YjvPsJrQW9wigDWEA&s" class="h-40 mx-auto mb-4"
+                            alt="No data" loading="lazy">
                         <p class="text-sm text-gray-400 italic">Belum ada data proposal yang diajukan.</p>
                     </div>
                 @else
@@ -99,8 +99,8 @@
                         ($dokumenStatus['approved'] ?? 0) == 0 &&
                         ($dokumenStatus['rejected'] ?? 0) == 0)
                     <div class="text-center">
-                        <img src="https://illustrations.popsy.co/gray/analysis.svg" class="h-40 mx-auto mb-4"
-                            alt="No data">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG_Zo7X-mdu1-Qm_O97YjvPsJrQW9wigDWEA&s" class="h-40 mx-auto mb-4"
+                            alt="No data" loading="lazy">
                         <p class="text-sm text-gray-400 italic">Belum ada data dokumen akhir.</p>
                     </div>
                 @else
