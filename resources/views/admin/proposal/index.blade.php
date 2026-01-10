@@ -171,7 +171,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end items-center gap-2">
                                         @if ($proposal->file_proposal)
-                                            <a href="{{ asset('storage/' . $proposal->file_proposal) }}" target="_blank"
+                                            <a href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
                                                 class="text-gray-400 hover:text-blue-600 g-blue-50 p-2 rounded-lg transition"
                                                 title="Download File">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor"

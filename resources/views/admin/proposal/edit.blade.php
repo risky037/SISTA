@@ -127,7 +127,7 @@
                 <label class="block text-gray-700 mb-1">File Proposal</label>
                 @if ($proposal->file_proposal)
                     <p class="text-gray-500 text-sm mb-2">File saat ini: <a
-                            href="{{ asset('storage/' . $proposal->file_proposal) }}" target="_blank"
+                            href="{{ asset('storage/proposals/' . $proposal->file_proposal) }}" target="_blank"
                             class="text-blue-600 hover:underline">Lihat File</a></p>
                 @endif
                 <input type="file" name="file_proposal"
