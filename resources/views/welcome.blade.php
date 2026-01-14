@@ -32,7 +32,7 @@
 
     <!-- Pilihan Login -->
     <div id="login-choice" class="login-choice z-depth-3">
-        <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png" alt="Logo">
+        <img src="https://sia.uici.ac.id/images/uici/logo-uici-baru.png" alt="Logo" loading="lazy">
         <h4>Sistem Informasi Tugas Akhir</h4>
         <p>Silakan pilih jenis login untuk masuk ke dashboard Anda:</p>
         <div class="login-options">
